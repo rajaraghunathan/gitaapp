@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bhagavad Gita Platform{% endblock %}</title>
+    <!-- Stable Global Cloudflare CDNs for instant cross-device delivery -->
+    <link rel="icon" href="data:,">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gita_base.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div id="domLock" class="dom-lock-overlay flex-column justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <!-- Optional: Add loading text below the spinner -->
+    <span class="mt-2 text-white fw-bold bg-dark px-3 py-1 rounded shadow-sm opacity-75">Please wait...</span>
+</div>
+
+    <!-- Unified Application Header Menu -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-2">
+        <div class="container">
+            <a class="navbar-brand navbar-brand-custom" href="/">
+                <i class="fa-solid fa-om me-2 text-warning"></i> Gita Portal
+            </a>
+            {% if session.get('user_id') and request.path == '/student-dashboard' %}
+                <a class="navbar-brand navbar-brand-custom" data-bs-toggle="offcanvas" data-bs-target="#studentMenu"
+                       style="cursor: pointer; font-size: 1.1rem;">Menu</a>
+            {% elif request.path == '/' %}
+                <a class="navbar-brand navbar-brand-custom" data-bs-toggle="offcanvas" data-bs-target="#chapterMenu"
+                       style="cursor: pointer; font-size: 1.1rem;">Menu</a>
+            {% else %}
+
+            {% endif %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="appNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="/"><i class="fa-solid fa-house me-1"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#" onclick="alert('This platform is dedicated to imparting the timeless wisdom of the Bhagavad Gita chapter by chapter.')"><i class="fa-solid fa-circle-info me-1"></i> About</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom" href="#" onclick="alert('For feedback or educational inquiries, reach out to raja.raghunathan@gmail.com')"><i class="fa-solid fa-envelope me-1"></i> Contact</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    {% if session.get('admin_logged_in') %}
+                        <a href="/admin-dashboard" class="btn btn-warning btn-sm fw-bold"><i class="fa-solid fa-gauge me-1"></i> Admin Dashboard</a>
+                        <a href="/logout" class="btn btn-outline-danger btn-sm fw-bold">Logout</a>
+                    {% elif session.get('user_id') %}
+                        <a href="/student-dashboard" class="btn btn-primary btn-sm fw-bold"><i class="fa-solid fa-graduation-cap me-1"></i>{{ student.name }} Classroom</a>
+                        <a href="/logout" class="btn btn-outline-danger btn-sm fw-bold">Logout</a>
+                    {% else %}
+                        <button class="btn btn-outline-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#studentLoginModal">Student Login</button>
+                        <button class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#studentRegisterModal">Register</button>
+                        <button class="btn btn-dark btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#adminLoginModal"><i class="fa-solid fa-lock"></i>Admin Panel</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Context Injection Stream Canvas Area -->
+    <main class="flex-shrink-0 w-100">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Global Footer Framework -->
+    <footer class="footer-custom role-contentinfo">
+        <div class="container text-center">
+            <p class="mb-1">© 2026 Bhagavad Gita Portal. Empowering Spiritual Literacy.</p>
+            <small class="text-muted">Built securely with Python Flask, SQLAlchemy & RESTful JavaScript Modules</small>
+        </div>
+    </footer>
+
+    <!-- --- AUTHENTICATION MODALS SYSTEM --- -->
+
+    <!-- Modal 1: Student Login Portal -->
+    <div class="modal fade" id="studentLoginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-user-graduate me-2"></i>Student Login Gate</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studentLoginForm" class="mb-3" onsubmit="executeAuth(event, '/api/auth/login', this)">
+                        <div class="mb-3">
+                            <label class="form-label">Email Identity</label>
+                            <input type="email" name="email" class="form-control" required placeholder="name@domain.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password Key Sequence</label>
+                            <input id="student-password" type="password" name="password" class="form-control" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary fw-bold w-100">Authorize Classroom Entry</button>
+                        <div class="d-flex justify-content-between">
+                            <span id="alert-msg" style="color: red;"></span>
+                            <span class="text-end" style="color: darkorchid; font-weight: bold; cursor: pointer" onclick="userForgotPassword()" >Reset Password</span>
+                        </div>
+                    </form>
+                    <form style="display: none;" id="resetPassForm" class="needs-validation" novalidate onsubmit="studentPasswordReset(event,this)">
+                        <div class="row g-2">
+                            <div class="col-6 mb-3">
+                                <label for="newPassword" >New Password</label>
+                                <input type="password" class="form-control" id="newPassword" minlength="8"  placeholder="Minimum 8 characters" required>
+                                <div class="invalid-feedback">Password must be at least 8 characters long.</div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="confirmPassword" >Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat new password" required>
+                                <div id="confirmFeedback" class="invalid-feedback">Passwords do not match.</div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <input id="reset-otp" type="text" inputmode="numeric" maxlength="6" class="form-control otp" placeholder="OTP will be sent to Email..." required>
+                                <div class="invalid-feedback">Enter 6 digit OTP Received.</div>
+                            </div>
+                            <div class="col-6 text-center mb-3">
+                                <button type="submit" class="btn btn-primary" id="btnSubmitReset">Change Password</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Student Registration Matrix -->
+    <div class="modal fade" id="studentRegisterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-user-plus me-2"></i>Create Student Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studentRegisterForm" onsubmit="executeAuth(event, '/api/auth/register', this)">
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="name" class="form-control" required placeholder="Arjun Kumar">
+                                <div class="invalid-feedback">Please enter Your Name.</div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Email Identity</label>
+                                <input type="email" name="email" class="form-control" required placeholder="arjun@gita.edu">
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Create Password</label>
+                                <input type="password" name="password" class="form-control" required minlength="8" placeholder="••••••••">
+                                <div class="invalid-feedback">Please enter 8 alphanumeric password.</div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Age (Optional)</label>
+                                <input type="number" name="age" class="form-control" min="1" max="120" placeholder="Age...">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Phone Number (Optional)</label>
+                                <input type="tel" name="phone" class="form-control" placeholder="........">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Gender (Optional)</label>
+                                <select name="gender" class="form-select">
+                                    <option value="">Choose Option</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <label class="form-label">Residential Address (Optional)</label>
+                                <textarea name="address" class="form-control" rows="2" placeholder="Street layout details..."></textarea>
+                            </div>
+                            <div id="otp-div" class="col-12 mb-2" style="display: block">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <input id="otp" type="text" inputmode="numeric" maxlength="6" class="form-control otp" placeholder="OTP will be sent to Email...">
+                                    <div id="timer">00:00</div>
+                                    <button id="otp-button" type="button" class="btn btn-primary fw-bold w-100" onclick="getOtp(this)">Get OTP</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="register-button" type="submit" class="btn btn-success w-100 fw-bold">Register Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Master Admin Access Control -->
+    <div class="modal fade" id="adminLoginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-user-shield me-2"></i>Admin Core Entry</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminLoginForm" onsubmit="executeAuth(event, '/api/auth/admin', this)">
+                        <div class="mb-3">
+                            <label class="form-label">System Master Password</label>
+                            <input type="password" name="password" class="form-control" required placeholder="Enter secret key...">
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 fw-bold">Verify Security Signature</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Components Packages -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+{% if not session.get('admin_logged_in') and not session.get('user_id') %}
+    //using jinga This Script from base.html loads only in index.html
+<script src="{{ url_for('static', filename='js/gita_base.js') }}"></script>
+{% endif %}
+
+    {% block extra_js %}{% endblock %}
+
+<!--    <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer"> </div>-->
+    <div class="toast-container position-fixed bottom-0 start-50 p-3" id="toastContainer"> </div>
+<script>
+    function showToast(message, type = "success") {
+            const toast = document.createElement("div");
+            const bgClass = type === "success" ? "success" : (type === "warning" ? "warning" : "danger");
+            toast.className =
+                `toast align-items-center slideIn fadeOut
+                 text-bg-${bgClass}
+                 border-0`;
+            toast.role = "alert";
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button
+                        type="button"
+                        class="btn-close
+                               btn-close-white
+                               me-2
+                               m-auto"
+                        data-bs-dismiss="toast">
+                    </button>
+                </div>
+            `;
+
+            document.getElementById(
+                "toastContainer"
+            ).appendChild(toast);
+
+            const bsToast = new bootstrap.Toast(toast, {
+                animation: true,
+                autohide: true,
+                delay: 3000
+            });
+            bsToast.show();
+
+            // Remove from DOM later
+            toast.addEventListener(
+                "hidden.bs.toast",
+                () => {
+                    toast.remove();
+                }
+            );
+        }
+</script>
+</body>
+</html>
+

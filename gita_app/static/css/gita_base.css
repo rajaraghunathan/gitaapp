@@ -1,0 +1,112 @@
+body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif; display: flex; min-height: 100vh; flex-direction: column; }
+.navbar-custom { background-color: #ffffff; border-bottom: 3px solid #d35400; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.navbar-brand-custom { font-weight: bold; color: #d35400 !important; font-size: 1.4rem; display: flex; align-items: center; }
+.nav-link-custom { color: #2c3e50 !important; font-weight: 600; transition: color 0.2s; margin-left: 10px; }
+.nav-link-custom:hover { color: #d35400 !important; }
+.footer-custom { background-color: #2c3e50; color: #ffffff; padding: 20px 0; margin-top: auto; border-top: 4px solid #e67e22; }
+.modal-header-custom { background-color: #d35400; color: white; }
+.shloka-text { font-size: 1.2rem; font-weight: bold; color: darkblue; line-height: 1.8; text-align: center; margin-bottom: 10px; }
+.video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); background: #000; }
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+/* Right Column: Forum Commentary Layout Stack */
+.right-column { background: white; border-left: 1px solid #e9ecef; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
+.comments-list { flex: 1; overflow-y: auto; margin-bottom: 15px; }
+.comment-item { background: #fdfcf7; border: 1px solid #f0e6d2; padding: 12px; border-radius: 6px; margin-bottom: 12px; position: relative; }
+.comment-meta { font-size: 0.8rem; color: #e67e22; font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
+.comment-time { font-size: 0.75rem; color: #999; font-weight: normal; }
+.comment-body { font-size: 0.9rem; color: #333; line-height: 1.4; word-break: break-word; }
+.comment-actions { margin-top: 8px; display: flex; gap: 10px; justify-content: flex-end; }
+.action-link { font-size: 0.75rem; color: #2980b9; text-decoration: none; cursor: pointer; font-weight: bold; }
+.action-link.delete-link { color: #c0392b; }
+.comment-input-area { border-top: 1px solid #eee; padding-top: 15px; }
+.comment-box { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none; height: 75px; box-sizing: border-box; font-family: inherit; font-size: 0.9rem; }
+.btn-submit-comment { width: 100%; background: #d35400; color: white; border: none; padding: 8px; margin-top: 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+.btn-submit-comment:hover { background: #b84900; }
+
+/* Utility styles */
+.loading-text { text-align: center; color: #7f8c8d; font-style: italic; margin-top: 50px; }
+.no-data-notice { text-align: center; color: #999; font-size: 0.85rem; padding: 20px 0; }
+.btn-nav { background: #2c3e50; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
+.btn-nav:hover { background: #1a252f; }
+.btn-nav:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+.dom-lock-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4); /* Darkened background makes the spinner pop */
+    z-index: 99999; /* Higher than any navigation or layout stack */
+    cursor: wait;
+    display: none !important; /* Forces layout control via JS */
+}
+/* Use Bootstrap's flex utilities when active */
+.dom-lock-overlay.active {
+    display: flex !important;
+}
+
+/* The container wrapping all elements */
+.chapter-grid {
+    display: grid;
+    /* Forces exactly 6 columns of equal width */
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;                 /* Spacing between individual boxes */
+}
+
+/* Individual square box styling matching your image */
+.chapter-grid .chapter-a {
+    display: flex;
+    align-items: center;       /* Centers text vertically */
+    justify-content: center;    /* Centers text horizontally */
+
+    /* Forces the box height to match its width dynamically making it a perfect square */
+    width: 100%;
+    aspect-ratio: 1 / 1 !important;
+
+    /* Visual style properties matching your target image */
+    border: 1px solid #b0b0b0; /* Clean, subtle gray border */
+    border-radius: 2px;        /* Very slight edge softening */
+    background-color: #f0f0f0; /* Soft light-gray background tint */
+    color: #0000b3;            /* Rich dark blue text color */
+
+    text-decoration: none;     /* Removes link underline */
+    font-weight: 500;
+    font-size: 16px;           /* Crisp typography visibility */
+    box-sizing: border-box;
+    transition: background-color 0.15s ease-in-out;
+}
+
+/* Subtle hover effect */
+.chapter-grid .chapter-a:hover {
+    background-color: #e0e0e0; /* Darkens slightly on cursor trace */
+    cursor: pointer;
+}
+
+.chapterName {
+    font-size:0.85rem; color:indigo; font-weight:bold;
+    padding: 10px;
+    margin-left:15px;
+    margin-right:15px;
+    border-bottom: 1px solid darkblue;
+    border-top: 1px solid darkblue;
+}
+.chapters {
+    font-size:0.85rem; color:crimson; font-weight:bold;
+    padding-bottom: 10px;
+}
+/* Shows a placeholder when the contenteditable div is empty */
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  color: #6c757d;
+  pointer-events: none;
+  display: block;
+}
+#studentMenu .nav {
+    --bs-nav-link-padding-x: 0.5rem ;
+    --bs-nav-link-padding-y: 0.25rem ;
+}
+.acharya-div, .acharya-admin-text-div, .shloka-text p {
+    white-space: pre-wrap;
+}

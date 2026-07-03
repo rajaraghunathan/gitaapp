@@ -1,0 +1,1487 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - Control Center{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-2 px-2">
+        <!-- Dashboard Switcher Controls -->
+        <div class="nav d-flex align-items-center nav-pills bg-white p-2 rounded shadow-sm border sticky-top" id="adminTabs" role="tablist" style="top: 56px;">
+            <!-- Left Side: Navigation Tabs -->
+            <button class="nav-link btn-sm active text-start py-2 fw-bold" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Shloka Manager
+            </button>
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">
+                <i class="fa-solid fa-comments me-2"></i> Discussion Queue
+            </button>
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
+            </button>
+
+            <!-- Right Side: Integrated Text Styling Toolbar -->
+            <div class="ms-auto d-flex align-items-center border-start ps-3 me-2" id="textToolbar">
+                <span class="small text-muted me-2 d-none d-md-inline" style="font-size: 11px;">Text:</span>
+                <div class="btn-group" role="group" aria-label="Text formatting">
+                    <button type="button" class="btn btn-sm btn-outline-secondary fw-bold py-1 px-2" onclick="setStyle('bold')">B</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary fst-italic py-1 px-2" onclick="setStyle('italic')">I</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary text-decoration-underline py-1 px-2" onclick="setStyle('underline')">U</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="setStyle('superscript')">X<sup>2</sup></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="setStyle('subscript')">X<sub>2</sub></button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Dashboard Working Interface Workspace Panels -->
+        <div class="tab-content bg-white p-2 rounded shadow-sm border" id="adminTabsContent">
+
+            <!-- Tab Pane A: Verse Injection Form And List Registry Workspace Panel -->
+            <div class="tab-pane fade show active" id="v-pane" role="tabpanel" aria-labelledby="v-tab">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="hidden" id="form_verse_id" value="">
+                        <input type="hidden" id="input_chapter">
+                        <input type="hidden" id="input_verse_number">
+                        <ul id="menuTabs" class="nav nav-pills mb-2">
+                            <li class="nav-item">
+                              <a id="a-shloka" class="nav-link active" data-bs-toggle="pill" href="#shloka-pane" role="tab">Shloka</a>
+                            </li>
+                            <li class="nav-item">
+                              <a id="a-anvayam" class="nav-link" data-bs-toggle="pill" href="#anvayam-pane" role="tab">Anvayam</a>
+                            </li>
+                            <li class="nav-item">
+                              <a id="a-acharya" class="nav-link" data-bs-toggle="pill" href="#acharya-pane" role="tab">Acharya</a>
+                            </li>
+                        </ul>
+                        <div class = "col d-flex gap-2 mb-2">
+                            <button class="btn btn-small" type="button" id="chapter-prev-btn" onclick="navigateToAdjacentChapter(-1)">⬅️</button>
+                            <div class="dropdown flex-grow-1 d-grid">
+                                <button id="ch-list-button" type="button" class="text-truncate btn btn-small btn-warning dropdown-toggle"  data-bs-toggle="dropdown">
+                                    Chapters
+                                </button>
+                                <ul id="chaptersList" class="dropdown-menu"></ul>
+                            </div>
+                            <button class="btn btn-small" type="button" id="chapter-next-btn" onclick="navigateToAdjacentChapter(1)">➡️</button>
+                        </div>
+                        <div class = "col d-flex gap-2 mb-2">
+                            <button class="btn btn-small" type="button" id="verse-prev-btn" onclick="navigateToAdjacentVerse(-1)">⬅️</button>
+                            <div class="dropdown flex-grow-1 d-grid">
+                                <button id="verse-list-button" type="button" class="text-truncate btn btn-small btn-warning dropdown-toggle"  data-bs-toggle="dropdown">
+                                    Verses
+                                </button>
+                                <ul id="verseList" class="dropdown-menu"></ul>
+                            </div>
+                            <button class="btn btn-small" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">➡️</button>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="fw-bold">Select:</span>
+                            <div class="dropdown">
+                              <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                                <span id="selected-meaning-language">Loading...</span>
+                              </button>
+                              <ul id="language-dropdown" class="dropdown-menu">
+
+                              </ul>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column gap-2 mb-2">
+                            <button id="add-new-lang-btn" class="btn btn-sm btn-outline-secondary text-nowrap " type="button" onclick="addNewMeaningLanguage()">➕ New Language</button>
+                            <button id="delete-lang-btn" class="btn btn-sm btn-danger text-nowrap " type="button" onclick="deleteMeaningLanguage()">🗑️ Delete Language</button>
+
+                            <button type="submit" formnovalidate form="meaning-language-form" id="save-current-lang-btn" class="btn btn-sm btn-success text-nowrap">💾 Save Changes</button>
+                            <button id="commit-lang-btn" class="btn btn-sm btn-success text-nowrap" type="button" onclick="sendMeaningPayloadToServer()"
+                                >Commit To DB</button>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="tab-content ">
+                            <!-- VERSE FORM -->
+                            <div class="tab-pane fade show active" id="shloka-pane" role="tabpanel">
+                                <!-- Form Shloka Card -->
+                                <form id="meaning-language-form" class="card mb-2" onsubmit="saveCurrentFormContext(event)">
+                                    <div class="card shadow-sm border-primary mb-2">
+                                      <span class="input-group-text"><strong>Sanskrit Shloka</strong></span>
+                                      <textarea id="input_shloka" class="form-control" rows="3" required placeholder="Paste Sanskrit characters..."></textarea>
+                                    </div>
+                                    <div class="card shadow-sm border-primary">
+                                        <div class="card-body">
+                                            <!-- Fixed Description Text Block -->
+                                            <div class="mb-2">
+                                                <label class="form-label fw-bold">Description Text Context</label>
+                                                <!-- Small Button Toolbar Container -->
+                                                <div id="field-description" contenteditable="true" class="form-control mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 50px;" placeholder="This field is required...">
+
+                                                </div>
+                                                <div id="desc-error-msg" class="text-danger small mt-1 d-none">Please fill out this field.</div>
+                                            </div>
+                                            <!-- Footnotes Table Module -->
+                                            <div class="border-end">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="mb-0 fw-bold">Footnotes Map</h6>
+                                                    <button class="btn btn-sm btn-secondary" onclick="addFootnoteRow()" type="button">➕ Add Row</button>
+                                                </div>
+                                                <table class="table table-sm table-bordered">
+                                                    <thead class="table-light">
+                                                        <tr><th style="width: 75px;">Ref</th><th>Content</th><th style="width: 50px;">Remove</th></tr>
+                                                    </thead>
+                                                    <tbody id="footnotes-table-body"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- ANVAYAM FORM -->
+                            <div class="tab-pane fade" id="anvayam-pane" role="tabpanel">
+                                <!-- YouTube Table Module -->
+                                <div class="card shadow-sm border-primary p-2 mb-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0 fw-bold">YouTube Map</h6>
+                                        <button class="btn btn-sm btn-secondary" onclick="addYouTubeRow()" type="button">➕ Add Row</button>
+                                    </div>
+                                    <table class="table table-sm table-bordered">
+                                        <thead class="table-light">
+                                            <tr><th style="width: 200px;">Speaker</th><th>Url</th><th style="width: 50px;">Remove</th></tr>
+                                        </thead>
+                                        <tbody id="youTube-table-body"></tbody>
+                                    </table>
+                                </div>
+                                <!-- Anvayam Table Module -->
+                                <div class="card shadow-sm border-primary p-2" >
+                                    <div class="d-flex justify-content-between align-items-center mb-2 sticky-top" style="z-index: 10;">
+                                        <h6 class="mb-0 fw-bold">Anvayam Map</h6>
+                                        <button class="btn btn-sm btn-secondary" onclick="addAnvayamRow()" onmousedown="event.preventDefault()" type="button">➕ Add Row</button>
+                                    </div>
+                                    <div style="max-height: 300px; overflow-y: auto;">
+                                        <table class="table table-sm table-bordered" >
+                                        <thead class="table-light">
+                                            <tr><th style="width: 200px;">Sanskrit (sa)</th><th id="anvayam-th">Translation (en)</th><th style="width: 50px;">Remove</th></tr>
+                                        </thead>
+                                        <tbody id="anvayam-table-body"></tbody>
+                                    </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Acharya Comments FORM -->
+                            <div class="tab-pane fade" id="acharya-pane" role="tabpanel">
+                                <div id="acharya">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <span class="fw-bold text-dark">Commentary:</span>
+                                    <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja">Sri Ramanuja</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#siva">Sri Siva</a>
+                                  </div>
+                                  <div class="card-body p-0">
+                                      <div id="ramanuja" class="collapse show" data-bs-parent="#acharya">
+                                          <div class="card">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between" >
+                                                <button type="submit" form="ramanuja-form" class="btn btn-sm btn-primary fw-bold">Update Ramanuja Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('ramanuja')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white">
+                                                <form id="ramanuja-form" onsubmit="commitAcharyaForm(event, 'ramanuja')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Ramanuja</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div id="sankara" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="sankara-form" class="btn btn-sm btn-primary fw-bold">Update Sankara Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('sankara')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="sankara-form" onsubmit="commitAcharyaForm(event, 'sankara')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Sankara</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div id="madhava" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="madhava-form" class="btn btn-sm btn-primary fw-bold">Update Madhava Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('madhava')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="madhava-form" onsubmit="commitAcharyaForm(event, 'madhava')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Madhava</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div id="desika" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="desika-form" class="btn btn-sm btn-primary fw-bold">Update Desika Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('desika')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="desika-form" onsubmit="commitAcharyaForm(event, 'desika')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Desika</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div id="siva" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="siva-form" class="btn btn-sm btn-primary fw-bold">Update Siva Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('siva')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="siva-form" onsubmit="commitAcharyaForm(event, 'siva')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Siva</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+<!--                                <div class="card shadow-sm border border-secondary-subtle">-->
+<!--                                    <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">-->
+<!--                                        <div class="d-flex align-items-center gap-2">-->
+<!--                                            <span class="fw-bold text-dark small">Commentary:</span>-->
+<!--                                            <div class="dropdown sticky">-->
+<!--                                                <button class="btn btn-outline-dark btn-sm dropdown-toggle fw-bold" type="button" id="commentaryMenuButton" data-bs-toggle="dropdown">-->
+<!--                                                    Select Author-->
+<!--                                                </button>-->
+<!--                                                <ul class="dropdown-menu" id="dynamic-author-menu">-->
+<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('ramanuja')">ramanuja</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('sankara')">sankara</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('madhava')">madhava</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('desika')">desika</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('siva')">siva</a></li>-->
+<!--                                                </ul>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <button type="button" class="btn btn-xs btn-success py-1 px-2 small d-none" id="addLangRowBtn" onclick="addLanguageFieldRow()">+ Add Language</button>-->
+<!--                                    </div>-->
+<!--                                    <div class="card-body bg-white p-3">-->
+<!--                                        <p class="text-muted text-center small my-2" id="commentary-placeholder">Please select an author from the dropdown menu to manage their commentaries.</p>-->
+
+<!--                                        &lt;!&ndash; Dynamic Action Form &ndash;&gt;-->
+<!--                                        <form id="active-commentary-form" class="d-none" onsubmit="commitCommentaryForm(event)">-->
+<!--                                            <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span id="current-active-author" class="text-primary fw-bold"></span></h6>-->
+
+<!--                                            &lt;!&ndash; Dynamic inputs render target workspace &ndash;&gt;-->
+<!--                                            <div id="dynamic-lang-fields-container"></div>-->
+
+<!--                                            <div class="text-end border-top pt-2 mt-3">-->
+<!--                                                <button type="submit" class="btn btn-sm btn-primary fw-bold">Update Commentaries</button>-->
+<!--                                            </div>-->
+<!--                                        </form>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Pane B: Global Student Commentary Modification Moderation Panel -->
+            <div class="tab-pane fade" id="c-pane" role="tabpanel" aria-labelledby="c-tab">
+                <h4 class="text-dark border-bottom pb-2 mb-3">Moderation Queue: Student Discussions Forum</h4>
+                <div class="table-responsive" style="max-height: 68vh; overflow-y: auto;">
+                    <table class="table table-striped align-middle border">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Student Metadata</th>
+                                <th>Context Reference</th>
+                                <th>Comment Entry Context String</th>
+                                <th class="text-center">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminCommentsTableBody">
+                            <!-- Loaded asynchronously over REST API routes -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Section C: Admin CSV Data Export Panel -->
+            <div class="tab-pane fade" id="export-pane" role="tabpanel">
+                <h4 class="text-dark mb-3">Backup & Administration Utilities</h4>
+                <p class="text-muted">Download complete, system-wide snapshot logs directly to Excel-compatible CSV files.</p>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light text-center">
+                            <h5><i class="fa-solid fa-users text-primary mb-2 d-block fs-3"></i> Students Registry Log</h5>
+                            <a href="/admin/export/students" class="btn btn-primary btn-sm mt-2"><i class="fa-solid fa-download me-1"></i> Export Students List</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light text-center">
+                            <h5><i class="fa-solid fa-comments text-success mb-2 d-block fs-3"></i> Forum Commentary Feed</h5>
+                            <a href="/admin/export/comments" class="btn btn-success btn-sm mt-2"><i class="fa-solid fa-download me-1"></i> Export All Comments</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+</div>
+
+<!-- Non-Blocking Language Creator Modal -->
+<div class="modal fade" id="addMeanLanguageModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMeanLanguageModalLabel">Add Language</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="modalMeanLangInput" class="form-control" placeholder="e.g. en, ta, sa" maxlength="2">
+      </div>
+      <div class="modal-header d-flex justify-content-end gap-2 border-top-0 pt-0">
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="submitNewLanguageForm()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Non-Blocking Delete Confirmation Modal -->
+<div class="modal fade" id="deleteMeanLanguageModal">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0 pb-0">
+        <h5 class="modal-title text-danger fw-bold" id="deleteMeanLanguageModalLabel">⚠️ Delete Dataset?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-secondary">
+        Are you sure you want to completely erase the
+        <strong id="modal-delete-lang-label" class="text-dark"></strong>
+        dataset? This action cannot be undone.
+      </div>
+      <div class="modal-footer border-top-0 pt-0 d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="submitDeleteLanguageForm()">Erase Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Component Structure: Inline Discussion Modifier Engine Interface Panel -->
+<div class="modal fade" id="adminEditCommentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><i class="fa-solid fa-user-pen me-2"></i>Force Rewrite Student Input</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="target_modifier_comment_id">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Alter text stream sequence safely:</label>
+                    <textarea id="target_modifier_comment_text" class="form-control" rows="4" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="submitAdminCommentUpdate()">Save Operational Edits</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let bootstrapLangModalInstance = null;
+    let globalActiveChapter = 1;
+    let selectedAuthorKey = null;
+    let activeVerseChapterNum = null;
+    let activeVerseNumber = null;
+    let loadedMeaningLanguages = {};
+    let currentMeaningLanguage = null;
+    let flattenedVerseList = [];
+    let flattenedChapterList = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initializeChapterList();
+    });
+
+    function cleanRichText(htmlInput) {
+        // 1. Convert non-breaking space characters and literals into normal spaces
+        let standardizedHtml = htmlInput
+            .replace(/&nbsp;/g, ' ')
+            .replace(/\u00A0/g, ' ');
+
+        // 2. Create a temporary element to safely read the text strings
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = standardizedHtml;
+        let decodedHtml = tempDiv.innerHTML;
+
+        // 3. Define the tags you want to keep (b, i, u, strong, em, sup, sub, br)
+        const allowedTagsRegex = /<\/?(b|i|u|strong|em|sup|sub|br)(\s*\/?>|>)/gi;
+
+        // 4. Temporarily mask allowed tags so they don't get deleted
+        const placeholders = [];
+        let maskedHtml = decodedHtml.replace(allowedTagsRegex, (match) => {
+            placeholders.push(match);
+            return `___TAG_PLACEHOLDER_${placeholders.length - 1}___`;
+        });
+
+        // 5. Strip ALL remaining tags (like <div>, <span>, etc.)
+        let cleanText = maskedHtml.replace(/<[^>]*>/g, '');
+
+        // // 6. Restore your allowed formatting tags
+        // placeholders.forEach((placeholder, index) => {
+        //     cleanText = cleanText.replace(`___TAG_PLACEHOLDER_${index}___`, placeholder);
+        // });
+
+        // 6. Restore allowed formatting tags using a callback function
+        // This prevents index collisions (e.g., placeholder 1 messing up 10)
+        let placeholderCounter = 0;
+        cleanText = cleanText.replace(/___TAG_PLACEHOLDER_\d+___/g, () => {
+            return placeholders[placeholderCounter++];
+        });
+
+        // 7. FINAL PASS: Convert leftover &amp; back to a real & symbol
+        const finalDecoder = document.createElement('div');
+        finalDecoder.innerHTML = cleanText;
+        let finalCleanText = finalDecoder.innerHTML;
+
+        // Explicit fallback fix for any stubborn amp strings
+        // finalCleanText = finalCleanText.replace(/&amp;/g, '&');
+        // Fix: Target both the raw Unicode character AND the string entity
+        finalCleanText = finalCleanText.replace(/\u200C|&zwnj;/g, '');
+        return finalCleanText.trim();
+    }
+
+    function initializeChapterList() {
+        const listContainer = document.getElementById('chaptersList');
+        if (!listContainer) return;
+        const aList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+        listContainer.innerHTML = '';
+        flattenedChapterList = [];
+        aList.forEach((list) => {
+            const li = document.createElement('li');
+            li.className = "chapter-item dropdown-item d-flex justify-content-between align-items-center";
+            li.dataset.chapter = list.toString();
+            li.style = "cursor: pointer;"
+            li.innerHTML = `<span><i class="fa-solid fa-book me-2"></i> Chapter ${list} </span> <i class="fa-solid fa-chevron-right text-muted small"></i>`;
+            li.addEventListener('click', function() {
+                document.querySelectorAll('.chapter-item').forEach(item =>
+                    item.classList.remove('active'));
+                this.classList.add('active');
+                globalActiveChapter = parseInt(this.dataset.chapter);
+                refreshAdminVersesList(globalActiveChapter);
+            });
+            listContainer.appendChild(li);
+            flattenedChapterList.push({ chapter: list })
+            });
+        const firstChapter = listContainer.querySelector('.chapter-item');
+        if (firstChapter) { firstChapter.click(); }
+    }
+
+    function navigateToAdjacentChapter(direction) {
+        // Calculate step boundaries to toggle control triggers
+        if (!activeVerseChapterNum) {
+            showToast("Refresh the Page", "warning");
+            return;
+        }
+        const currentIdx = flattenedChapterList.findIndex(item => item.chapter == activeVerseChapterNum);
+
+        if (currentIdx === -1) return;
+        const targetIdx = currentIdx + direction;
+        if (targetIdx >= 0 && targetIdx < flattenedChapterList.length) {
+            const chapterElements = document.querySelectorAll('.chapter-item');
+            chapterElements.forEach(item => item.classList.remove('active'));
+            if (chapterElements[targetIdx]) {
+                chapterElements[targetIdx].classList.add('active');
+            }
+            refreshAdminVersesList(flattenedChapterList[targetIdx].chapter)
+        }
+    }
+
+    function refreshAdminVersesList(chapterNum) {
+        const listButton = document.getElementById("ch-list-button");
+        listButton.innerHTML = `Chapter ${chapterNum}`;
+
+        const url = `/api/chapterShlokas?chapter=${chapterNum}`;
+        fetch(url)
+            .then(res => res.json())
+            .then(chapters => {
+                currentMeaningLanguage = 'en'
+                const listContainer = document.getElementById('verseList');
+                listContainer.innerHTML = '';
+                flattenedVerseList.length = 0
+                chapters.forEach(v => {
+                    const li = document.createElement('li');
+                    li.className = "verse-item dropdown-item d-flex justify-content-between align-items-center";
+                    li.dataset.verse = v.verse_number.toString();
+                    li.style = "cursor: pointer;"
+                    li.innerHTML = `<span><i class="fa-solid fa-book me-2"></i> Verse ${v.verse_number} </span> <i class="fa-solid fa-chevron-right text-muted small"></i>`;
+                    li.addEventListener('click', function() {
+                        document.querySelectorAll('.verse-item').forEach(item =>
+                            item.classList.remove('active'));
+                        this.classList.add('active');
+                        loadVerseToForm(v.id, v.chapter_number, v.verse_number)
+                    });
+                    listContainer.appendChild(li);
+                    flattenedVerseList.push({ id: v.id, chapter: v.chapter_number, verse: v.verse_number })
+                });
+                if (flattenedVerseList.length > 0) {
+                    loadVerseToForm(flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
+                }
+                const idx = flattenedChapterList.findIndex(item => item.chapter == chapterNum);
+                document.getElementById('chapter-prev-btn').disabled = (idx === 0);
+                document.getElementById('chapter-next-btn').disabled = (idx === flattenedChapterList.length - 1);
+            });
+    }
+
+    async function loadVerseToForm(id, ch, vn) {
+        // Set Verse Parameters
+        const url = `/api/singleverse/admin?chapter=${ch}&verse=${vn}`;
+        const res = await fetch(url);
+        const verse = await res.json();
+
+        const listButton = document.getElementById("verse-list-button");
+        listButton.innerHTML = `Verse ${ch}.${vn}`;
+
+        document.getElementById('form_verse_id').value = id;
+        document.getElementById('input_chapter').value = ch;
+        document.getElementById('input_verse_number').value = vn;
+        document.getElementById('input_shloka').value = verse.shloka;
+        // document.getElementById('input_youtube_url').value = verse.youtube_url;
+
+        // Cache coordinates to locate verse & commentaries
+        activeVerseChapterNum = parseInt(ch);
+        activeVerseNumber = parseInt(vn);
+
+        const idx = flattenedVerseList.findIndex(item => item.verse == vn);
+        document.getElementById('verse-prev-btn').disabled = (idx === 0);
+        document.getElementById('verse-next-btn').disabled = (idx === flattenedVerseList.length - 1);
+
+        // Set Meaning & YouTube Languages
+        // loadedMeaningLanguages = verse.meaning || {};
+        loadedMeaningLanguages["meaning"] = verse.meaning || {};
+        loadedMeaningLanguages["youTube"] = verse.youtube_url || {};
+        const keys = Object.keys(loadedMeaningLanguages["meaning"]);
+        const initialLang = keys.length > 0 ? keys[0] : null;
+        if (currentMeaningLanguage) {
+            updateMeaningLanguageDropdownOptions(currentMeaningLanguage);
+        } else {
+            updateMeaningLanguageDropdownOptions(initialLang);
+        }
+
+        // Loads the Acharya Commentary Block
+        loadCommentaryAcharya(ch,vn);
+    }
+
+    function navigateToAdjacentVerse(direction) {
+        // Calculate step boundaries to toggle control triggers
+        if (!activeVerseNumber) {
+            showToast("Load the Verse First", "warning");
+            return;
+        }
+        const currentIdx = flattenedVerseList.findIndex(item => item.verse == activeVerseNumber);
+        if (currentIdx === -1) return;
+        const targetIdx = currentIdx + direction;
+        if (targetIdx >= 0 && targetIdx < flattenedVerseList.length) {
+            const verseElements = document.querySelectorAll('.verse-item');
+            verseElements.forEach(item => item.classList.remove('active'));
+            if (verseElements[targetIdx]) {
+                verseElements[targetIdx].classList.add('active');
+            }
+            loadVerseToForm(flattenedVerseList[targetIdx].id, flattenedVerseList[targetIdx].chapter, flattenedVerseList[targetIdx].verse);
+        }
+    }
+
+    const langKeys = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit'}
+    function updateMeaningLanguageDropdownOptions(activeValue) {
+        const dropdown = document.getElementById('language-dropdown');
+        let htmlContent = '';
+        Object.keys(loadedMeaningLanguages["meaning"]).forEach(lang => {
+            htmlContent += `
+                <li>
+                    <button type="button" class="dropdown-item" onclick="loadMeaningLanguageContext('${lang}')">
+                        ${langKeys[lang]}
+                    </button>
+                </li>
+            `;
+        });
+        dropdown.innerHTML = htmlContent;
+
+        loadMeaningLanguageContext(activeValue);
+    }
+
+    function loadMeaningLanguageContext(langCode) {
+        currentMeaningLanguage = langCode;
+        document.getElementById('selected-meaning-language').textContent = langCode ? langKeys[langCode] : "None Loaded";
+        // document.getElementById('current-lang-title').textContent = langCode ? langKeys[langCode] : "None";
+
+        if (!langCode || !loadedMeaningLanguages["meaning"][langCode]) {
+            showToast("Load the Verse First", "warning");
+            document.getElementById('field-description').innerHTML = '';
+            document.getElementById('footnotes-table-body').innerHTML = '';
+            document.getElementById('anvayam-table-body').innerHTML = '';
+            return;
+        }
+
+        const meaningData = loadedMeaningLanguages["meaning"][langCode];
+        document.getElementById('field-description').innerHTML = meaningData.description || '';
+        // 1. Footnotes remains a regular dictionary mapping
+        renderFootnotesTable(meaningData.footnotes || {});
+
+        // 2. Anvayam is now an array list structure
+        renderAnvayamTable(meaningData.anvayam || []);
+
+        const youtubeData = loadedMeaningLanguages["youTube"][langCode];
+        renderYoutubeTable(youtubeData || {});
+    }
+
+    function addNewMeaningLanguage() {
+        const isActive = document.getElementById("acharya-pane").classList.contains('active')
+        if(isActive === true){
+            showToast("Shloka Section is not Active.", "danger");
+            return;
+        }
+        if (!activeVerseNumber) {
+            showToast("Load the Verse First", "warning");
+            return;
+        }
+        // Clear previous modal values before showing
+        document.getElementById('modalMeanLangInput').value = '';
+
+        // Initialize and show the non-blocking Bootstrap modal
+        if (!bootstrapLangModalInstance) {
+            bootstrapLangModalInstance = new bootstrap.Modal(document.getElementById('addMeanLanguageModal'));
+            document.getElementById("addMeanLanguageModalLabel").innerHTML = "Getting the Contents..."
+        }
+        bootstrapLangModalInstance.show();
+    }
+
+    async function submitNewLanguageForm() {
+        const rawInput = document.getElementById('modalMeanLangInput').value;
+        if (!rawInput) return;
+        const cleanCode = rawInput.trim().toLowerCase();
+
+        if (!(cleanCode in langKeys)) {
+            showToast("Type any of these languages (en, ta, sa) only", "warning");
+            return;
+        }
+        if (loadedMeaningLanguages["meaning"][cleanCode]) {
+            showToast(`Dataset Available for - ${langKeys[cleanCode]}.`, "warning");
+            return;
+        }
+        loadedMeaningLanguages["youTube"][cleanCode] = {};
+        showToast(`Dataset successfully created for Youtube - ${langKeys[cleanCode]}.`, "success");
+
+        document.getElementById('anvayam-table-body').innerHTML = "Getting Anvayam Table...";
+        document.getElementById('field-description').innerHTML = "Getting Description...";
+
+        const enText = loadedMeaningLanguages["meaning"]['en'].description
+        const payload = {
+            enText: enText
+        }
+        const url = '/api/translate';
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const description = await res.json();
+
+        loadedMeaningLanguages["meaning"][cleanCode] = { description: description, footnotes: {}, anvayam: [] };
+        updateMeaningLanguageDropdownOptions(cleanCode);
+        showToast(`Dataset successfully created for Meaning -  ${langKeys[cleanCode]}.`, "success");
+        // Close the layout modal panel instantly
+        if (bootstrapLangModalInstance) {
+            document.getElementById("addMeanLanguageModalLabel").innerHTML = "Add Language"
+            bootstrapLangModalInstance.hide();
+        }
+    }
+
+    // Global placeholder variable to reference the modal window execution context
+    let bootstrapDeleteModalInstance = null;
+    function deleteMeaningLanguage() {
+        const isActive = document.getElementById("acharya-pane").classList.contains('active')
+        if(isActive === true){
+            showToast("Shloka Section is not Active.", "danger");
+            return;
+        }
+        // Read the current language code target key text directly from your dashboard label state
+        const langCode = document.getElementById('selected-meaning-language').textContent.trim();
+
+        // Safety check: Exit instantly if no active language code exists or is set to default string
+        if (!langCode || langCode === "None Loaded") {
+            showToast("No active language loaded to delete.", "warning");
+            return;
+        }
+        if (currentMeaningLanguage === "en") {
+            showToast("default Language cannot be deleted.", "warning");
+            return;
+        }
+
+        // Inject the target code text into our confirmation message block dynamically
+        document.getElementById('modal-delete-lang-label').textContent = langCode.toUpperCase();
+
+        // Instantiate and launch the Bootstrap modal context box cleanly without halting browser threads
+        if (!bootstrapDeleteModalInstance) {
+            bootstrapDeleteModalInstance = new bootstrap.Modal(document.getElementById('deleteMeanLanguageModal'));
+        }
+        bootstrapDeleteModalInstance.show();
+    }
+
+    function submitDeleteLanguageForm() {
+        // 1. Resolve target data language code value to extract
+        const langValue = document.getElementById('selected-meaning-language').textContent.trim();
+
+        // Find the key
+        const langCode = Object.keys(langKeys).find(
+            key => langKeys[key] === langValue
+        );
+
+        // 2. Erase the dataset directly out of your memory state object tracker
+        delete loadedMeaningLanguages["meaning"][langCode];
+        delete loadedMeaningLanguages["youTube"][langCode];
+
+        // 3. Clear active values from the display form fields instantly
+        document.getElementById('youTube-table-body').innerHTML = '';
+        document.getElementById('field-description').innerHTML = '';
+        document.getElementById('footnotes-table-body').innerHTML = '';
+        document.getElementById('anvayam-table-body').innerHTML = '';
+
+        // 4. Recalculate remaining language keys available to autoload fallback entries
+        const keys = Object.keys(loadedMeaningLanguages["meaning"]);
+        const initialLang = keys.length > 0 ? keys[0] : null;
+
+        // 5. Re-render your clean memory strings into the active UI dropdown elements
+        updateMeaningLanguageDropdownOptions(initialLang);
+
+        // 6. Automatically point to the next existing language context item
+        if (!initialLang) {
+            document.getElementById('selected-meaning-language').textContent = "None Loaded";
+        }
+
+        // 7. Dismiss the delete confirmation structural modal screen instantly
+        if (bootstrapDeleteModalInstance) {
+            bootstrapDeleteModalInstance.hide();
+        }
+        showToast(`Dataset successfully removed for ${langValue}.`, "success");
+    }
+
+     // --- YOUTUBE URL (Dictionary Object) ---
+    function renderYoutubeTable(dictionaryData) {
+        const tbody = document.getElementById('youTube-table-body');
+        let htmlContent = '';
+        Object.entries(dictionaryData).forEach(([key, val]) => {
+            htmlContent += `
+                <tr class="youtube-row-item">
+                    <td>
+                        <input type="text" class="form-control form-control-sm fn-key-input fw-bold"
+                            form="meaning-language-form" value="${key}" required>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <div class="d-flex gap-2">
+                          <input type="url" class="input_youtube_url form-control form-control-sm fn-val-input "
+                          placeholder="https://youtube.com..." form="meaning-language-form" value="${val}" required>
+                          <button class="btn btn-sm btn-primary" type="button" onclick="playYoutube(event)">Play</button>
+                        </div>
+                        <div class="videoWrapper mt-2" style="display: none;">
+                            <div class="video-container mb-2">
+                                <iframe class="youtubePlayer" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button>
+                    </td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = htmlContent;
+    }
+
+    function addYouTubeRow() {
+        const langValue  = document.getElementById('selected-meaning-language').textContent
+        if (langValue === "None Loaded") {
+            showToast("No Active Language to Add Footer Row", "warning");
+            return;
+        }
+        const tbody = document.getElementById('youTube-table-body');
+        let htmlContent = tbody.innerHTML;
+        htmlContent += `
+                <tr class="youtube-row-item">
+                    <td>
+                        <input type="text" class="form-control form-control-sm fn-key-input fw-bold"
+                        placeholder="Speaker Name..." form="meaning-language-form" value="" required>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <div class="d-flex gap-2">
+                          <input type="url" class="input_youtube_url form-control form-control-sm fn-val-input"
+                          placeholder="https://youtube.com..." form="meaning-language-form" value="" required>
+                          <button class="btn btn-sm btn-primary" type="button" onclick="playYoutube(event)">Play</button>
+                        </div>
+                        <div class="videoWrapper mt-2" style="display: none;">
+                            <div class="video-container mb-2">
+                                <iframe class="youtubePlayer" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button>
+                    </td>
+                </tr>
+            `;
+        tbody.innerHTML = htmlContent;
+    }
+
+    // --- FOOTNOTES RENDER (Dictionary Object) ---
+    function renderFootnotesTable(dictionaryData) {
+        const tbody = document.getElementById('footnotes-table-body');
+        let htmlContent = '';
+        const CHARS_PER_ROW = 100;
+        Object.entries(dictionaryData).forEach(([key, val]) => {
+            // Compute an approximate initial row depth based on line-breaks to avoid layout recalculation
+            const textVal = String(val);
+            const segments = textVal.split('\n');
+            let estimatedLines = 0;
+            segments.forEach(segment => {
+                if (segment.length === 0) {
+                    estimatedLines += 1; // Empty line count
+                } else {
+                    // Factor in character length for long paragraphs without \n
+                    estimatedLines += Math.ceil(segment.length / CHARS_PER_ROW);
+                }
+            });
+            const rowsCount = Math.max(1, Math.min(estimatedLines, 10));
+            htmlContent += `
+                <tr class="footnote-row-item">
+                    <td>
+                        <input type="text" class="form-control form-control-sm fn-key-input fw-bold" value="${key}" required>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <!-- REMOVED: Immediate execution layout sizing; REMOVED: literal wrapping quotes -->
+                        <textarea class="form-control form-control-sm fn-val-input"
+                                  rows="${rowsCount}"
+                                  style="resize: vertical; min-width: 100%; white-space: pre-wrap; overflow-y;"
+                                  oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required>${val}</textarea>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button>
+                    </td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = htmlContent;
+    }
+
+    function addFootnoteRow() { // Accessible by changing the HTML button onclick to addFootnoteRow() if needed
+        const langValue  = document.getElementById('selected-meaning-language').textContent
+        if (langValue === "None Loaded") {
+            showToast("No Active Language to Add Footer Row", "warning");
+            return;
+        }
+        const tbody = document.getElementById('footnotes-table-body');
+        let htmlContent = tbody.innerHTML;
+        htmlContent += `
+            <tr class="footnote-row-item">
+                <td>
+                    <input type="text" class="form-control form-control-sm fn-key-input fw-bold" value="" required>
+                </td>
+                <td style="vertical-align: top;">
+                    <!-- REMOVED: Immediate execution layout sizing; REMOVED: literal wrapping quotes -->
+                    <textarea class="form-control form-control-sm fn-val-input"
+                              rows="3"
+                              style="resize: vertical; min-width: 100%; white-space: pre-wrap; overflow-y: hidden;"
+                              oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required></textarea>
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button>
+                </td>
+            </tr>
+        `;
+        tbody.innerHTML = htmlContent;
+    }
+
+    // --- ANVAYAM RENDER (Array List) ---
+    async function renderAnvayamTable(arrayData) {
+        const tbody = document.getElementById('anvayam-table-body');
+        tbody.innerHTML = '';
+
+        // 💡 FIX: Force a fallback if the data coming from the database is not an array
+        if (!Array.isArray(arrayData)) {
+            alert(`Expected an array for anvayam but received:", ${arrayData}`);
+            arrayData = []; // Reset to empty list so .forEach doesn't crash
+        }
+
+        if (currentMeaningLanguage){
+             document.getElementById("anvayam-th").innerText = 'Translation (' + currentMeaningLanguage + ')'
+        } else {
+            document.getElementById("anvayam-th").innerText = 'Translation (en)'
+        }
+
+        if (arrayData.length === 0) {
+            const enArrayData = loadedMeaningLanguages.meaning.en.anvayam
+            enArrayData.forEach(item => {
+                // Guard against string items or empty objects inside the array
+                const saText = item && typeof item === 'object' ? (item.sa || '') : '';
+                const enText = '';
+                tbody.appendChild(buildAnvayamRowMarkup(saText, enText));
+            });
+        } else {
+            arrayData.forEach(item => {
+                // Guard against string items or empty objects inside the array
+                const saText = item && typeof item === 'object' ? (item.sa || '') : '';
+                const enText = item && typeof item === 'object' ? (item.en || '') : '';
+                tbody.appendChild(buildAnvayamRowMarkup(saText, enText));
+            });
+        }
+    }
+
+    function addAnvayamRow() {
+        const langValue  = document.getElementById('selected-meaning-language').textContent
+        if (langValue === "None Loaded") {
+            showToast("No Active Language to Add Anvayam Row", "warning");
+            return;
+        }
+        const activeEl = document.activeElement;
+        const currentRow = activeEl.closest('tr');
+        // If cursor isn't in the table
+        if (currentRow) {
+            currentRow.insertAdjacentElement('afterend', buildAnvayamRowMarkup('', ''));
+        } else {
+            document.getElementById('anvayam-table-body').appendChild(buildAnvayamRowMarkup('', ''));
+        }
+    }
+
+    function buildAnvayamRowMarkup(saValue, enValue) {
+        const tr = document.createElement('tr');
+        tr.className = 'anvayam-row-item';
+        tr.innerHTML = `
+            <td style="white-space: pre-wrap;"><input type="text" class="form-control form-control-sm fn-key-input key-sanskrit" form="meaning-language-form" value="${saValue}" required></td>
+            <td style="white-space: pre-wrap;"><input type="text" class="form-control form-control-sm fn-val-input" form="meaning-language-form" value="${enValue}" required></td>
+            <td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button></td>
+        `;
+        return tr;
+    }
+
+    function shlokaFormValidate() {
+        const shlokaTextEl = document.getElementById("input_shloka");
+        const sText = shlokaTextEl.value;
+        if (sText.trim() === ''){
+            document.getElementById("a-shloka").click(); //Activate shloka-pane
+            shlokaTextEl.focus();
+            return false;
+        }
+
+        // Check for Field Description box for emptiness
+        const editor = document.getElementById('field-description');
+        const errorMsg = document.getElementById('desc-error-msg');
+        const content = editor.innerText.trim()
+        if (content === "") {
+            editor.classList.add('is-invalid'); // Turns the border red
+            errorMsg.classList.remove('d-none'); // Shows the error text
+            document.getElementById("a-shloka").click(); //Activate shloka-pane
+            editor.focus() ;
+            return false;                             // Stops the function here
+        }
+        // If text exists, remove error styles and deploy
+        editor.classList.remove('is-invalid');
+        errorMsg.classList.add('d-none');
+
+        const container ={
+            'a-shloka': ['.footnote-row-item' ],
+            'a-anvayam': ['.youtube-row-item', '.anvayam-row-item' ]
+        }
+        for (const [paneButton, list] of Object.entries(container)) {
+            for (const input of list) {
+                const fnKeyInputs = document.querySelectorAll(input + ' .fn-key-input');
+                for (const el of fnKeyInputs) {
+                    if (el.value === '') {
+                        document.getElementById(paneButton).click();
+                        el.focus();
+                        return false; // Safely halts the entire form submission
+                    }
+                }
+                const fnValInputs = document.querySelectorAll(input + ' .fn-val-input');
+                for (const el of fnValInputs) {
+                    if (el.value === '') {
+                        document.getElementById(paneButton).click();
+                        el.focus();
+                        return false; // Safely halts the entire form submission
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    // --- SCRAPING INTERFACE STATE ---
+    function saveCurrentFormContext(event) {
+        if (event) event.preventDefault();
+        if (!currentMeaningLanguage) {showToast("No active language workspace to save.", "warning"); return;}
+        const isActive = document.getElementById("acharya-pane").classList.contains('active')
+        if(isActive === true){
+            showToast("Shloka Section is not Active.", "danger");
+            return;
+        }
+
+        const isValid = shlokaFormValidate() //Validation step for shloka-pane and anvayam pane
+        if (isValid === false) return;
+
+        // Scrape YouTube object mapping
+        const youTube = scrapeYouTube();
+        if (youTube === false) return; // Halt on duplicate check
+
+        // Scrape footnotes object mapping
+        const footnotes = scrapeFootnotes();
+        if (footnotes === false) return; // Halt on duplicate check
+
+
+        // Scrape ordered anvayam array list
+        const anvayam = scrapeAnvayam();
+        if (anvayam.length === 0) {
+            showToast(`Anvayam Dataset for ${langKeys[currentMeaningLanguage["meaning"]]} is missing`, "warning")
+            return;
+        }
+
+        const editor = document.getElementById('field-description');
+        const content = cleanRichText(editor.innerHTML )
+
+        const meaningData =   {
+            description: content,
+            footnotes: footnotes,
+            anvayam: anvayam // Passes the clean list array straight back
+        }
+
+        loadedMeaningLanguages["meaning"][currentMeaningLanguage]  = meaningData
+        loadedMeaningLanguages["youTube"][currentMeaningLanguage]  = youTube
+        showToast(`Saved Dataset for ${langKeys[currentMeaningLanguage]}`, "success")
+    }
+
+    // Scrape helper for YouTube (Checking for duplicate numeric/string keys)
+    function scrapeYouTube() {
+        const outMap = {};
+        const rows = document.querySelectorAll('.youtube-row-item');
+
+        for (const row of rows) {
+            const key = row.querySelector('.fn-key-input').value.trim();
+            const val = row.querySelector('.fn-val-input').value.trim();
+
+            if (key) {
+                if (key in outMap) {
+                    showToast(`Youtube Speaker clash found: "${key}" used multiple times!`, "danger");
+                    return false;
+                }
+                outMap[key] = val;
+            }
+        }
+        return outMap;
+    }
+
+    // Scrape helper for Footnotes (Checking for duplicate numeric/string keys)
+    function scrapeFootnotes() {
+        const outMap = {};
+        const rows = document.querySelectorAll('.footnote-row-item');
+
+        for (const row of rows) {
+            const key = row.querySelector('.fn-key-input').value.trim();
+            let val = row.querySelector('.fn-val-input').value.trim();
+            val = cleanRichText(val)
+            if (key) {
+                if (key in outMap) {
+                    showToast(`Footnote key clash found: "${key}" used multiple times!`, "danger");
+                    return false;
+                }
+                outMap[key] = val;
+            }
+        }
+        return outMap;
+    }
+
+    // Scrape helper for Anvayam (Compiling a ordered sequential array list)
+    function scrapeAnvayam() {
+        const outList = [];
+        const rows = document.querySelectorAll('.anvayam-row-item');
+
+        rows.forEach(row => {
+            const sa = row.querySelector('.fn-key-input').value.trim();
+            const en = row.querySelector('.fn-val-input').value.trim();
+
+            // Only save rows that have at least one field filled out
+            if (sa || en) {
+                outList.push({
+                    'sa': sa,
+                    'en': en
+                });
+            }
+        });
+        return outList;
+    }
+
+    function sendMeaningPayloadToServer() {
+        const isActive = document.getElementById("acharya-pane").classList.contains('active')
+        if(isActive === true){
+            showToast("Shloka Section is not Active.", "danger");
+            return;
+        }
+        const verseId = parseInt(document.getElementById('form_verse_id').value);
+        const chNum = parseInt(document.getElementById('input_chapter').value);
+        const verseNum = parseInt(document.getElementById('input_verse_number').value);
+
+        const isValid = shlokaFormValidate() //Validation step for shloka-pane and anvayam pane
+        if (isValid === false) return;
+
+        const shloka = document.getElementById('input_shloka').value;
+
+        if (!activeVerseChapterNum || !activeVerseNumber) {
+            showToast("Load the Verse First", "warning");
+            return;
+        }
+        if (shloka.trim() === "") {
+            showToast("Shloka Cannot be Empty", "success");
+            return;
+        }
+        if (!validateMeaningLanguageWorkspaces(loadedMeaningLanguages["meaning"])) {
+            return; // Stop the database commit process if validation fails
+        }
+
+        const payload = {
+            chapter_number: chNum,
+            verse_number: verseNum,
+            meaning: loadedMeaningLanguages["meaning"],
+            youtube_urls : loadedMeaningLanguages["youTube"],
+            shloka: shloka.trim()
+        };
+
+        // Execution only reaches here if the function returned true
+        showToast("🗄️ All datasets verified! Committing data payload...", "success");
+
+        fetch('/api/meaning/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Server communication fault.");
+            return res.json();
+        })
+        .then(data => {
+            if (data.status === 'similar') {
+                showToast(data.message, "warning");
+            } else if (data.success) {
+                showToast("Database mapping operational!", "success");
+                loadVerseToForm(verseId,chNum,verseNum )
+            }
+        })
+        .catch(err => showToast(err.message, "danger"));
+    }
+
+    /**
+     * Validates that all language workspaces contain data.
+     * @param {Object} languagesObject - The dataset to validate (e.g., loadedMeaningLanguages)
+     * @returns {boolean} - Returns true if all datasets are complete, false if any empty fields exist.
+     */
+    function validateMeaningLanguageWorkspaces(languagesObject) {
+        // If the object itself is empty, null, or undefined, fail immediately
+        if (!languagesObject || Object.keys(languagesObject).length === 0) {
+            showToast("No language data found to validate.", "warning");
+            return false;
+        }
+        for (const [langCode, data] of Object.entries(languagesObject)) {
+            // Run individual emptiness checks
+            const isDescEmpty = !data.description || data.description.trim() === '';
+            // const isFnEmpty = !data.footnotes || Object.keys(data.footnotes).length === 0;
+            const isAnvEmpty = !data.anvayam || data.anvayam.length === 0;
+
+            // If any property inside this language is empty, block the pipeline
+            if (isDescEmpty || isAnvEmpty) {
+                // Resolve full name (e.g., 'Tamil') if global langKeys helper exists
+                const langName = (typeof langKeys !== 'undefined' && langKeys[langCode])
+                    ? langKeys[langCode]
+                    : langCode.toUpperCase();
+
+                showToast(`Validation Failed: The workspace for ${langName} has missing data.`, "warning");
+                return false; // Exit function early
+            }
+        }
+        return true; // Everything is clean and filled out
+    }
+
+    /* --- COMMENTARY ENGINE LOGIC --- */
+
+    function loadCommentaryAcharya(cNum,vNum) {
+        const url = `/api/acharya?chapter=${cNum}&verse=${vNum}`;
+        fetch(url).then(res => res.json()).then(data => {
+            document.querySelectorAll('.acharya-admin-div').forEach(item => item.textContent = "");
+            // data format: { "en": "content", "sa": "content" } or empty {}
+
+            if (data && Object.keys(data).length > 0) {
+                Object.entries(data).forEach(([acharya, langObj]) => {
+                    Object.entries(langObj).forEach(([langKey,langContent]) =>{
+                        createAcharyaRowElement(acharya, langKey, langContent);
+                    })
+                });
+            }
+        }).catch(() => {
+            // If endpoint doesn't exist yet, build layout fallback seamlessly
+            document.querySelectorAll('.acharya-admin-div').forEach(item => item.textContent = "");
+        });
+    }
+
+    function createAcharyaRowElement(acharya, langCode = '', contentText = '') {
+        const container = document.querySelector(`#${acharya} .acharya-admin-div`)
+        // const container = document.getElementById('dynamic-lang-fields-container');
+        const rowId = acharya +'_row_' + Date.now() + Math.floor(Math.random() * 100);
+        const div = document.createElement('div');
+        div.className = `p-2 border-bottom bg-light target-${acharya}-item`;
+        div.id = rowId;
+        const isDisabled = langCode === 'author' ? 'disabled' : '';
+        div.innerHTML =
+            `<div class="row g-1 align-items-center">
+                <div class="col-4">
+                    <input type="text" class="form-control form-control-sm fw-bold ${acharya}-key-input" placeholder="Language (e.g., en)" value="${langCode}" ${isDisabled} required>
+                </div>
+                <div class="col-8 text-end">
+                    ${langCode !== 'author' ?`
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeAcharyaFieldRow('${rowId}')" title="Delete Row"
+                            >Remove</button>
+                     `: ''}
+                </div>
+            </div>
+            <!-- 1. The Input Area with form-control and an empty placeholder style -->
+            <div ${langCode !== 'author' ?`contenteditable="true"`: ''} class="form-control mt-2 ${acharya}-value-input acharya-admin-text-div"
+               placeholder="This field is required...">${contentText}</div>
+            <!-- Error Message Display -->
+            <div class="${acharya}-error-msg text-danger small mt-1 d-none">Please fill out this field.</div>
+            `;
+        if (contentText === '') {
+            container.children[0].after(div);    //prepend(div); //Insert the Div as first Child
+        } else {
+            container.appendChild(div);
+        }
+
+    }
+
+    function addAcharyaFieldRow(acharya) {
+        // createLanguageRowElement('', '');
+        createAcharyaRowElement(acharya, 'en', '');
+    }
+
+    function removeAcharyaFieldRow(elementId) {
+        const row = document.getElementById(elementId);
+        if (row) {
+            row.remove();
+        }
+    }
+
+    async function commitAcharyaForm(event, acharya) {
+        event.preventDefault();
+        if (!acharya || !activeVerseChapterNum || !activeVerseNumber) return;
+        const langItems = document.querySelectorAll(`.target-${acharya}-item`);
+        const internalDictionaryPayload = {};
+        for (const item of langItems) {
+            const key = item.querySelector(`.${acharya}-key-input`).value.trim();
+            // const val = item.querySelector('.lang-value-input').value.trim();
+
+            // 1. Target your contenteditable div
+            const valEl = item.querySelector(`.${acharya}-value-input`);
+            const textContent = valEl.textContent;
+            let html = valEl.innerHTML;
+            const finalContent = cleanRichText(html);
+
+            const errorMsgEl = item.querySelector(`.${acharya}-error-msg`);
+             if (textContent === "") {
+                valEl.classList.add('is-invalid'); // Turns the border red
+                errorMsgEl.classList.remove('d-none'); // Shows the error text
+                valEl.focus();
+                return;
+            }
+            // If text exists, remove error styles and deploy
+            valEl.classList.remove('is-invalid');
+            errorMsgEl.classList.add('d-none');
+
+            if (key) {
+                // Check for duplicate
+                if (key in internalDictionaryPayload) {
+                    showToast("Duplicate Language Detected", "danger");
+                    return false; // 🛑 STOPS EVERYTHING. Exits the entire function instantly.
+                }
+                internalDictionaryPayload[key] = finalContent;
+            }
+        }
+
+        // Pack payload structural wrapper explicitly targeting database configurations
+        const finalPayload = {
+            chapter_number: activeVerseChapterNum,
+            verse_number: activeVerseNumber,
+            acharya: acharya,
+            commentary_data: internalDictionaryPayload
+        };
+
+        fetch('/api/commentaries/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(finalPayload)
+        })
+        .then(response => {
+            // 1. Parse the JSON body, but pass status along to handle errors cleanly
+            return response.json().then(data => {
+                if (!response.ok) {
+                    // Throw an error with the backend message if status code is 400, 403, 500, etc.
+                    throw new Error(data.error || 'Something went wrong');
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            // 2. Handle successful responses based on custom status keys
+            if (data.status === 'similar') {
+                showToast(data.message || "No changes detected.", "warning");
+            } else if (data.success) {
+                showToast(data.message || "Commentaries saved successfully!", "success");
+                loadCommentaryAcharya(activeVerseChapterNum, activeVerseNumber);
+            }
+        })
+        .catch(error => {
+            // 3. Capture and display network errors or thrown backend validation errors
+            console.error('Error updating commentaries:', error);
+            showToast(error.message, "danger");
+        });
+    }
+
+    function fetchGlobalComments() {
+        fetch('/api/comments/all')
+            .then(res => res.json())
+            .then(comments => {
+                const tbody = document.getElementById('adminCommentsTableBody');
+                tbody.innerHTML = '';
+                comments.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="fw-bold d-block text-dark">${c.student_name}</span><small class="text-muted">${c.student_email}</small></td>
+                        <td class="font-monospace text-secondary">CH ${c.chapter} - V ${c.verse_number}</td>
+                        <td><p class="mb-0 small text-dark" style="max-width:380px;">${c.text}</p><small class="text-muted" style="font-size:0.7rem;"><i class="fa-regular fa-clock me-1"></i>${c.timestamp}</small></td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-dark" onclick="openAdminCommentModal(${c.id}, \`${escapeString(c.text)}\`)"><i class="fa-solid fa-edit">edit</i></button>
+                                <button class="btn btn-outline-danger" onclick="deleteCommentEntry(${c.id})"><i class="fa-solid fa-trash-can">delete</i></button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+    }
+
+    function openAdminCommentModal(id, text) {
+        document.getElementById('target_modifier_comment_id').value = id;
+        document.getElementById('target_modifier_comment_text').value = text;
+        new bootstrap.Modal(document.getElementById('adminEditCommentModal')).show();
+    }
+
+    function submitAdminCommentUpdate() {
+        const id = document.getElementById('target_modifier_comment_id').value;
+        const text = document.getElementById('target_modifier_comment_text').value;
+
+        fetch(`/api/comments/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        }).then(res => {
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('adminEditCommentModal')).hide();
+                fetchGlobalComments();
+            }
+        });
+    }
+
+    function deleteCommentEntry(id) {
+        if (!confirm("Purge this student remark object from the registry feed?")) return;
+        fetch(`/api/comments/${id}`, { method: 'DELETE' }).then(res => { if (res.ok) fetchGlobalComments(); });
+    }
+
+    function escapeString(str) {
+        return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
+    function playYoutube(event) {
+        event.preventDefault();
+        const button = event.target; // Replaces 'this' safely
+
+        // 1. Find the input field inside the same input group
+        const inputGroup = button.parentElement;
+        const inputField = inputGroup.querySelector('.input_youtube_url');
+        const videoUrl = inputField ? inputField.value.trim() : '';
+
+        // 2. Find the video elements located directly after the input group
+        const wrapper = inputGroup.nextElementSibling; // Targets .videoWrapper
+        const player = wrapper ? wrapper.querySelector('.youtubePlayer') : null;
+
+        // Safety check to ensure elements exist in the DOM
+        if (!wrapper || !player) {
+            console.error("Video elements could not be found in the DOM.");
+            return;
+        }
+
+        if (button.innerText === "Play") {
+            if (videoUrl === '') {
+                showToast("YouTube URL Field is Blank", "warning");
+                return; // Stop function execution early
+            }
+
+            // Only update if the source changed to prevent reloading
+            if (player.src !== videoUrl) {
+                player.src = videoUrl;
+            }
+            wrapper.style.display = 'block';
+            button.innerText = "Hide";
+        }
+        // Condition 2: Button says "Hide"
+        else {
+            player.src = 'about:blank';
+            wrapper.style.display = 'none';
+            button.innerText = "Play";
+        }
+    }
+
+    function setStyle(command) {
+        document.execCommand(command, false, null);
+    }
+
+    // Check if the two objects are equal with respect to key value pairs
+    function deepObjEqual(obj1, obj2) {
+        // If both are the exact same primitive or reference
+        if (obj1 === obj2) return true;
+
+        // If one is not an object or is null, they are not equal
+        if (typeof obj1 !== 'object' || obj1 === null ||
+            typeof obj2 !== 'object' || obj2 === null) {
+            return false;
+        }
+
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+
+        if (keys1.length !== keys2.length) return false;
+
+        for (let key of keys1) {
+            // Recursively check keys and values
+            if (!keys2.includes(key) || !deepObjEqual(obj1[key], obj2[key])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+</script>
+{% endblock %}

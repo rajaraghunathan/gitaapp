@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Home - Bhagavad Gita Wisdom Repository{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+        <!-- Primary Public Shloka Reading Stream Feed Grid -->
+        <div>
+            <div class="bg-white p-4 rounded shadow-sm mb-4 border border-light text-center py-5" id="welcomeJumbotron">
+                <h2 class="text-secondary"><i class="fa-solid fa-yin-yang text-warning mb-3 d-block fa-2x"></i> Welcome to the Gita Portal</h2>
+                <p class="text-muted">Select an individual chapter entry from the side registry ledger matrix to parse spiritual wisdom elements immediately.</p>
+            </div>
+
+            <div id="versesFeedTarget">
+                <div class="border-top mb-2 pt-2">
+<!--                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="offcanvas" data-bs-target="#chapterMenu">MENU</button>-->
+                    {% if not session.get('user_id') %}
+                        <small class="text-secondary italic">Log in as a student to participate in classroom discussions or view streaming videos.</small>
+                    {% endif %}
+                </div>
+                <!-- Selected items generated sequentially using JavaScript loop configurations -->
+            </div>
+        </div>
+
+</div>
+
+
+
+<!-- Off Canvas -->
+<div class="offcanvas offcanvas-start" id="chapterMenu">
+    <div class="offcanvas-header">
+        <button id="canvasDismiss" type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div id="verseUrl" class="offcanvas-body">
+        <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                    <i class="fa-shield fa-folder-open me-2 text-warning">Bhagavad Gita</i>
+                    <i title="Click to View Chapter Summary" onclick = "loadSummary()" class="fa-shield fa-folder-open me-2 text-warning" style="cursor: pointer;" >Chapter Summary</i>
+                    <i id="sh" class="fa-solid fa-folder-open me-2 text-warning">Shlokas</i>
+                </div>
+                <div class="list-group list-group-flush scrollable-menu" id="homeChaptersList" style="max-height: 75vh; overflow-y: auto;">
+                    <!-- Hydrated cleanly from internal REST database query objects loops -->
+                </div>
+            </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/gita_index.js') }}"></script>
+{% endblock %}

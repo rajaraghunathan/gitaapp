@@ -1,0 +1,866 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid my-2 px-0">
+    <input type="hidden" id="form_verse_id" value="">
+    <input type="hidden" id="input_chapter">
+    <input type="hidden" id="input_verse_number">
+    <div class="text-center">
+        <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.1rem"></i>
+    </div>
+    <div class="d-flex w-100 align-items-center gap-2 px-2 py-2">
+        <div class="dropdown mb-0 me-auto">
+            <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">English</button>
+            <ul class="dropdown-menu">
+                <li><button id="en-lang" type="button" class="dropdown-item active" onclick="loadLang(event, 'en')">English</button></li>
+                <li><button id="ta-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'ta')">Tamil</button></li>
+                <li><button id="hi-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'hi')">Hindi</button></li>
+                <li><button id="te-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'te')">Telugu</button></li>
+            </ul>
+        </div>
+        <button class="btn btn-sm btn-primary flex-shrink-0" type="button" id="verse-prev-btn" onclick="navigateToAdjacentVerse(-1)">⬅️ Shloka</button>
+        <div class="dropdown flex-grow-1" style="min-width: 0;">
+            <button id="verse-list-button" type="button" class="btn btn-warning btn-sm dropdown-toggle text-truncate w-100"
+            data-bs-toggle="dropdown">
+            1.1 धृतराष्ट्र उवाच ...
+            </button>
+            <ul id="verseList" class="dropdown-menu"></ul>
+        </div>
+        <button class="btn btn-sm btn-primary flex-shrink-0" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">Shloka ➡️</button>
+    </div>
+    <div class="tab-content w-100 d-block" style="width: 100% !important;">
+        <!-- VERSE SECTION -->
+        <div class="container-fluid tab-pane active" id="s-pane" >
+            <div class="row">
+                <div class="col-sm-5 mb-2">
+                    <!-- Shloka Block -->
+
+                    <div id="shloka" class="carousel slide" data-bs-ride="carousel">
+                      <!-- The slideshow/carousel -->
+                      <div class="carousel-inner">
+
+                      </div>
+
+                      <!-- Left and right controls/icons -->
+                      <button class="carousel-control-prev" type="button" data-bs-target="#shloka" data-bs-slide="prev">
+                        <span style="color: black;"><-</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#shloka" data-bs-slide="next">
+                        <span style="color: black;">-></span>
+                      </button>
+                    </div>
+
+                    <div id="youtube-render-div">
+
+                    </div>
+
+                </div>
+                <div class="col-sm-7">
+                    <!-- Description Text Block -->
+                    <div class="card mb-2 p-2">
+                        <label class="form-label fw-bold">Description</label>
+                        <p id="field-description"></p>
+                    </div>
+                    <!-- Footnotes Table -->
+                    <div class="card mb-2 p-2">
+                        <label class="form-label fw-bold">Notes</label>
+                        <p id="footnotes-div"></p>
+                    </div>
+                    <!-- Anvayam Table Module -->
+                    <div class="card mb-2 p-2">
+                        <label class="form-label fw-bold">Word Meaning</label>
+                        <p id="anvayam-div"></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- COMMENTARY SECTION -->
+        <div class="container-fluid tab-pane fade" id="c-pane" >
+            <div id="acharya">
+                <div class="card">
+                  <div class="card-header">
+                    <span class="fw-bold text-dark">Commentary:</span>
+                    <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja">Sri Ramanuja</a>
+                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
+                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
+                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
+                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#siva">Sri Siva</a>
+                  </div>
+                  <div class="card-body">
+                      <div id="ramanuja" class="acharya-div collapse show" data-bs-parent="#acharya">Ramanuja Content</div>
+                      <div id="sankara" class="acharya-div collapse" data-bs-parent="#acharya">Sankara Content</div>
+                      <div id="madhava" class="acharya-div collapse" data-bs-parent="#acharya">Madhava Content</div>
+                      <div id="desika" class="acharya-div collapse" data-bs-parent="#acharya">Desika Content</div>
+                      <div id="siva" class="acharya-div collapse" data-bs-parent="#acharya">Siva Content</div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <!-- QUIZ SECTION -->
+        <div class="ccontainer-fluid tab-pane fade" id="quiz-pane">
+            <!-- Dynamic Overlay Container Layout for rendering Quiz Questions inline -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 id="quiz-h5">Interactive Quiz</h5>
+                </div>
+                <div id="quizQuestionsContainer" class="card-body overflow-y-auto" style="height: 60vh;">
+
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <p id="quizScore" class="mb-0 text-start" style="display: none;"></p>
+                    <div class="ms-auto d-flex gap-2">
+                        <button type="button" class="btn btn-success" onclick="loadActiveChapterQuiz(activeVerseChapterNum)">Refresh</button>
+                        <button type="button" class="btn btn-success" onclick="submitActiveQuizAnswers()">Submit Answers</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Student Comment Section -->
+        <div class="container-fluid tab-pane fade" id="comment-pane">
+            <div class="right-column">
+                <!-- Right Column Discussion and Editing Dashboard -->
+                <h5 style="color:#2c3e50; border-bottom:2px solid #f4edd2; padding-bottom:8px; margin-bottom:15px; margin-top:0;">Discussion Board</h5>
+                <div class="comments-list" id="commentsScrollContainer">
+                    <p class="no-data-notice">No active shloka currently loaded.</p>
+                </div>
+                <!-- Context-Aware Commenting Input Block -->
+                <div class="comment-input-area" id="inputActionArea" style="display: none;">
+                    <textarea class="comment-box" id="studentInputBox" placeholder="Type your personal reflection or question here..."></textarea>
+                    <button class="btn-submit-comment" id="commentSubmitBtn" onclick="submitStudentComment()">Post Reflection</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Off Canvas -->
+<div class="offcanvas offcanvas-start" id="studentMenu">
+    <div class="offcanvas-header">
+        {% if session.get('user_id') %}
+            <span style="font-size:0.85rem; color:#7f8c8d; font-weight:bold; margin-right:15px;">
+                🙏 Welcome, <span id="studentGreeting" class="text-primary">{% if student %}{{ student.name }}{% else %}Student{% endif %}</span> Portal
+            </span>
+        {% endif %}
+        <button class="btn btn-outline-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#studentPofileModal" onclick="loadStudentProfile()">Profile</button>
+        <button id="studentMenuDismiss" type="button" class="btn-close" data-bs-dismiss="offcanvas" ></button>
+    </div>
+    <span id="chapterName" class="chapterName">Chapter Name</span>
+    <div class="offcanvas-body">
+        <span class="chapters mb-2">CHAPTERS</span>
+        <div id="verseUrl" class="chapter-grid">
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=1">01</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=2">02</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=3">03</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=4">04</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=5">05</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=6">06</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=7">07</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=8">08</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=9">09</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=10">10</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=11">11</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=12">12</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=13">13</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=14">14</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=15">15</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=16">16</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=17">17</a>
+          <a class="chapter-a" href="/api/chapterShlokas?chapter=18">18</a>
+        </div>
+        <ul id="menuTabs" class="nav nav-pills mt-3">
+            <li class="nav-item">
+              <a class="nav-link active" data-bs-dismiss="offcanvas" data-bs-toggle="pill" href="#s-pane">Shloka</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-dismiss="offcanvas" data-bs-toggle="pill" href="#c-pane">Commentary</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-dismiss="offcanvas" data-bs-toggle="pill" href="#quiz-pane">Quiz</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-dismiss="offcanvas" data-bs-toggle="pill" href="#comment-pane">Discussion</a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- Modal 1: Student Profile Matrix -->
+<div class="modal fade" id="studentPofileModal" tabindex="-1" aria-labelledby="studentPofileModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fa-solid fa-user-plus me-2"></i>Student Account</h5>
+                <button id="studentPofileModal-close" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="studentProfileForm" onsubmit="updateStudentProfile(event, this)">
+                    <div class="row g-2">
+                        <span style="font-size:0.85rem; color: crimson; font-weight:bold;">Email: <span id="st-email" class="text-primary"></span></span>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Age</span>
+                            <input id="st-age" type="number" name="age" class="form-control" min="1" max="120" placeholder="Age...">
+                        </div>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Phone</span>
+                            <input id="st-phone" type="tel" name="phone" class="form-control" placeholder="........">
+                        </div>
+                        <div class="input-group input-group-sm mb-2">
+                            <span class="input-group-text">Gender</span>
+                            <select id="st-gender" name="gender" class="form-select">
+                                <option value="">Choose Option</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="input-group input-group-sm mb-2 mt-2">
+                            <span class="input-group-text">Address</span>
+                            <textarea id="st-address" name="address" class="form-control" rows="3" placeholder="Street layout details..."></textarea>
+                        </div>
+                    </div>
+                    <button id="update-button" type="submit" class="btn btn-success fw-bold">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let globalActiveChapter = 1;
+    let currentActiveId = null; //Active Verse id
+    let selectedAuthorKey = null;
+    let activeVerseChapterNum = null;
+    let activeVerseNumber = null;
+    let loadedMeaningLanguages = {};
+    let currentMeaningLanguage = null;
+    let flattenedVerseList = [];
+    let flattenedChapterList = [];
+    let currentEditingCommentId = null;
+    const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit', 'hi': 'Hindi', 'te': 'Telugu'}
+    const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa', 'Hindi': 'hi', 'Telugu': 'te'}
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const chapterClassList = document.querySelectorAll('.chapter-a');
+        chapterClassList.forEach(aElement => {
+            aElement.addEventListener('click',(event) => {
+                refreshAdminVersesList(event);
+            })
+        })
+        // Evaluate entry checkpoint tracking conditions to maintain persistent bookmarks
+        const urlParams = new URLSearchParams(window.location.search);
+        const chapterId = parseInt(urlParams.get('c_num'));
+        if (chapterId && chapterClassList[chapterId - 1]) {
+            chapterClassList[chapterId - 1].click();
+        } else if (chapterClassList[0]) {
+            chapterClassList[0].click();
+        }
+
+        // Select all tab pill links inside the menu
+        const tabLinks = document.querySelectorAll('#menuTabs .nav-link');
+        // Force the offcanvas to close when a tab link is clicked
+        tabLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById("studentMenuDismiss").click();
+            });
+        });
+    });
+
+    function lockDOM() {
+        document.getElementById('domLock').classList.add('active');
+    }
+    function unlockDOM() {
+        document.getElementById('domLock').classList.remove('active');
+    }
+
+    function refreshAdminVersesList(event) {
+        event.preventDefault();
+        const url = event.currentTarget.getAttribute('href');
+        fetch(url)
+            .then(res => res.json())
+            .then(chapters => {
+                const listContainer = document.getElementById("verseList");
+                listContainer.innerHTML = '';
+                flattenedVerseList.length = 0
+                chapters.forEach(v => {
+                    document.getElementById("chapterName").innerText = v.chapter_number + ") " + v.name
+                    document.getElementById('chapter-num').innerText = "Chapter-" + v.chapter_number + ": " + v.name
+                    const li = document.createElement('li');
+                    li.className = "verse-item dropdown-item d-flex justify-content-between align-items-center";
+                    li.dataset.verse = v.verse_number.toString();
+                    li.style = "cursor: pointer;"
+                    li.innerHTML = `<span><i class="fa-solid fa-book me-2"></i> Verse ${v.verse_number} </span> <i class="fa-solid fa-chevron-right text-muted small"></i>`;
+                    li.addEventListener('click', function() {
+                        document.querySelectorAll('.verse-item').forEach(item =>
+                            item.classList.remove('active'));
+                        this.classList.add('active');
+                        const selectedLang = document.getElementById("lang-dropdown").innerText;
+                        const lang = langKeys[selectedLang.trim()]
+                        loadVerse(lang, v.id, v.chapter_number, v.verse_number);
+                    });
+                    listContainer.appendChild(li);
+                    flattenedVerseList.push({ id: v.id, chapter: v.chapter_number, verse: v.verse_number })
+                });
+
+                // Evaluate entry checkpoint tracking conditions to maintain persistent bookmarks
+                const urlParams = new URLSearchParams(window.location.search);
+                const targetedId = parseInt(urlParams.get('verse_id'));
+                const chapterId = parseInt(urlParams.get('c_num'));
+                const verseId = parseInt(urlParams.get('v_num'));
+                if (targetedId && flattenedVerseList.some(item => item.id == targetedId)) {
+                    loadVerse("en", targetedId, chapterId, verseId);
+                    loadActiveChapterQuiz(chapterId);
+                } else if (flattenedVerseList.length > 0) {
+                    loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
+                    loadActiveChapterQuiz(flattenedVerseList[0].chapter);
+                }
+                document.getElementById("studentMenuDismiss").click();
+            });
+    }
+
+    async function loadVerse (lang, id, ch, vn) {
+        document.getElementById("field-description").innerText  = "Getting The Data From The Server..."
+        document.getElementById("footnotes-div").innerText  = ""
+        document.getElementById("anvayam-div").innerText  = ""
+        currentActiveId = parseInt(id);
+        document.getElementById('inputActionArea').style.display = 'block';
+        lockDOM();
+        const url = `/api/singleverse?chapter=${ch}&verse=${vn}&language=${lang}`;
+        // const res = await fetch(url);
+        // const verse = await res.json();
+        fetch(url).then(res => res.json()).then(verse => {
+            const listButton = document.getElementById("verse-list-button");
+            listButton.innerHTML = `${verse.chapter_number}.${verse.verse_number} ${verse.shloka.sa}`;
+
+            globalActiveChapter = parseInt(ch);
+            document.getElementById('form_verse_id').value = parseInt(id);
+            document.getElementById('input_chapter').value = parseInt(ch);
+            document.getElementById('input_verse_number').value = parseInt(vn);
+            // document.getElementById('input_shloka').innerText = verse.shloka;
+
+            const shlokaObj = verse.shloka
+            const shlokaCarousel = document.querySelector ("#shloka .carousel-inner");
+            shlokaCarousel.innerHTML = "";
+            let htmlContent = "";
+            Object.entries(shlokaObj).forEach(([key, val], index) => {
+                const activeClass = index === 0 ? 'active' : '';
+                htmlContent += `
+                    <div class="shloka-text card carousel-item ${activeClass}">
+                        <i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>
+                        <p>${val}</p>
+                    </div>
+                `;
+            });
+            shlokaCarousel.innerHTML = htmlContent;
+
+
+
+            const langDropdown = document.getElementById("lang-dropdown");
+            const dropdownMenu = langDropdown.closest('.dropdown');
+            dropdownMenu.querySelectorAll('.dropdown-item').forEach(li=>{
+                li.classList.remove('active')
+                if (li.textContent === langVals[lang]) {
+                    li.classList.add('active')
+                }
+            })
+
+            // Manage YouTube media player state
+            const YTData = verse.youtube_url ? verse.youtube_url[lang] : {};
+            renderYoutube (YTData);
+
+            // Cache coordinates to locate verse & commentaries
+            activeVerseChapterNum = parseInt(ch);
+            activeVerseNumber = parseInt(vn);
+
+            const idx = flattenedVerseList.findIndex(item => item.verse == vn);
+            document.getElementById('verse-prev-btn').disabled = (idx === 0);
+            document.getElementById('verse-next-btn').disabled = (idx === flattenedVerseList.length - 1);
+
+            loadedMeaningLanguages = verse.meaning || {};
+
+            const keys = Object.keys(loadedMeaningLanguages);
+            const initialLang = keys.length > 0 ? keys[0] : null;
+            loadMeaningLanguageContext(initialLang);
+            // updateMeaningLanguageDropdownOptions(initialLang);
+
+            // Loads the Acharya Commentary Block
+            loadCommentaryForAuthor(lang);
+
+            // Loads Student Comment Block
+            cancelInlineCommentEdit();
+            renderCommentsPane(id);
+        }).catch(err => console.error("Error retrieving verse details:", err))
+        .finally(() => {
+            unlockDOM();
+        });
+
+    }
+
+    function loadLang (event, lang) {
+        const id = document.getElementById('form_verse_id').value;
+        const ch = document.getElementById('input_chapter').value;
+        const vn = document.getElementById('input_verse_number').value;
+        if (!id) {
+            showToast("Load the Verse First");
+            return;
+        }
+        document.getElementById("lang-dropdown").innerText = langVals[lang];
+
+        const dropdownMenu = event.target.closest('.dropdown-menu');
+        dropdownMenu.querySelector('.dropdown-item.active')?.classList.remove('active');
+        event.target.classList.add('active');
+        loadActiveChapterQuiz(activeVerseChapterNum);
+        loadVerse (lang,id,ch,vn);
+    }
+
+    function navigateToAdjacentVerse(direction) {
+        // Calculate step boundaries to toggle control triggers
+        if (!activeVerseNumber) {
+            showToast("Load the Verse First", "warning");
+            return;
+        }
+        const currentIdx = flattenedVerseList.findIndex(item => item.verse == activeVerseNumber);
+        if (currentIdx === -1) return;
+        const targetIdx = currentIdx + direction;
+        if (targetIdx >= 0 && targetIdx < flattenedVerseList.length) {
+            const verseElements = document.querySelectorAll('.verse-item');
+            verseElements.forEach(item => item.classList.remove('active'));
+            if (verseElements[targetIdx]) {
+                verseElements[targetIdx].classList.add('active');
+            }
+            const selectedLang = document.getElementById("lang-dropdown").innerText;
+            const lang = langKeys[selectedLang.trim()]
+            loadVerse(lang, flattenedVerseList[targetIdx].id, flattenedVerseList[targetIdx].chapter, flattenedVerseList[targetIdx].verse)
+        }
+    }
+
+    function loadMeaningLanguageContext(langCode) {
+        currentMeaningLanguage = langCode;
+
+        if (!langCode || !loadedMeaningLanguages[langCode]) {
+            showToast("Load the Verse First", "warning");
+            document.getElementById('field-description').innerHTML = '';
+            document.getElementById('footnotes-div').innerHTML = '';
+            document.getElementById('anvayam-div').innerHTML = '';
+            return;
+        }
+
+        const data = loadedMeaningLanguages[langCode];
+        document.getElementById('field-description').innerHTML = data.description || '';
+        // 1. Footnotes remains a regular dictionary mapping
+        // renderFootnotesTable(data.footnotes || {});
+        renderFootnotes (data.footnotes || {});
+        // 2. Anvayam is now an array list structure
+        // renderAnvayamTable(data.anvayam || []);
+        renderAnvayam(data.anvayam || []);
+    }
+
+    function renderYoutube (YTData) {
+        const yDiv = document.getElementById('youtube-render-div');
+        let headerHtml = '';
+        let bodyHtml = '';
+        yDiv.innerHTML = '';
+        if (YTData && typeof YTData === 'object' && Object.keys(YTData).length > 0) {
+            let counter = 1;
+            Object.entries(YTData).map(([key, val]) => {
+                headerHtml += `
+                   <a class="btn btn-sm" data-bs-toggle="collapse" href="#y-link${counter}">${key}</a>
+                 `
+                bodyHtml += `
+                        <div id="y-link${counter}" class="youtube-div collapse ${counter===1 ?`show`: ''}" data-bs-parent="#youtube-render-div">
+                            <div class="video-container">
+                                <iframe id="youtubePlayer" width="560" height="315" src="${val}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                `
+                counter += 1
+            });
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            const cardHeader = document.createElement('div');
+            cardHeader.classList.add('card-header');
+            cardHeader.innerHTML = headerHtml;
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body p-0';
+            cardBody.innerHTML = bodyHtml;
+            cardDiv.appendChild(cardHeader).appendChild(cardBody);
+            yDiv.appendChild(cardDiv );
+        }
+    }
+
+
+
+    function renderFootnotes(objData) {
+        const fDiv = document.getElementById('footnotes-div');
+
+        // 1. Safe guard check: Ensure objData is defined, not null, and has keys
+        if (objData && typeof objData === 'object' && Object.keys(objData).length > 0) {
+
+            // 2. Map entries to strings, omitting the trailing separator issue
+            const footnoteLines = Object.entries(objData).map(([key, val]) => {
+                return `<strong>"${key}" : </strong>${val}`;
+            });
+
+            // 3. Join strings with <br> so the list is dense and clean
+            fDiv.innerHTML = footnoteLines.join('<br><br>') + '.';
+        } else {
+            fDiv.innerHTML = "<strong>Not Available</strong>";
+        }
+    }
+
+    function renderAnvayam(arrData) {
+        const anvayamDiv = document.getElementById('anvayam-div');
+
+        if (arrData && arrData.length > 0) {
+            // Create an array of formatted text strings
+            const textSegments = arrData.map(item => {
+                const saText = item && typeof item === 'object' ? (item.sa || '') : '';
+                const enText = item && typeof item === 'object' ? (item.en || '') : '';
+                return `<strong>${saText} - </strong>${enText}`;
+            });
+
+            // Join them with a semicolon and space, eliminating any trailing punctuation
+            anvayamDiv.innerHTML = textSegments.join('; ') + '.';
+        } else {
+            anvayamDiv.innerHTML = "<strong>Not Available</strong>";
+        }
+    }
+
+    /* --- COMMENTARY ENGINE LOGIC --- */
+    function resetCommentaryWorkspace() {
+        document.querySelectorAll('.acharya-div').forEach(item => item.textContent = "");
+    }
+
+    function loadCommentaryForAuthor(lang) {
+        if (!activeVerseChapterNum || !activeVerseNumber) {
+            alert("Please select or load a Verse from the records matrix first before editing commentaries.");
+            return;
+        }
+        document.querySelectorAll('.acharya-div').forEach(item =>
+            item.textContent = "Getting Commentary from Server..."
+        );
+        lockDOM();
+        const url = `/api/acharya/student?chapter=${activeVerseChapterNum}&verse=${activeVerseNumber}&language=${lang}`;
+        fetch(url).then(res => res.json()).then(data => {
+            resetCommentaryWorkspace()
+            document.querySelectorAll('.acharya-div').forEach((item, idx) => {
+                const author = data[item.id]['author'];
+                const status = data[item.id]['lang status'];
+                const acharyaText = data[item.id][lang];
+                let language = langVals[lang];
+                if (status === "No Translation") { language = langVals["en"]}
+                const commentary  = "<strong>" + author + ": (" + language + " - " +  status +")</strong><br><br>" + acharyaText;
+                const container = document.getElementById(item.id);
+                container.innerHTML = commentary;
+            })
+        }).catch(() => {
+            resetCommentaryWorkspace();
+        })
+        .finally(() => {
+            unlockDOM();
+        });
+    }
+
+    // Render verse-specific discussions chronologically
+    async function renderCommentsPane(vid) {
+        const container = document.getElementById('commentsScrollContainer');
+        container.innerHTML = '';
+
+        const res = await fetch(`/api/student_comments/${vid}`);
+        const data = await res.json();
+
+        const comments_data = data.comments
+        if (!comments_data || comments_data.length === 0) {
+            container.innerHTML = '<p class="no-data-notice">No reflections posted yet on this verse.</p>';
+            return;
+        }
+        comments_data.forEach(c => {
+            const item = document.createElement('div');
+            item.className = 'comment-item';
+
+            // Read current browser tracking identity safely from structural components
+            // (Matches string equality against context parameter values generated inside the loop framework)
+            let runtimeActionControls = '';
+
+            // Show operation controls if the current user owns this comment
+            // (Backend validates user ownership using the student's ID matched against session credentials)
+            runtimeActionControls = `
+                <div class="comment-actions">
+                    <span class="action-link" onclick="setupInlineCommentEdit(${c.id}, \`${escapeStringValue(c.text)}\`)">Edit</span>
+                    <span class="action-link delete-link" onclick="triggerCommentPurge(${c.id})">Delete</span>
+                </div>
+            `;
+            if(c.student_id !== data.current_user_id) {
+                runtimeActionControls = '';
+            }
+            item.innerHTML = `
+                <div class="comment-meta">
+                    <span>${c.student_name}</span>
+                    <span class="comment-time">${c.timestamp}</span>
+                </div>
+                <div class="comment-body" id="comment-text-view-${c.id}">${c.text}</div>
+                ${runtimeActionControls}
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    // Submit comment creation or operational revisions using the unified REST API route
+    function submitStudentComment() {
+        const box = document.getElementById('studentInputBox');
+        const textValue = box.value.trim();
+        if (!textValue) return;
+
+        if (currentEditingCommentId) {
+            // Execute Update payload transaction via standard PUT route mapping rules
+            fetch(`/api/comments/${currentEditingCommentId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textValue })
+            })
+            .then(res => {
+                if (res.ok) {
+                    loadVerse (currentMeaningLanguage, currentActiveId, activeVerseChapterNum, activeVerseNumber);
+                } else {
+                    alert("Modification operation rejected by server validation filters.");
+                }
+            });
+        } else {
+            // Execute standard Creation payload via POST endpoint routes
+            fetch('/api/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text: textValue,
+                    verse_id: currentActiveId
+                })
+            })
+            .then(res => {
+                if (res.ok) {
+                    box.value = '';
+                    loadVerse (currentMeaningLanguage, currentActiveId, activeVerseChapterNum, activeVerseNumber);
+                } else {
+                    alert("Could not process commentary registration parameters.");
+                }
+            });
+        }
+    }
+
+    function setupInlineCommentEdit(id, text) {
+        currentEditingCommentId = id;
+        const box = document.getElementById('studentInputBox');
+        box.value = text;
+        box.focus();
+        document.getElementById('commentSubmitBtn').innerText = "Update Reflection";
+    }
+
+    function cancelInlineCommentEdit() {
+        currentEditingCommentId = null;
+        document.getElementById('studentInputBox').value = '';
+        document.getElementById('commentSubmitBtn').innerText = "Post Reflection";
+    }
+
+    function triggerCommentPurge(id) {
+        if (!confirm("Permanently drop this reflection from the public stream?")) return;
+
+        fetch(`/api/comments/${id}`, { method: 'DELETE' })
+            .then(res => {
+                if (res.ok) {
+                    loadVerse (currentMeaningLanguage, currentActiveId, activeVerseChapterNum, activeVerseNumber);
+                } else {
+                    alert("Purge request rejected by processing filter layers.");
+                }
+            });
+    }
+
+    function escapeStringValue(str) {
+        return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
+    <!-- Built-in Sanskrit Text-To-Speech Pronunciation engine -->
+    function speakSanskritShloka(event) {
+        event.stopPropagation();
+        const shlokaText = event.target.nextElementSibling.innerText;
+        console.log(shlokaText)
+        // const shlokaText = document.getElementById('input_shloka').innerText;
+        if (!shlokaText) return;
+        const language = {'en':'en-IN', 'ta':'ta-IN','te':'te-IN','sa':'hi-IN'}
+        // Uses the browser's built-in Speech Synthesis utility function call
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(shlokaText);
+        utterance.lang = 'hi-IN'; // Sets phonetic rules directly to standard Indian dialect accents
+
+        utterance.rate = 0.85;  // Slightly slower for clearer pronunciation
+        utterance.pitch = 1.0; // Standard pitch
+        utterance.volume = 1.0; // Max volume target
+
+        // 🔥 FIX 4: Chrome/Android garbage collection bug fix
+        // Keeps the object alive in memory until speaking concludes
+        window.currentUtterance = utterance;
+
+        utterance.onend = function() {
+            window.currentUtterance = null;
+        };
+
+        utterance.onerror = function(e) {
+            console.error("Speech Synthesis Error:", e.error);
+        };
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // Asynchronous Quiz Generator Engine
+    function loadActiveChapterQuiz(ch) {
+        document.getElementById("quizScore").style.display = "none"
+        const selectedLang = document.getElementById("lang-dropdown").innerText;
+        const lang = langKeys[selectedLang.trim()]
+        fetch(`/api/quiz/${ch}/${lang}`)
+            .then(res => res.json())
+            .then(questions => {
+                const container = document.getElementById('quizQuestionsContainer');
+                container.innerHTML = '';
+
+                const h5QuizEl = document.getElementById("quiz-h5");
+                h5QuizEl.innerHTML = "";
+                if (questions.length === 0) {
+                    h5QuizEl.innerHTML = "Interactive Quiz - No evaluation assessments registered yet for this CH." + ch + " segment.";
+                    return;
+                }
+                h5QuizEl.innerHTML = "Interactive Quiz for CH." + ch + " segment.";
+                questions.forEach((q, idx) => {
+                    const qBlock = document.createElement('div');
+                    qBlock.className = 'mb-4 p-2 border-bottom border-light';
+                    qBlock.innerHTML = `
+                        <p class="fw-bold mb-2">Q${idx + 1}: ${q.question}</p>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="quiz_q_${q.id}" value="A" id="opt_a_${q.id}">
+                            <label class="form-check-label" for="opt_a_${q.id}" data-text="${q.A}">A) ${q.A}</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="quiz_q_${q.id}" value="B" id="opt_b_${q.id}">
+                            <label class="form-check-label" for="opt_b_${q.id}" data-text="${q.B}">B) ${q.B}</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="quiz_q_${q.id}" value="C" id="opt_c_${q.id}">
+                            <label class="form-check-label" for="opt_c_${q.id}" data-text="${q.C}">C) ${q.C}</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="quiz_q_${q.id}" value="D" id="opt_d_${q.id}">
+                            <label class="form-check-label" for="opt_d_${q.id}" data-text="${q.D}">D) ${q.D}</label>
+                        </div>
+                    `;
+                    qBlock.setAttribute('data-question-id', q.id);
+                    container.appendChild(qBlock);
+                });
+            });
+    }
+
+
+    async function submitActiveQuizAnswers() {
+        const inputs = document.querySelectorAll('#quizQuestionsContainer [data-question-id]');
+        const answersPayload = {};
+
+        if (inputs.length === 0) {
+            showToast("No evaluation assessments registered yet.", "warning");
+            return;
+        }
+        inputs.forEach(el => {
+            const qId = el.getAttribute('data-question-id');
+            const inputEls = document.querySelectorAll(`input[name="quiz_q_${qId}"]`);
+            inputEls.forEach(inputEl=>{
+                if (inputEl.checked) {
+                    const label = inputEl.nextElementSibling;
+                    answersPayload[qId] = label.dataset.text;
+                }
+            })
+        });
+
+
+        fetch('/api/quiz/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chapter: activeVerseChapterNum,
+                lang: currentMeaningLanguage,
+                answers: answersPayload
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const scoreEl = document.getElementById("quizScore")
+                scoreEl.style.display = "block";
+                const curScore = "<strong>Current Score: </strong>" + data["current_score"];
+                const overallScore = "<strong>Over All Score: </strong>" + data["overall_score"];
+                scoreEl.innerHTML = curScore + "; " + overallScore;
+                highlightQuizResult(data["correct_answers"]);
+            } else {
+                alert("Please answer the questions before submitting.");
+            }
+        });
+    }
+
+    function highlightQuizResult(resultRes) {
+        const inputs = document.querySelectorAll('#quizQuestionsContainer [data-question-id]');
+        inputs.forEach(el => {
+            const qId = el.getAttribute('data-question-id');
+            const inputEls = document.querySelectorAll(`input[name="quiz_q_${qId}"]`);
+            inputEls.forEach(inputEl=>{
+                const label = inputEl.nextElementSibling;
+                label.className = "form-check-label"
+                if (inputEl.checked) {
+                    if(resultRes[qId] === 'correct' ){
+                        label.classList.add('bg-success')
+                    } else {
+                        label.classList.add('bg-danger')
+                    }
+                }
+            })
+        });
+    }
+
+    function loadStudentProfile() {
+        document.querySelector ('#studentPofileModal .modal-title').innerText  ="Profile of " + "{{ student.name }}";
+        document.getElementById("st-email").innerText = "{{ student.email }}";
+        document.getElementById("st-age").value = "{{ student.age }}";
+        document.getElementById("st-phone").value = "{{ student.phone }}";
+        document.getElementById("st-address").value = "{{ student.address }}";
+        document.getElementById("st-gender").value = "{{ student.gender }}";
+    }
+
+    function updateStudentProfile(event, formElement) {
+        event.preventDefault();
+        const formData = new FormData(formElement);
+        const payload = {};
+        formData.forEach((value, key) => payload[key] = value);
+        payload['email'] = "{{ student.email }}";
+        payload['id'] = parseInt ("{{ student.id }}");
+
+        fetch('/api/auth/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json()).then(data => {
+            if(data.success) {
+                showToast(data.message, "success");
+                document.getElementById("studentPofileModal-close").click();
+                window.location.href = '/student-dashboard';
+            } else {
+                showToast(data.message, "warning");
+            }
+        })
+        .catch(err => alert("Network transmission breakdown: " + err));
+    }
+
+
+
+
+</script>
+{% endblock %}
