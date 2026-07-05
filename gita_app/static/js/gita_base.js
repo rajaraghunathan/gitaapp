@@ -8,6 +8,8 @@ function executeAuth(event, endpoint, formElement) {
         if (!otpVerified){
             showToast("Get OTP Verified First");
             return;
+        } else {
+            document.querySelector ('#studentRegisterForm input[name="email"]').disabled = false;
         }
     }
     const formData = new FormData(formElement);
@@ -38,15 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
             inputs.forEach(input => {
                 input.value = '';
                 input.checked = false;
+                input.disabled = false;
             });
 
             if (this.id === "studentRegisterModal") {
                 otpVerified = null;
-                document.getElementById("timer").textContent = "00:00"
                 document.getElementById('otp-button').textContent = 'Get OTP';
-                clearInterval(otpIntervalId);
-                otpIntervalId = null; // Clear the reference holder
-
+                document.querySelector ('#studentRegisterForm input[name="email"]').disabled = false;
             }
 
             if (this.id === "studentLoginModal") {
@@ -95,9 +95,10 @@ function getOtp(el) {
             body: JSON.stringify(emailValue)
         }).then(res => res.json()).then(data => {
             if(data.success === true) {
-                const display = document.querySelector('#otp-button');
+                document.getElementById('otp-button').textContent = "Submit OTP";
                 const timerEl = document.getElementById("timer")
-                startTimer(300, timerEl, display); // Timer Set in seconds
+                // startTimer(300, timerEl, display); // Timer Set in seconds
+                document.querySelector ('#studentRegisterForm input[name="email"]').disabled = true;
                 showToast(data.message, "success");
             } else {
                 showToast(data.message, "danger")
@@ -113,40 +114,15 @@ function getOtp(el) {
             if(data.success === true) {
                 otpVerified = "Verified";
                 el.textContent = "Verified";
-                clearInterval(otpIntervalId);
-                otpIntervalId = null; // Clear the reference holder
-                document.getElementById("timer").textContent = "00:00"
                 showToast(data.message, "success");
             } else {
+                if (data.session === false) {
+                  document.getElementById('otp-button').textContent = "Get OTP";
+                }
                 showToast(data.message, "danger")
             }
         })
     }
-}
-
-function userForgotPassword () {
-    document.getElementById("alert-msg").textContent = "";
-    const emailInput = document.querySelector('#studentLoginModal input[name="email"]');
-    const emailValue = emailInput.value;
-    if (emailValue === "" ) {
-        document.getElementById("alert-msg").textContent = "Enter Email First";
-        showToast("Enter Email First", "warning");
-        return;
-    }
-    fetch('/api/auth/forgotpassword', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailValue)
-    }).then(res => res.json().then(data => ({ status: res.status, body: data }))).then(msgObj=>{
-        if(msgObj.body.success === true) {
-            document.getElementById("resetPassForm").style.display = "block";
-            document.getElementById("alert-msg").textContent = "";
-            showToast(msgObj.body.message, "success")
-        } else {
-            document.getElementById("alert-msg").textContent = msgObj.body.message;
-            showToast(msgObj.body.message, "warning")
-        }
-    })
 }
 
 // 1. Create a global variable to hold the timer reference ID
@@ -181,6 +157,36 @@ function startTimer(duration, timerEl, display) {
             showToast("OTP Expired");
         }
     }, 1000);
+}
+
+function userForgotPassword () {
+    document.getElementById("alert-msg").textContent = "";
+    const emailInput = document.querySelector('#studentLoginModal input[name="email"]');
+    const emailValue = emailInput.value;
+    if (emailValue === "" ) {
+        document.getElementById("alert-msg").textContent = "Enter Email First";
+        showToast("Enter Email First", "warning");
+        return;
+    }
+    fetch('/api/auth/forgotpassword', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailValue)
+    }).then(res => res.json()).then(data => {
+        if(data.success === true) {
+            document.getElementById("resetPassForm").style.display = "block";
+            document.getElementById("alert-msg").textContent = "";
+            document.querySelector ('#studentLoginForm input[name="email"]').disabled = true;
+            showToast(data.message, "success")
+        } else {
+            if (data.session === true) {
+                document.getElementById("resetPassForm").style.display = "block";
+                document.querySelector ('#studentLoginForm input[name="email"]').disabled = true;
+            }
+            document.getElementById("alert-msg").textContent = data.message;
+            showToast(data.message, "warning")
+        }
+    })
 }
 
 function checkPasswordMatch() {
@@ -224,8 +230,13 @@ function studentPasswordReset(event,formElement) {
             showToast(data.message, "success");
             document.getElementById("alert-msg").textContent = "";
             document.getElementById("resetPassForm").style.display = "none";
+            document.querySelector ('#studentLoginForm input[name="email"]').disabled = false;
             document.querySelectorAll("#resetPassForm input").forEach(input=>{input.value = ""})
         } else {
+            if (data.session === false) {
+                document.getElementById("resetPassForm").style.display = "none";
+                document.querySelectorAll("#resetPassForm input").forEach(input=>{input.value = ""})
+            }
             document.getElementById("alert-msg").textContent = data.message
             showToast(data.message, "warning");
         }

@@ -2,17 +2,16 @@ import os
 from config import Config
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from dotenv import load_dotenv
-from database import db
+from database import db, mail, migrate
 from flask_migrate import Migrate
 from models import Chapter, Verse
-from email_utils import mail
 from deep_translator import GoogleTranslator
 
 from auth import user, admin, routes
 
-load_dotenv()
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# mail = Mail()
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
@@ -27,7 +26,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 db.init_app(app)
 
 # Initialize migration system
-migrate = Migrate()
 migrate.init_app(app, db)
 
 # Register blueprint
@@ -112,4 +110,3 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    # app.run(host='0.0.0.0', port=5000, debug=True)

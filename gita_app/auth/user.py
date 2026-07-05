@@ -1,14 +1,81 @@
-from django.contrib.messages.api import success
-
-import email_utils, random
+import random, re, resend, os
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template
-from database import db
+from flask_mail import Message
+from database import db, mail
 from models import Student, Verse, Comment
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from werkzeug.security import (generate_password_hash, check_password_hash)
 
 user = Blueprint("user", __name__)
+
+# Optimized hash set of major common email providers
+ALLOWED_DOMAINS = {"gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "zoho.com"}
+EMAIL_FORMAT_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+otp_expiry_time = 5 #in minutes
+def is_valid_email(email):
+    email = email.strip().lower()
+    if not re.match(EMAIL_FORMAT_REGEX, email):
+        # print("Validation failed: Bad string syntax formatting.")
+        return False
+
+    # Extract the domain name after the '@' sign safely
+    try:
+        username, domain = email.split('@', 1)
+    except ValueError:
+        return False
+
+    # Strict check against your trusted providers list
+    if domain not in ALLOWED_DOMAINS:
+        # print(f"Validation failed: Domain '{domain}' is not on the allowed list.")
+        return False
+
+    # Validation succeeded instantly
+    # print('validity', email)
+    return email
+
+def send_otp(email, otp, purpose):
+    try:
+        msg = Message(
+            subject=f"Gita {purpose} OTP",
+            recipients=[email]
+        )
+        msg.body = f"""
+        Hari Om,
+
+        Your One-Time Password (OTP) for {purpose} is: {otp}
+        This OTP is valid for 5 minutes.If you didn't request this, please ignore this email.
+
+        Regards,
+        Gita Team
+        """
+        mail.send(msg)
+    except Exception as e:
+        error_msg = f"Error sending OTP: {e}"
+        print(f"Error Sending Mail: {e}")
+
+resend.api_key = os.getenv("RESEND_API_KEY")
+def send_otp_resend(user_email, otp, purpose):
+    try:
+        params = {
+            "from": "onboarding@resend.dev",  # Or your verified domain
+            "to": user_email,
+            "subject": f"Gita {purpose} OTP",
+            "html":
+                f"""
+                Hari Om,<br><br>
+
+                Your One-Time Password (OTP) for {purpose} is: {otp} <br>
+                This OTP is valid for 5 minutes.If you didn't request this, please ignore this email. <br><br>
+
+                Regards,<br>
+                Gita Team<br>
+                """
+        }
+        email = resend.Emails.send(params)
+        print("Mail dispatched perfectly via HTTP API hook!")
+    except Exception as e:
+        print(f"Error Dispatching Mail: {e}")
 
 def generate_otp():
     return str(random.randint(100000, 999999))
@@ -26,7 +93,7 @@ def student_dashboard():
 def get_otp():
     email = request.get_json()
 
-    valid_email = email_utils.is_valid_email(email)
+    valid_email = is_valid_email(email)
     if not valid_email:
         return jsonify({"success": False, "message": 'Not a Valid Email'})
 
@@ -36,25 +103,25 @@ def get_otp():
     otp = generate_otp()
     purpose = 'Registration'
 
-    # email_utils.send_otp(valid_email, otp, purpose)
-
+    send_otp(valid_email, otp, purpose)
+    # print(valid_email,otp,purpose)
     session["temp_user"] = {
+        "email": email,
         "otp": otp,
         "otp_created_at": datetime.now().isoformat()  # isoformat converts datetime → string
     }
-    print(valid_email, session["temp_user"]["otp"], session["temp_user"]["otp_created_at"])
     return jsonify({"success": True, "message": "OTP Sent Successfully."})
 
 @user.route('/api/sumbit_otp', methods=['POST'])
 def get_otp_submit():
     if not session.get("temp_user"):
-        return jsonify({"success": False, "message": "OTP Expired"})
+        return jsonify({"success": False, "message": "OTP Expired", "session": False})
 
     # OTP expiration check
     otp_time = datetime.fromisoformat(session["temp_user"].get("otp_created_at"))
-    if datetime.now() - otp_time > timedelta(minutes=5):
+    if datetime.now() - otp_time > timedelta(minutes=otp_expiry_time):
         session.pop("temp_user", None)
-        return jsonify({"success": False, "message": "OTP Expired"})
+        return jsonify({"success": False, "message": "OTP Expired", "session": False})
 
     # OTP check
     otp = request.get_json()
@@ -72,9 +139,9 @@ def api_student_register():
     if Student.query.filter_by(email=email).first():
         return jsonify({"success": False, "message": "Email identity already deployed inside records."})
     password = str(data.get('password'))
-    hashed_password = generate_password_hash(str(data.get('password')), salt_length=16)
+    hashed_password = generate_password_hash(password, salt_length=16)
     student = Student(
-        name=data.get('name'), email=email, password=password,
+        name=data.get('name'), email=email, password=hashed_password,
         age=int(data.get('age')) if data.get('age') else None,
         phone=data.get('phone'), address=data.get('address'), gender=data.get('gender')
     )
@@ -113,8 +180,13 @@ def api_student_login():
 @user.route('/api/auth/forgotpassword', methods=['POST'])
 def api_student_forgot_password():
     email = request.get_json()
+    if session.get('new_password'):
+        otp_time = datetime.fromisoformat(session["new_password"].get("otp_created_at"))
+        session_email = session['new_password'].get('email')
+        if datetime.now() - otp_time < timedelta(minutes=otp_expiry_time) and email == session_email:
+            return jsonify({"success": False, "message": f'OTP already sent to email','session':True})
 
-    valid_email = email_utils.is_valid_email(email)
+    valid_email = is_valid_email(email)
     if not valid_email:
         return jsonify({"success": False, "message": 'Not a Valid Email'})
 
@@ -124,37 +196,46 @@ def api_student_forgot_password():
         purpose = 'Reset Password'
 
         session["new_password"] = {
+            'email': email,
             "otp": otp,
             "otp_created_at": datetime.now().isoformat()  # isoformat converts datetime → string
         }
-        # email_utils.send_otp(valid_email, otp, purpose)
-        print(purpose, otp)
+        send_otp(valid_email, otp, purpose)
+        # print(valid_email, otp, purpose)
         return jsonify({"success": True, "message": "OTP Sent to Your Email Address."})
     else:
         return jsonify({"success": False, "message": "Email Address not found. Please Register."})
 
 @user.route('/api/auth/changepassword', methods=['POST'])
 def api_student_password_change():
+    if not session.get('new_password'):
+        return jsonify({"success": False, "message": "OTP Expired", 'session': False})
+
     data = request.get_json() or {}
     email = data.get('email')
-    password = str(data.get('newpassword'))
+    password = str(data.get('password'))
     otp = data.get('otp')
-    student = Student.query.filter_by(email=email).first()
+
+    session_email = session['new_password'].get('email')
+    if session_email != email:
+        return jsonify({"success": False, "message": "Email Entry Mismatch"})
+
+    student = Student.query.filter_by(email=session_email).first()
     if not student:
         return jsonify({"success": False, "message": "Your Profile Does Not Exist. Please Register First"})
 
     # OTP expiration check
     otp_time = datetime.fromisoformat(session["new_password"].get("otp_created_at"))
-    if datetime.now() - otp_time > timedelta(minutes=5):
+    if datetime.now() - otp_time > timedelta(minutes=otp_expiry_time):
         session.pop("new_password", None)
-        return jsonify({"success": False, "message": "OTP Expired"})
+        return jsonify({"success": False, "message": "OTP Expired", 'session': False})
 
     if session["new_password"].get('otp') != otp:
         return jsonify({"success": False, "message": "OTP Mismatch"})
 
     session.pop('new_password', None)
     hashed_password = generate_password_hash(password, salt_length = 16)
-    student.password = password #hashed_password
+    student.password = hashed_password
     db.session.commit()
     return jsonify({"success": True, "message": "Password Updated Successfully."})
 
