@@ -139,7 +139,7 @@ def api_student_register():
     if Student.query.filter_by(email=email).first():
         return jsonify({"success": False, "message": "Email identity already deployed inside records."})
     password = str(data.get('password'))
-    hashed_password = generate_password_hash(password, salt_length=16)
+    hashed_password = generate_password_hash(password)
     student = Student(
         name=data.get('name'), email=email, password=hashed_password,
         age=int(data.get('age')) if data.get('age') else None,
@@ -213,9 +213,8 @@ def api_student_password_change():
 
     data = request.get_json() or {}
     email = data.get('email')
-    password = str(data.get('password'))
+    password = str(data.get('newPassword'))
     otp = data.get('otp')
-
     session_email = session['new_password'].get('email')
     if session_email != email:
         return jsonify({"success": False, "message": "Email Entry Mismatch"})
@@ -234,7 +233,7 @@ def api_student_password_change():
         return jsonify({"success": False, "message": "OTP Mismatch"})
 
     session.pop('new_password', None)
-    hashed_password = generate_password_hash(password, salt_length = 16)
+    hashed_password = generate_password_hash(password)
     student.password = hashed_password
     db.session.commit()
     return jsonify({"success": True, "message": "Password Updated Successfully."})

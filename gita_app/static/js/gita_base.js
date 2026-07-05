@@ -217,7 +217,7 @@ function studentPasswordReset(event,formElement) {
     const otp = document.getElementById("reset-otp").value;
     const payload = {
         "email": emailValue,
-        "newpassword": newPassword,
+        "newPassword": newPassword,
         "otp": otp
     };
     fetch('/api/auth/changepassword', {
