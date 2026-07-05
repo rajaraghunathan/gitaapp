@@ -162,8 +162,8 @@ def api_student_login():
     if not student:
         return jsonify({"success": False, "message": "Email Identity Not Registered"})
 
-    # is_valid_password = check_password_hash(student.password, password)
-    is_valid_password = (student.password == password)
+    is_valid_password = check_password_hash(student.password, password)
+    # is_valid_password = (student.password == password)
 
     if is_valid_password:
         v_id = student.last_verse_id
