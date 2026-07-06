@@ -132,4 +132,4 @@ class QuizScore(db.Model):
     total_questions = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     # Establish relationship to access student details easily
-    student = db.relationship('Student', backref=db.backref('scores', lazy=True))
+    student = db.relationship('Student', backref=db.backref('scores', cascade='all, delete-orphan', lazy=True))
