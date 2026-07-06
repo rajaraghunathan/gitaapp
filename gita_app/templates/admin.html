@@ -15,6 +15,9 @@
             <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
                 <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
             </button>
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Students
+            </button>
 
             <!-- Right Side: Integrated Text Styling Toolbar -->
             <div class="ms-auto d-flex align-items-center border-start ps-3 me-2" id="textToolbar">
@@ -326,6 +329,29 @@
                             <a href="/admin/export/comments" class="btn btn-success btn-sm mt-2"><i class="fa-solid fa-download me-1"></i> Export All Comments</a>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Tab Pane Student: Student Registration Details -->
+            <div class="tab-pane fade" id="student-pane" role="tabpanel" aria-labelledby="student-tab">
+                <h4 class="text-dark border-bottom pb-2 mb-3">Student Registration Details</h4>
+                <div class="table-responsive" style="max-height: 68vh; overflow-y: auto;">
+                    <table class="table table-striped align-middle border">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th class="text-center">Age</th>
+                                <th>Phone</th>
+                                <th class="text-center">Gender</th>
+                                <th class="text-center">Last Verse Id</th>
+                                <th class="text-center">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Loaded asynchronously Student Data -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -1407,6 +1433,33 @@
     function deleteCommentEntry(id) {
         if (!confirm("Purge this student remark object from the registry feed?")) return;
         fetch(`/api/comments/${id}`, { method: 'DELETE' }).then(res => { if (res.ok) fetchGlobalComments(); });
+    }
+
+     function fetchStudentList() {
+        fetch('/api/students/all')
+            .then(res => res.json())
+            .then(students => {
+                const tbody = document.getElementById('studentsTableBody');
+                tbody.innerHTML = '';
+                students.forEach(s => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${s.name}</td><td>${s.email}</td><td class="text-center">${s.age}</td>
+                        <td>${s.phone}</td><td class="text-center">${s.gender}</td><td class="text-center">${s.last_verse_id}</td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-danger" onclick="deleteStudentEntry(${s.id})"><i class="fa-solid fa-trash-can">delete</i></button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+    }
+
+    function deleteStudentEntry(id){
+        if (!confirm("Delete the Student from Database?")) return;
+        fetch(`/api/students/${id}`, { method: 'DELETE' }).then(res => { if (res.ok) fetchStudentList(); });
     }
 
     function escapeString(str) {

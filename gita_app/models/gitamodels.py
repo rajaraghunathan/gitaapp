@@ -88,8 +88,7 @@ class Student(db.Model):
     photo = db.Column(db.String(255), nullable=True, default='default_avatar.png')
     # State tracking: Stores the ID of the last viewed verse
     last_verse_id = db.Column(db.Integer, nullable=True)
-    comments = db.relationship('Comment', backref='student', lazy=True)
-
+    comments = db.relationship('Comment', backref='student', cascade='all, delete-orphan', lazy=True)
 
 # 3. Community Commentary Table
 class Comment(db.Model):

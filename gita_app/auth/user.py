@@ -85,7 +85,10 @@ def student_dashboard():
     if 'user_id' not in session:
         flash('Access Denied: Please login as a student.', 'danger')
         return redirect(url_for('home'))
-    student = db.get_or_404(Student, session['user_id'])
+    student = db.session.get(Student, session.get('user_id'))
+    if student is None:
+        session.clear()
+        return redirect(url_for('home'))
     # student = Student.query.get(session['user_id'])
     return render_template('student.html', student=student)
 

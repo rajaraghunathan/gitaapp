@@ -302,6 +302,23 @@ def get_all_comments_admin():
         "timestamp": c.timestamp.astimezone().strftime('%d-%b-%Y %I:%M %p') if c.timestamp else 'Just now'
     } for c in comments])
 
+@admin.route('/api/students/all', methods=['GET'])
+def get_all_students_admin():
+    if not session.get('admin_logged_in'): return jsonify({"error": "Unauthorized"}), 403
+    students = Student.query.order_by(Student.id).all()
+    return jsonify([{
+        k: v for k, v in student.__dict__.items() if not k.startswith('_')
+    } for student in students])
+
+@admin.route('/api/students/<int:sid>', methods=['DELETE'])
+def delete_student(sid):
+    student = Student.query.get_or_404(sid)
+    if not session.get('admin_logged_in'):
+        return jsonify({"error": "Unauthorized Access Rule"}), 403
+    db.session.delete(student)
+    db.session.commit()
+    return jsonify({"success": True})
+
 @admin.route('/admin/export/<string:data_type>')
 def admin_csv_export(data_type):
     if not session.get('admin_logged_in'):

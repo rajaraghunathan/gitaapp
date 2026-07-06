@@ -40,10 +40,7 @@ def allowed_file(filename):
 
 @app.route('/')
 def home():
-    if 'user_id' not in session:
-        return render_template('index.html',logged='no')
-    else:
-        return render_template('index.html', logged='yes')
+    return render_template('index.html')
 
 @app.route('/logout')
 def logout():

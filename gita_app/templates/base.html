@@ -212,8 +212,8 @@
     <!-- Script Components Packages -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
+<!-- using jinga This Script from base.html loads only in index.html -->
 {% if not session.get('admin_logged_in') and not session.get('user_id') %}
-    //using jinga This Script from base.html loads only in index.html
 <script src="{{ url_for('static', filename='js/gita_base.js') }}"></script>
 {% endif %}
 
