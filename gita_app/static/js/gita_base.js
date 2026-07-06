@@ -23,6 +23,9 @@ function executeAuth(event, endpoint, formElement) {
     .then(res => res.json().then(data => ({ status: res.status, body: data })))
     .then(resObj => {
         if(resObj.body.success === true) {
+            const modalElement = formElement.closest('.modal');
+            modalElement.querySelector('[data-bs-dismiss="modal"]').click();
+            // window.location.replace(resObj.body.redirect);
             window.location.href = resObj.body.redirect;
         } else {
             showToast("Authentication Error: " + (resObj.body.message || "Operation Rejected"),"danger")

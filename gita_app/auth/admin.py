@@ -16,7 +16,7 @@ ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')
 def admin_dashboard():
     if not session.get('admin_logged_in'):
         flash('Access Denied: Admin authorization required.', 'danger')
-        return redirect(url_for('admin.home'))
+        return redirect(url_for('home'))
     return render_template('admin.html')
 
 @admin.route('/api/auth/admin', methods=['POST'])

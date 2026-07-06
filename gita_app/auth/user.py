@@ -244,7 +244,7 @@ def api_student_password_change():
 @user.route('/api/auth/update', methods=['POST'])
 def api_student_update():
     if 'user_id' not in session:
-        return redirect(url_for('home'))
+        return jsonify({"success": False, "message": "Session expired. Please log in again.", "redirect": url_for('home')}), 401
     data = request.get_json() or {}
     email = data.get('email')
     student = Student.query.filter_by(email=email).first()

@@ -854,6 +854,9 @@
                 window.location.href = '/student-dashboard';
             } else {
                 showToast(data.message, "warning");
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1500);
             }
         })
         .catch(err => alert("Network transmission breakdown: " + err));

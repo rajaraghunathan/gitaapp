@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from dotenv import load_dotenv
 from database import db, mail, migrate
 from flask_migrate import Migrate
-from models import Chapter, Verse
+from models import Chapter, Verse, Student
 from deep_translator import GoogleTranslator
 
 from auth import user, admin, routes
@@ -40,7 +40,11 @@ def allowed_file(filename):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    if 'user_id' not in session:
+        return render_template('index.html')
+    else:
+        student = db.session.get(Student, session.get('user_id'))
+        return render_template('index.html', student=student)
 
 @app.route('/logout')
 def logout():
