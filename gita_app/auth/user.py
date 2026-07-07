@@ -89,8 +89,19 @@ def student_dashboard():
     if student is None:
         session.clear()
         return redirect(url_for('home'))
-    # student = Student.query.get(session['user_id'])
-    return render_template('student.html', student=student)
+
+    v_id = student.last_verse_id
+    if v_id is None:
+        return render_template('student.html', student=student)
+    else:
+        verse = Verse.query.filter_by(id=v_id).first()
+        c_num = verse.chapter_number
+        v_num = verse.verse_number
+        return render_template('student.html', student=student,
+            verse_id=v_id,
+            c_num=c_num,
+            v_num=v_num
+        )
 
 @user.route('/api/get_otp', methods=['POST'])
 def get_otp():
@@ -169,14 +180,10 @@ def api_student_login():
     # is_valid_password = (student.password == password)
 
     if is_valid_password:
-        v_id = student.last_verse_id
-        verse = Verse.query.filter_by(id=v_id).first()
-
-        c_num = verse.chapter_number
-        v_num = verse.verse_number
         session.clear()
         session['user_id'] = student.id
-        redirect_url = f"/student-dashboard?verse_id={v_id}&c_num={c_num}&v_num={v_num}" if v_id else "/student-dashboard"
+        # redirect_url = f"/student-dashboard?verse_id={v_id}&c_num={c_num}&v_num={v_num}" if v_id else "/student-dashboard"
+        redirect_url = f"/student-dashboard"
         return jsonify({"success": True, "redirect": redirect_url})
     return jsonify({"success": False, "message": "Invalid password entry"})
 

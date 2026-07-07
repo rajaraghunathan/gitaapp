@@ -111,7 +111,7 @@
                                             <div class="mb-2">
                                                 <label class="form-label fw-bold">Description Text Context</label>
                                                 <!-- Small Button Toolbar Container -->
-                                                <div id="field-description" contenteditable="true" class="form-control mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 50px;" placeholder="This field is required...">
+                                                <div id="field-description" contenteditable="true" class="form-control mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 50px;">
 
                                                 </div>
                                                 <div id="desc-error-msg" class="text-danger small mt-1 d-none">Please fill out this field.</div>
@@ -168,124 +168,89 @@
                             <!-- Acharya Comments FORM -->
                             <div class="tab-pane fade" id="acharya-pane" role="tabpanel">
                                 <div id="acharya">
-                                <div class="card">
-                                  <div class="card-header">
-                                    <span class="fw-bold text-dark">Commentary:</span>
-                                    <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja">Sri Ramanuja</a>
-                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
-                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
-                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
-                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#siva">Sri Siva</a>
-                                  </div>
-                                  <div class="card-body p-0">
-                                      <div id="ramanuja" class="collapse show" data-bs-parent="#acharya">
-                                          <div class="card">
-                                            <div class="card-header bg-light d-flex align-items-center justify-content-between" >
-                                                <button type="submit" form="ramanuja-form" class="btn btn-sm btn-primary fw-bold">Update Ramanuja Commentaries</button>
-                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('ramanuja')">+ Add Language</button>
-                                            </div>
-                                            <div class="card-body bg-white">
-                                                <form id="ramanuja-form" onsubmit="commitAcharyaForm(event, 'ramanuja')">
-                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Ramanuja</span></h6>
-                                                    <div class="acharya-admin-div"></div>
-                                                </form>
-                                            </div>
-                                        </div>
+                                    <div class="card">
+                                      <div class="card-header">
+                                        <span class="fw-bold text-dark">Commentary:</span>
+                                        <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja">Sri Ramanuja</a>
+                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
+                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
+                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
+                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#siva">Sri Siva</a>
                                       </div>
-                                      <div id="sankara" class="collapse" data-bs-parent="#acharya">
-                                          <div class="card shadow-sm border border-secondary-subtle">
-                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                <button type="submit" form="sankara-form" class="btn btn-sm btn-primary fw-bold">Update Sankara Commentaries</button>
-                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('sankara')">+ Add Language</button>
+                                      <div class="card-body p-0">
+                                          <div id="ramanuja" class="collapse show" data-bs-parent="#acharya">
+                                              <div class="card">
+                                                <div class="card-header bg-light d-flex align-items-center justify-content-between" >
+                                                    <button type="submit" form="ramanuja-form" class="btn btn-sm btn-primary fw-bold">Update Ramanuja Commentaries</button>
+                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('ramanuja')">+ Add Language</button>
+                                                </div>
+                                                <div class="card-body bg-white">
+                                                    <form id="ramanuja-form" onsubmit="commitAcharyaForm(event, 'ramanuja')">
+                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Ramanuja</span></h6>
+                                                        <div class="acharya-admin-div"></div>
+                                                    </form>
+                                                </div>
                                             </div>
-                                            <div class="card-body bg-white p-3">
-                                                <form id="sankara-form" onsubmit="commitAcharyaForm(event, 'sankara')">
-                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Sankara</span></h6>
-                                                    <div class="acharya-admin-div"></div>
-                                                </form>
+                                          </div>
+                                          <div id="sankara" class="collapse" data-bs-parent="#acharya">
+                                              <div class="card shadow-sm border border-secondary-subtle">
+                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                    <button type="submit" form="sankara-form" class="btn btn-sm btn-primary fw-bold">Update Sankara Commentaries</button>
+                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('sankara')">+ Add Language</button>
+                                                </div>
+                                                <div class="card-body bg-white p-3">
+                                                    <form id="sankara-form" onsubmit="commitAcharyaForm(event, 'sankara')">
+                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Sankara</span></h6>
+                                                        <div class="acharya-admin-div"></div>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                          </div>
+                                          <div id="madhava" class="collapse" data-bs-parent="#acharya">
+                                              <div class="card shadow-sm border border-secondary-subtle">
+                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                    <button type="submit" form="madhava-form" class="btn btn-sm btn-primary fw-bold">Update Madhava Commentaries</button>
+                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('madhava')">+ Add Language</button>
+                                                </div>
+                                                <div class="card-body bg-white p-3">
+                                                    <form id="madhava-form" onsubmit="commitAcharyaForm(event, 'madhava')">
+                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Madhava</span></h6>
+                                                        <div class="acharya-admin-div"></div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                          </div>
+                                          <div id="desika" class="collapse" data-bs-parent="#acharya">
+                                              <div class="card shadow-sm border border-secondary-subtle">
+                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                    <button type="submit" form="desika-form" class="btn btn-sm btn-primary fw-bold">Update Desika Commentaries</button>
+                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('desika')">+ Add Language</button>
+                                                </div>
+                                                <div class="card-body bg-white p-3">
+                                                    <form id="desika-form" onsubmit="commitAcharyaForm(event, 'desika')">
+                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Desika</span></h6>
+                                                        <div class="acharya-admin-div"></div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                          </div>
+                                          <div id="siva" class="collapse" data-bs-parent="#acharya">
+                                              <div class="card shadow-sm border border-secondary-subtle">
+                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                    <button type="submit" form="siva-form" class="btn btn-sm btn-primary fw-bold">Update Siva Commentaries</button>
+                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('siva')">+ Add Language</button>
+                                                </div>
+                                                <div class="card-body bg-white p-3">
+                                                    <form id="siva-form" onsubmit="commitAcharyaForm(event, 'siva')">
+                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Siva</span></h6>
+                                                        <div class="acharya-admin-div"></div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                          </div>
                                       </div>
-                                      <div id="madhava" class="collapse" data-bs-parent="#acharya">
-                                          <div class="card shadow-sm border border-secondary-subtle">
-                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                <button type="submit" form="madhava-form" class="btn btn-sm btn-primary fw-bold">Update Madhava Commentaries</button>
-                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('madhava')">+ Add Language</button>
-                                            </div>
-                                            <div class="card-body bg-white p-3">
-                                                <form id="madhava-form" onsubmit="commitAcharyaForm(event, 'madhava')">
-                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Madhava</span></h6>
-                                                    <div class="acharya-admin-div"></div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                      </div>
-                                      <div id="desika" class="collapse" data-bs-parent="#acharya">
-                                          <div class="card shadow-sm border border-secondary-subtle">
-                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                <button type="submit" form="desika-form" class="btn btn-sm btn-primary fw-bold">Update Desika Commentaries</button>
-                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('desika')">+ Add Language</button>
-                                            </div>
-                                            <div class="card-body bg-white p-3">
-                                                <form id="desika-form" onsubmit="commitAcharyaForm(event, 'desika')">
-                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Desika</span></h6>
-                                                    <div class="acharya-admin-div"></div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                      </div>
-                                      <div id="siva" class="collapse" data-bs-parent="#acharya">
-                                          <div class="card shadow-sm border border-secondary-subtle">
-                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                <button type="submit" form="siva-form" class="btn btn-sm btn-primary fw-bold">Update Siva Commentaries</button>
-                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('siva')">+ Add Language</button>
-                                            </div>
-                                            <div class="card-body bg-white p-3">
-                                                <form id="siva-form" onsubmit="commitAcharyaForm(event, 'siva')">
-                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Siva</span></h6>
-                                                    <div class="acharya-admin-div"></div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                      </div>
-                                  </div>
+                                    </div>
                                 </div>
-                            </div>
-<!--                                <div class="card shadow-sm border border-secondary-subtle">-->
-<!--                                    <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">-->
-<!--                                        <div class="d-flex align-items-center gap-2">-->
-<!--                                            <span class="fw-bold text-dark small">Commentary:</span>-->
-<!--                                            <div class="dropdown sticky">-->
-<!--                                                <button class="btn btn-outline-dark btn-sm dropdown-toggle fw-bold" type="button" id="commentaryMenuButton" data-bs-toggle="dropdown">-->
-<!--                                                    Select Author-->
-<!--                                                </button>-->
-<!--                                                <ul class="dropdown-menu" id="dynamic-author-menu">-->
-<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('ramanuja')">ramanuja</a></li>-->
-<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('sankara')">sankara</a></li>-->
-<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('madhava')">madhava</a></li>-->
-<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('desika')">desika</a></li>-->
-<!--                                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCommentaryForAuthor('siva')">siva</a></li>-->
-<!--                                                </ul>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <button type="button" class="btn btn-xs btn-success py-1 px-2 small d-none" id="addLangRowBtn" onclick="addLanguageFieldRow()">+ Add Language</button>-->
-<!--                                    </div>-->
-<!--                                    <div class="card-body bg-white p-3">-->
-<!--                                        <p class="text-muted text-center small my-2" id="commentary-placeholder">Please select an author from the dropdown menu to manage their commentaries.</p>-->
-
-<!--                                        &lt;!&ndash; Dynamic Action Form &ndash;&gt;-->
-<!--                                        <form id="active-commentary-form" class="d-none" onsubmit="commitCommentaryForm(event)">-->
-<!--                                            <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span id="current-active-author" class="text-primary fw-bold"></span></h6>-->
-
-<!--                                            &lt;!&ndash; Dynamic inputs render target workspace &ndash;&gt;-->
-<!--                                            <div id="dynamic-lang-fields-container"></div>-->
-
-<!--                                            <div class="text-end border-top pt-2 mt-3">-->
-<!--                                                <button type="submit" class="btn btn-sm btn-primary fw-bold">Update Commentaries</button>-->
-<!--                                            </div>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -440,6 +405,18 @@
     document.addEventListener("DOMContentLoaded", () => {
         initializeChapterList();
     });
+    // window.addEventListener('pageshow', function (event) {
+    //   // 1. Get the latest navigation performance entry
+    //   const navigationEntry = performance.getEntriesByType("navigation")[0];
+    //   // 2. Check if the page loaded from the browser cache (bfcache)
+    //   const isCached = event.persisted;
+    //   // 3. Check if the navigation type is explicitly back/forward
+    //   const isBackForward = navigationEntry && navigationEntry.type === 'back_forward';
+    //   // 4. Force a fresh server reload if either condition is met
+    //   if (isCached || isBackForward) {
+    //     window.location.reload();
+    //   }
+    // });
 
     function cleanRichText(htmlInput) {
         // 1. Convert non-breaking space characters and literals into normal spaces
@@ -575,6 +552,17 @@
         // Set Verse Parameters
         const url = `/api/singleverse/admin?chapter=${ch}&verse=${vn}`;
         const res = await fetch(url);
+        if (res.status === 403) {
+            localStorage.clear();
+            sessionStorage.clear();
+            showToast("Unauthorized access (403)","danger");
+            setInterval(function () {window.location.href = '/';}, 1000);
+            throw new Error("Unauthorized access (403)");
+        }
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const verse = await res.json();
 
         const listButton = document.getElementById("verse-list-button");
@@ -1385,7 +1373,14 @@
     }
 
     function fetchGlobalComments() {
-        fetch('/api/comments/all')
+        const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        fetch('/api/comments/all',{
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json',
+            'X-User-Timezone': userTimezone // <-- Sends timezone to the backend
+            }
+        })
             .then(res => res.json())
             .then(comments => {
                 const tbody = document.getElementById('adminCommentsTableBody');

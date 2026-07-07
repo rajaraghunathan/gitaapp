@@ -2,8 +2,7 @@ import os, json, uuid, re, requests, io, csv
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template, make_response
 from database import db
 from models import Student, Verse, AcharyaComment, Comment
-from sqlalchemy import and_
-from sqlalchemy.orm.attributes import flag_modified
+from zoneinfo import ZoneInfo
 
 admin = Blueprint("admin", __name__)
 
@@ -67,20 +66,6 @@ def get_acharya_comment_admin():
     if session.get('admin_logged_in') :
         chapter_number = request.args.get('chapter', type=int)
         verse_number = request.args.get('verse', type=int)
-        # acharya = request.args.get('acharya')
-
-        # 2. Security Check: Prevent SQL injection or attribute errors
-        # Ensure the string matches an actual column name on your model
-        # if not hasattr(AcharyaComment, acharya):
-        #     return jsonify({})
-
-        # 3. Grab the dynamic column object using getattr()
-        # target_column = getattr(AcharyaComment, acharya)
-
-        # result = (db.session.query(target_column).where(
-        #     AcharyaComment.chapter_number == chapter_number,
-        #     AcharyaComment.verse_number == verse_number)
-        #           .scalar())
         result = db.session.execute(db.select(AcharyaComment)
         .where(AcharyaComment.chapter_number == chapter_number, AcharyaComment.verse_number == verse_number)
             ).scalar()
@@ -295,11 +280,16 @@ def update_commentaries():
 @admin.route('/api/comments/all', methods=['GET'])
 def get_all_comments_admin():
     if not session.get('admin_logged_in'): return jsonify({"error": "Unauthorized"}), 403
+    user_tz_name = request.headers.get('X-User-Timezone', 'UTC')
+    try:
+        user_zone = ZoneInfo(user_tz_name)
+    except Exception:
+        user_zone = ZoneInfo('UTC')  # Fallback if timezone name is unrecognized
     comments = Comment.query.order_by(Comment.timestamp.desc()).all()
     return jsonify([{
         "id": c.id, "text": c.text, "student_name": c.student.name, "student_email": c.student.email,
         "chapter": c.verse.chapter_number, "verse_number": c.verse.verse_number,
-        "timestamp": c.timestamp.astimezone().strftime('%d-%b-%Y %I:%M %p') if c.timestamp else 'Just now'
+        "timestamp": c.timestamp.astimezone(user_zone).strftime('%d-%b-%Y %I:%M %p') if c.timestamp else 'Just now'
     } for c in comments])
 
 @admin.route('/api/students/all', methods=['GET'])

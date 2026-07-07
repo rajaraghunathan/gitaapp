@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from auth.admin import safe_translate_large_text #customized function
 from deep_translator import GoogleTranslator
 from translate import dynamic_sanskrit_transliterate #customized function
+from zoneinfo import ZoneInfo
 
 routes = Blueprint("routes", __name__)
 
@@ -136,6 +137,11 @@ def get_single_verse_user():
 @routes.route('/api/student_comments/<int:vid>', methods=['GET'])
 def get_student_comments(vid):
     if 'user_id' not in session: return jsonify({"error": "Unauthorized"}), 401
+    user_tz_name = request.headers.get('X-User-Timezone', 'UTC')
+    try:
+        user_zone = ZoneInfo(user_tz_name)
+    except Exception:
+        user_zone = ZoneInfo('UTC')  # Fallback if timezone name is unrecognized
 
     v = Verse.query.get_or_404(vid)
     if 'user_id' in session:
@@ -151,7 +157,7 @@ def get_student_comments(vid):
         for c in sorted_comments:
             # Safe inline check: Use formatting if timestamp is valid, otherwise provide a fallback string
             # formatted_time = c.timestamp.strftime('%d-%b-%Y %I:%M %p') if c.timestamp else 'Just now'
-            formatted_time = c.timestamp.astimezone().strftime('%d-%b-%Y %I:%M %p') if c.timestamp else 'Just now'
+            formatted_time = c.timestamp.astimezone(user_zone).strftime('%d-%b-%Y %I:%M %p') if c.timestamp else 'Just now'
             comments_data.append({
                 "id": c.id,
                 "text": c.text,

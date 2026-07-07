@@ -254,8 +254,7 @@
             })
         })
         // Evaluate entry checkpoint tracking conditions to maintain persistent bookmarks
-        const urlParams = new URLSearchParams(window.location.search);
-        const chapterId = parseInt(urlParams.get('c_num'));
+        const chapterId = {{ c_num or 'null' }}
         if (chapterId && chapterClassList[chapterId - 1]) {
             chapterClassList[chapterId - 1].click();
         } else if (chapterClassList[0]) {
@@ -309,10 +308,9 @@
                 });
 
                 // Evaluate entry checkpoint tracking conditions to maintain persistent bookmarks
-                const urlParams = new URLSearchParams(window.location.search);
-                const targetedId = parseInt(urlParams.get('verse_id'));
-                const chapterId = parseInt(urlParams.get('c_num'));
-                const verseId = parseInt(urlParams.get('v_num'));
+                const targetedId = {{ verse_id or 'null' }}
+                const chapterId = {{ c_num or 'null' }}
+                const verseId = {{ v_num or 'null' }}
                 if (targetedId && flattenedVerseList.some(item => item.id == targetedId)) {
                     loadVerse("en", targetedId, chapterId, verseId);
                     loadActiveChapterQuiz(chapterId);
@@ -332,9 +330,19 @@
         document.getElementById('inputActionArea').style.display = 'block';
         lockDOM();
         const url = `/api/singleverse?chapter=${ch}&verse=${vn}&language=${lang}`;
-        // const res = await fetch(url);
-        // const verse = await res.json();
-        fetch(url).then(res => res.json()).then(verse => {
+        fetch(url).then(res => {
+            if (res.status === 403) {
+                localStorage.clear();
+                sessionStorage.clear();
+                showToast("Unauthorized access (403)","danger");
+                setInterval(function () {window.location.href = '/';}, 1000);
+                throw new Error("Unauthorized access (403)");
+            }
+            if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        }).then(verse => {
             const listButton = document.getElementById("verse-list-button");
             listButton.innerHTML = `${verse.chapter_number}.${verse.verse_number} ${verse.shloka.sa}`;
 
@@ -358,8 +366,6 @@
                 `;
             });
             shlokaCarousel.innerHTML = htmlContent;
-
-
 
             const langDropdown = document.getElementById("lang-dropdown");
             const dropdownMenu = langDropdown.closest('.dropdown');
@@ -571,8 +577,15 @@
     async function renderCommentsPane(vid) {
         const container = document.getElementById('commentsScrollContainer');
         container.innerHTML = '';
+        const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const res = await fetch(`/api/student_comments/${vid}`, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json',
+            'X-User-Timezone': userTimezone // <-- Sends timezone to the backend
+            }
+        });
 
-        const res = await fetch(`/api/student_comments/${vid}`);
         const data = await res.json();
 
         const comments_data = data.comments

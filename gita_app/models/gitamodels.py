@@ -102,7 +102,6 @@ class Comment(db.Model):
     verse_id = db.Column(db.Integer, db.ForeignKey('verse.id'), nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
 
-
 class QuizQuestion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chapter = db.Column(db.Integer, nullable=False)

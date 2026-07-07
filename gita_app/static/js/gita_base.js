@@ -99,7 +99,6 @@ function getOtp(el) {
         }).then(res => res.json()).then(data => {
             if(data.success === true) {
                 document.getElementById('otp-button').textContent = "Submit OTP";
-                const timerEl = document.getElementById("timer")
                 // startTimer(300, timerEl, display); // Timer Set in seconds
                 document.querySelector ('#studentRegisterForm input[name="email"]').disabled = true;
                 showToast(data.message, "success");
@@ -126,40 +125,6 @@ function getOtp(el) {
             }
         })
     }
-}
-
-// 1. Create a global variable to hold the timer reference ID
-let otpIntervalId = null;
-function startTimer(duration, timerEl, display) {
-    let timer = duration, minutes, seconds;
-
-    // 2. SAFETY CHECK: If a timer is already running, kill it before starting a new one
-    if (otpIntervalId !== null) {
-        clearInterval(otpIntervalId);
-    }
-
-    otpIntervalId = setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-        timerEl.textContent = minutes + ":" + seconds;
-        display.textContent = "Submit OTP";
-
-        // 3. Check if the time has run out
-        if (--timer < 0) {
-            // Stop the loop completely
-            clearInterval(otpIntervalId);
-            otpIntervalId = null; // Clear the reference holder
-
-            // Add your expired actions here
-            display.textContent = "Get OTP";
-            timerEl.textContent = "00:00";
-            otpVerified = null;
-            showToast("OTP Expired");
-        }
-    }, 1000);
 }
 
 function userForgotPassword () {
