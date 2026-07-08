@@ -311,8 +311,9 @@
                 const targetedId = {{ verse_id or 'null' }}
                 const chapterId = {{ c_num or 'null' }}
                 const verseId = {{ v_num or 'null' }}
+                const lang = `{{ language }}`
                 if (targetedId && flattenedVerseList.some(item => item.id == targetedId)) {
-                    loadVerse("en", targetedId, chapterId, verseId);
+                    loadVerse(lang, targetedId, chapterId, verseId);
                     loadActiveChapterQuiz(chapterId);
                 } else if (flattenedVerseList.length > 0) {
                     loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
@@ -372,7 +373,8 @@
             dropdownMenu.querySelectorAll('.dropdown-item').forEach(li=>{
                 li.classList.remove('active')
                 if (li.textContent === langVals[lang]) {
-                    li.classList.add('active')
+                    li.classList.add('active');
+                    document.getElementById("lang-dropdown").innerText = langVals[lang];
                 }
             })
 
@@ -383,6 +385,7 @@
             // Cache coordinates to locate verse & commentaries
             activeVerseChapterNum = parseInt(ch);
             activeVerseNumber = parseInt(vn);
+            currentMeaningLanguage = lang;
 
             const idx = flattenedVerseList.findIndex(item => item.verse == vn);
             document.getElementById('verse-prev-btn').disabled = (idx === 0);
@@ -582,7 +585,8 @@
             method: 'GET',
             headers: {
             'Content-Type': 'application/json',
-            'X-User-Timezone': userTimezone // <-- Sends timezone to the backend
+            'X-User-Timezone': userTimezone, // <-- Sends timezone to the backend
+            'lang':currentMeaningLanguage
             }
         });
 

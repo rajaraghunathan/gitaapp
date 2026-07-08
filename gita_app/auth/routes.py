@@ -138,6 +138,8 @@ def get_single_verse_user():
 def get_student_comments(vid):
     if 'user_id' not in session: return jsonify({"error": "Unauthorized"}), 401
     user_tz_name = request.headers.get('X-User-Timezone', 'UTC')
+    language = request.headers.get('lang', 'en')
+    session['language'] = language
     try:
         user_zone = ZoneInfo(user_tz_name)
     except Exception:

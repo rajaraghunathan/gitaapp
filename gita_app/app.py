@@ -87,8 +87,15 @@ def get_chapter_and_verses():
         cols_to_skip_in_verse = {'youtube_url', 'comments'}
         c_dict = {k: v for k, v in chapter.__dict__.items()
                   if not k.startswith('_') and k not in cols_to_skip_in_chapter}
-        v_dict = {k: v for k, v in verse.__dict__.items()
-                  if not k.startswith('_') and k not in cols_to_skip_in_verse}
+        v_dict = {
+            'id': verse.id,
+            'chapter_number': verse.chapter_number,
+            'verse_number': verse.verse_number,
+            'shloka': verse.shloka,
+            'description': verse.meaning.get('en').get('description')
+        }
+        # v_dict = {k: v for k, v in verse.__dict__.items()
+        #           if not k.startswith('_') and k not in cols_to_skip_in_verse}
         verses_list.append(c_dict | v_dict)
     return jsonify(verses_list)
 
