@@ -2,7 +2,6 @@ import re, pprint, os, json
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import declarative_base, sessionmaker
 from models.gitamodels import Verse
-from app import app, db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_INPUT_PATH = os.path.join(BASE_DIR, "json using codes", "chapter6_webscrap.json")

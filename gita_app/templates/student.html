@@ -64,7 +64,7 @@
                         <p id="field-description"></p>
                     </div>
                     <!-- Footnotes Table -->
-                    <div class="card mb-2 p-2">
+                    <div class="card mb-2 p-2" style="display: none;">
                         <label class="form-label fw-bold">Notes</label>
                         <p id="footnotes-div"></p>
                     </div>
@@ -510,15 +510,16 @@
 
         // 1. Safe guard check: Ensure objData is defined, not null, and has keys
         if (objData && typeof objData === 'object' && Object.keys(objData).length > 0) {
-
+            fDiv.closest(".card").style.display = 'block';
             // 2. Map entries to strings, omitting the trailing separator issue
             const footnoteLines = Object.entries(objData).map(([key, val]) => {
                 return `<strong>"${key}" : </strong>${val}`;
             });
 
             // 3. Join strings with <br> so the list is dense and clean
-            fDiv.innerHTML = footnoteLines.join('<br><br>') + '.';
+            fDiv.innerHTML = footnoteLines.join('<br><br>');
         } else {
+            fDiv.closest(".card").style.display = 'none';
             fDiv.innerHTML = "<strong>Not Available</strong>";
         }
     }
