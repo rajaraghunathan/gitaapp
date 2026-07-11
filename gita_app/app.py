@@ -3,8 +3,8 @@ from config import Config
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from dotenv import load_dotenv
 from database import db, mail, migrate
-from models import Chapter, Verse, Student
-from deep_translator import GoogleTranslator
+from models import Chapter, Verse, Student, AcharyaComment
+from translate import text_translate_google, batch_translate_google, translate_large_text_with_google
 
 from auth import user, admin, routes
 
@@ -102,18 +102,67 @@ def get_chapter_and_verses():
 @app.route('/api/translate', methods=['POST'])
 def translate_text_stream():
     data = request.get_json() or {}
-    text_to_translate = data.get('text', '').strip()
-    target_language = data.get('lang', 'en').strip() # Defaults to English ('en')
+    text = data.get('enText', '').strip()
+    anvayam = data.get('enAnvayam', [])
+    source = data.get('sourceLang', 'en').strip()
+    target = data.get('targetLang', 'en').strip()
 
-    if not text_to_translate:
-        return jsonify({"success": False, "message": "No text provided"}), 400
+    translated_description, success_text = text_translate_google(text, source, target)
+    translated_anvayam, success_batch = batch_translate_google(anvayam, source, target)
 
-    try:
-        # Built-in function call handles the text translation matrix locally
-        translated_result = GoogleTranslator(source='auto', target=target_language).translate(text_to_translate)
-        return jsonify({"success": True, "translated_text": translated_result})
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+    if success_text and success_batch:
+        return jsonify({
+            "success": True,
+            "translated_text": translated_description,
+            "translated_anvayam": translated_anvayam
+        }), 200
+
+    error_details = []
+    if not success_text:
+        error_details.append(f"Main text error: {translated_description}")
+    if not success_batch:
+        error_details.append(f"Batch items error: {translated_anvayam}")
+
+    return jsonify({
+        "success": False,
+        "message": "Translation processing failed.",
+        "details": " | ".join(error_details)
+    }), 500
+
+@app.route('/api/admin/acharya_translate', methods=['POST'])
+def get_acharya_translate_admin():
+    data = request.get_json() or {}
+    acharya = str(data.get('acharya'))
+    chapter_number = data.get('chapter_number')
+    verse_number = data.get('verse_number')
+    target_lang = data.get('targetLang', 'en').strip()
+
+    record = (db.session.query(AcharyaComment).filter(
+        AcharyaComment.chapter_number == chapter_number,
+        AcharyaComment.verse_number == verse_number
+    ).first())
+    acharya_dict = getattr(record, acharya)
+    if acharya_dict.get('sa'):
+        source_lang = 'sa'
+        commentary = acharya_dict.get('sa')
+    else:
+        source_lang = 'en'
+        commentary = acharya_dict.get('en')
+    if commentary:
+        translated_commentary, success = translate_large_text_with_google(commentary, source_lang, target_lang)
+    else:
+        translated_commentary, success = translate_large_text_with_google("", source_lang, target_lang)
+    if success:
+        return jsonify({
+            "success": True,
+            "translated_text": translated_commentary
+        }), 200
+    else:
+        return jsonify({
+            "success": False,
+            "message": "Translation processing failed.",
+            "details": f"Main text error: {translated_commentary}"
+        }), 500
 
 with app.app_context():
     db.create_all()

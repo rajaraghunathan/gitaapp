@@ -16,7 +16,13 @@ def admin_dashboard():
     if not session.get('admin_logged_in'):
         flash('Access Denied: Admin authorization required.', 'danger')
         return redirect(url_for('home'))
-    return render_template('admin.html')
+    if not session.get('temp'):
+        return render_template('admin.html')
+    else:
+        vid = session['temp'].get('id')
+        chapter = session['temp'].get('chapter')
+        verse = session['temp'].get('verse')
+        return render_template('admin.html',vid=vid,chapter=chapter,verse=verse)
 
 @admin.route('/api/auth/admin', methods=['POST'])
 def api_admin_login():
@@ -36,6 +42,11 @@ def get_single_verse_admin():
              .where(Verse.chapter_number == chapter_number, Verse.verse_number == verse_number)
              .scalar())
     v_dict = {k: v for k, v in verse.__dict__.items() if not k.startswith('_')}
+    session['temp'] = {
+        'id': verse.id,
+        'chapter': chapter_number,
+        'verse': verse_number
+    }
     return jsonify(v_dict)
 
 @admin.route('/api/meaning/update', methods=['POST']) #Finalised & Working

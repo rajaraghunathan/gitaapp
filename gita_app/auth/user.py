@@ -98,7 +98,8 @@ def student_dashboard():
         c_num = verse.chapter_number
         v_num = verse.verse_number
         language = session.get('language', 'en')
-        return render_template('student.html', student=student,
+        return render_template('student.html',
+            student=student,
             verse_id=v_id,
             c_num=c_num,
             v_num=v_num,

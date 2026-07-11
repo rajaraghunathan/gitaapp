@@ -312,11 +312,18 @@
                 const chapterId = {{ c_num or 'null' }}
                 const verseId = {{ v_num or 'null' }}
                 const lang = `{{ language }}`
+                const verseList = document.querySelectorAll('.verse-item')
                 if (targetedId && flattenedVerseList.some(item => item.id == targetedId)) {
-                    loadVerse(lang, targetedId, chapterId, verseId);
+                    const verseButton = verseList[verseId-1];
+                    verseButton.onclick = () => loadVerse(lang, targetedId, chapterId, verseId);
+                    verseButton.click();
+                    // loadVerse(lang, targetedId, chapterId, verseId);
                     loadActiveChapterQuiz(chapterId);
                 } else if (flattenedVerseList.length > 0) {
-                    loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
+                    const verseButton = verseList[0];
+                    verseButton.onclick = () => loadVerse('en', targetedId, chapterId, verseId);
+                    verseButton.click();
+                    // loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     loadActiveChapterQuiz(flattenedVerseList[0].chapter);
                 }
                 document.getElementById("studentMenuDismiss").click();
@@ -532,7 +539,7 @@
             const textSegments = arrData.map(item => {
                 const saText = item && typeof item === 'object' ? (item.sa || '') : '';
                 const enText = item && typeof item === 'object' ? (item.en || '') : '';
-                return `<strong>${saText} - </strong>${enText}`;
+                return `<strong>${saText} --- </strong>${enText}`;
             });
 
             // Join them with a semicolon and space, eliminating any trailing punctuation

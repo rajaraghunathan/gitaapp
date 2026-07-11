@@ -96,6 +96,7 @@
 
                     </div>
                     <div class="col-sm-10">
+                        <h6 id="current-shloka"></h6>
                         <div class="tab-content ">
                             <!-- VERSE FORM -->
                             <div class="tab-pane fade show active" id="shloka-pane" role="tabpanel">
@@ -110,6 +111,7 @@
                                             <!-- Fixed Description Text Block -->
                                             <div class="mb-2">
                                                 <label class="form-label fw-bold">Description Text Context</label>
+<!--                                                <button type="button" class="btn btn-sm btn-primary" onclick="helperDescription('field-description')">Helper</button>-->
                                                 <!-- Small Button Toolbar Container -->
                                                 <div id="field-description" contenteditable="true" class="form-control mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 50px;">
 
@@ -152,6 +154,7 @@
                                 <div class="card shadow-sm border-primary p-2" >
                                     <div class="d-flex justify-content-between align-items-center mb-2 sticky-top" style="z-index: 10;">
                                         <h6 class="mb-0 fw-bold">Anvayam Map</h6>
+<!--                                        <button type="button" class="btn btn-sm btn-primary" onclick="helperAnvayam('anvayam-table-body')">Helper</button>-->
                                         <button class="btn btn-sm btn-secondary" onclick="addAnvayamRow()" onmousedown="event.preventDefault()" type="button">➕ Add Row</button>
                                     </div>
                                     <div style="max-height: 300px; overflow-y: auto;">
@@ -321,7 +324,6 @@
             </div>
 
 
-
         </div>
 
 </div>
@@ -401,6 +403,8 @@
     let currentMeaningLanguage = null;
     let flattenedVerseList = [];
     let flattenedChapterList = [];
+    const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa'}
+    const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit'}
 
     document.addEventListener("DOMContentLoaded", () => {
         initializeChapterList();
@@ -487,9 +491,15 @@
             });
             listContainer.appendChild(li);
             flattenedChapterList.push({ chapter: list })
-            });
-        const firstChapter = listContainer.querySelector('.chapter-item');
-        if (firstChapter) { firstChapter.click(); }
+        });
+        const lastChapter = {{ chapter or 'null' }}
+        const chapters = listContainer.querySelectorAll('.chapter-item');
+        if (lastChapter) {
+            chapters[lastChapter-1].click();
+        } else {
+            chapters[0].click();
+        }
+
     }
 
     function navigateToAdjacentChapter(direction) {
@@ -539,8 +549,17 @@
                     listContainer.appendChild(li);
                     flattenedVerseList.push({ id: v.id, chapter: v.chapter_number, verse: v.verse_number })
                 });
-                if (flattenedVerseList.length > 0) {
-                    loadVerseToForm(flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
+
+                const lastVid = {{ vid or 'null'}}
+                const lastChapter = {{ chapter or 'null' }}
+                const lastVerse = {{ verse or 'null'}}
+                const verseList = document.querySelectorAll('.verse-item')
+                if (lastVid && flattenedVerseList.some(item => item.id == lastVid)) {
+                    verseList[lastVerse-1].click();
+                    // loadVerseToForm(lastVid, lastChapter, lastVerse);
+                } else if (flattenedVerseList.length > 0) {
+                    verseList[0].click();
+                    // loadVerseToForm(flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                 }
                 const idx = flattenedChapterList.findIndex(item => item.chapter == chapterNum);
                 document.getElementById('chapter-prev-btn').disabled = (idx === 0);
@@ -577,6 +596,7 @@
         // Cache coordinates to locate verse & commentaries
         activeVerseChapterNum = parseInt(ch);
         activeVerseNumber = parseInt(vn);
+        document.getElementById("current-shloka").textContent = 'Chapter: ' + ch + ' ; Verse: ' + vn
 
         const idx = flattenedVerseList.findIndex(item => item.verse == vn);
         document.getElementById('verse-prev-btn').disabled = (idx === 0);
@@ -617,7 +637,7 @@
         }
     }
 
-    const langKeys = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit'}
+
     function updateMeaningLanguageDropdownOptions(activeValue) {
         const dropdown = document.getElementById('language-dropdown');
         let htmlContent = '';
@@ -625,7 +645,7 @@
             htmlContent += `
                 <li>
                     <button type="button" class="dropdown-item" onclick="loadMeaningLanguageContext('${lang}')">
-                        ${langKeys[lang]}
+                        ${langVals[lang]}
                     </button>
                 </li>
             `;
@@ -637,8 +657,8 @@
 
     function loadMeaningLanguageContext(langCode) {
         currentMeaningLanguage = langCode;
-        document.getElementById('selected-meaning-language').textContent = langCode ? langKeys[langCode] : "None Loaded";
-        // document.getElementById('current-lang-title').textContent = langCode ? langKeys[langCode] : "None";
+        document.getElementById('selected-meaning-language').textContent = langCode ? langVals[langCode] : "None Loaded";
+        // document.getElementById('current-lang-title').textContent = langCode ? langVals[langCode] : "None";
 
         if (!langCode || !loadedMeaningLanguages["meaning"][langCode]) {
             showToast("Load the Verse First", "warning");
@@ -686,23 +706,28 @@
         if (!rawInput) return;
         const cleanCode = rawInput.trim().toLowerCase();
 
-        if (!(cleanCode in langKeys)) {
+        if (!(cleanCode in langVals)) {
             showToast("Type any of these languages (en, ta, sa) only", "warning");
             return;
         }
         if (loadedMeaningLanguages["meaning"][cleanCode]) {
-            showToast(`Dataset Available for - ${langKeys[cleanCode]}.`, "warning");
+            showToast(`Dataset Available for - ${langVals[cleanCode]}.`, "warning");
             return;
         }
-        loadedMeaningLanguages["youTube"][cleanCode] = {};
-        showToast(`Dataset successfully created for Youtube - ${langKeys[cleanCode]}.`, "success");
 
         document.getElementById('anvayam-table-body').innerHTML = "Getting Anvayam Table...";
         document.getElementById('field-description').innerHTML = "Getting Description...";
 
-        const enText = loadedMeaningLanguages["meaning"]['en'].description
+        <!-- Getting the Translated Content for Description and Anvayam -->
+        const div = document.createElement ("div");
+        div.innerHTML = loadedMeaningLanguages["meaning"]['en'].description;
+        const enText = div.textContent;
+        const enAnvayam = loadedMeaningLanguages["meaning"]['en'].anvayam;
         const payload = {
-            enText: enText
+            sourceLang: "en",
+            targetLang: cleanCode,
+            enText: enText,
+            enAnvayam: enAnvayam
         }
         const url = '/api/translate';
         const res = await fetch(url, {
@@ -710,11 +735,18 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        const description = await res.json();
+        const data = await res.json();
+        if (!data.success) {
+            showToast(data.message + data.details, "warning");
+            return;
+        }
+        const description = data.translated_text || "";
+        const anvayam = data.translated_anvayam || [];
 
-        loadedMeaningLanguages["meaning"][cleanCode] = { description: description, footnotes: {}, anvayam: [] };
+        loadedMeaningLanguages["youTube"][cleanCode] = {};
+        loadedMeaningLanguages["meaning"][cleanCode] = { description: description, footnotes: {}, anvayam: anvayam };
         updateMeaningLanguageDropdownOptions(cleanCode);
-        showToast(`Dataset successfully created for Meaning -  ${langKeys[cleanCode]}.`, "success");
+        showToast(`Dataset successfully created for - ${langVals[cleanCode]}.`, "success");
         // Close the layout modal panel instantly
         if (bootstrapLangModalInstance) {
             document.getElementById("addMeanLanguageModalLabel").innerHTML = "Add Language"
@@ -758,8 +790,8 @@
         const langValue = document.getElementById('selected-meaning-language').textContent.trim();
 
         // Find the key
-        const langCode = Object.keys(langKeys).find(
-            key => langKeys[key] === langValue
+        const langCode = Object.keys(langVals).find(
+            key => langVals[key] === langValue
         );
 
         // 2. Erase the dataset directly out of your memory state object tracker
@@ -1063,7 +1095,7 @@
         // Scrape ordered anvayam array list
         const anvayam = scrapeAnvayam();
         if (anvayam.length === 0) {
-            showToast(`Anvayam Dataset for ${langKeys[currentMeaningLanguage["meaning"]]} is missing`, "warning")
+            showToast(`Anvayam Dataset for ${langVals[currentMeaningLanguage["meaning"]]} is missing`, "warning")
             return;
         }
 
@@ -1078,7 +1110,7 @@
 
         loadedMeaningLanguages["meaning"][currentMeaningLanguage]  = meaningData
         loadedMeaningLanguages["youTube"][currentMeaningLanguage]  = youTube
-        showToast(`Saved Dataset for ${langKeys[currentMeaningLanguage]}`, "success")
+        showToast(`Saved Dataset for ${langVals[currentMeaningLanguage]}`, "success")
     }
 
     // Scrape helper for YouTube (Checking for duplicate numeric/string keys)
@@ -1218,9 +1250,9 @@
 
             // If any property inside this language is empty, block the pipeline
             if (isDescEmpty || isAnvEmpty) {
-                // Resolve full name (e.g., 'Tamil') if global langKeys helper exists
-                const langName = (typeof langKeys !== 'undefined' && langKeys[langCode])
-                    ? langKeys[langCode]
+                // Resolve full name (e.g., 'Tamil') if global langVals helper exists
+                const langName = (typeof langVals !== 'undefined' && langVals[langCode])
+                    ? langVals[langCode]
                     : langCode.toUpperCase();
 
                 showToast(`Validation Failed: The workspace for ${langName} has missing data.`, "warning");
@@ -1285,9 +1317,33 @@
 
     }
 
-    function addAcharyaFieldRow(acharya) {
+    async function addAcharyaFieldRow(acharya) {
         // createLanguageRowElement('', '');
-        createAcharyaRowElement(acharya, 'en', '');
+        if (acharya === 'ramanuja') {
+            const editLanguage = document.getElementById("selected-meaning-language").innerText;
+            const cleanCode = langKeys[editLanguage]
+            const payload = {
+                chapter_number: activeVerseChapterNum,
+                verse_number: activeVerseNumber,
+                acharya: acharya,
+                targetLang: cleanCode
+            }
+            const url = '/api/admin/acharya_translate';
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (!data.success) {
+                showToast(data.message + data.details, "warning");
+                return;
+            }
+            const commentaryTranslated = data.translated_text || "";
+            createAcharyaRowElement(acharya, cleanCode, commentaryTranslated);
+        } else {
+            createAcharyaRowElement(acharya, 'en', '');
+        }
     }
 
     function removeAcharyaFieldRow(elementId) {
@@ -1528,6 +1584,128 @@
             }
         }
         return true;
+    }
+
+    <!-- Helper Functions -->
+    function loadModal(id, bodyContent, actionButtonConfig = null) {
+        // 1. Generate the base HTML string
+        let modalHtml = `
+            <div class="modal fade" id="${id}Modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title"><i class="fa-solid fa-user-shield me-2"></i>${id}</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ${bodyContent}
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Red close button is always present -->
+                            <button id="textTranslate" type="button" class="btn btn-primary" onclick="translateFromServer(\'${id}\')">Translate</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 2. Inject HTML into the body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        const modalElement = document.getElementById(`${id}Modal`);
+        const footerElement = modalElement.querySelector('.modal-footer');
+
+        // 3. Dynamically create and add the action button if configuration is provided
+        if (actionButtonConfig && typeof actionButtonConfig.onClick === 'function') {
+            const actionBtn = document.createElement('button');
+            actionBtn.type = 'button';
+            actionBtn.className = actionButtonConfig.className || 'btn btn-primary';
+            actionBtn.innerText = actionButtonConfig.text || 'Submit';
+
+            // Attach your dynamic commands/function
+            actionBtn.addEventListener('click', function(e) {
+                actionButtonConfig.onClick(e, bootstrapModal);
+            });
+
+            // Insert the action button BEFORE the close button in the footer
+            footerElement.insertBefore(actionBtn, footerElement.firstChild);
+        }
+
+        // 4. Initialize and show the modal
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
+
+        // 5. Auto-cleanup on close
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            bootstrapModal.dispose();
+            modalElement.remove();
+        });
+    }
+
+    function helperDescription(id) {
+        const engContent = loadedMeaningLanguages["meaning"]["en"]["description"];
+        const editLanguage = document.getElementById("selected-meaning-language").innerText;
+        const editContent = loadedMeaningLanguages["meaning"][langKeys[editLanguage]]["description"];
+        let bodyContentHtml = `
+            <div class="row">
+                <div class="col-6">
+                    <h6>English</h6>
+                    <div>${engContent}</div>
+                </div>
+                <div class="col-6">
+                    <h6 id="${id}Language">${editLanguage}</h6>
+                    <div id="${id}NewContent" contenteditable="true">${editContent}</div>
+                </div>
+            </div>
+        `
+
+        loadModal(id, bodyContentHtml, {
+            text: 'Load',
+            className: 'btn btn-success', // Green button
+            onClick: function(event, modalInstance) {
+                const editContentHtml = document.getElementById(`${id}NewContent`).innerHTML;
+                const cleanHtml = cleanRichText(editContentHtml);
+                const editContent = document.getElementById(`${id}NewContent`).textContent;
+                if (editContent.trim() !== ""){
+                    document.getElementById(id).innerHTML = cleanHtml;
+                    showToast("Updated. Save Changes & Commit to DB", "success");
+                }
+                // Close the modal programmatically when done
+                modalInstance.hide();
+            }
+        });
+    }
+
+    async function translateFromServer(id) {
+        let url = '/api/translate';
+        if (id === "anvayam-table-body") {
+            alert('under development');
+            return;
+        }
+        const engContent = loadedMeaningLanguages["meaning"]["en"]["description"];
+        const div = document.createElement ('div');
+        div.innerHTML = engContent;
+        const enText = div.textContent;
+        if (Array.isArray(enText)) {
+            url = '/api/translate';
+        }
+        const cleanCode = langKeys [document.getElementById(`${id}Language`).textContent];
+        document.getElementById(`${id}NewContent`).textContent = "Getting The Text..."
+        const payload = {
+            sourceLang: "en",
+            targetLang: cleanCode,
+            enText: enText
+        }
+        // const url = '/api/translate';
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.success) {showToast(data.message, "warning"); return;}
+        const description = data.translated_text
+        document.getElementById(`${id}NewContent`).textContent = description;
     }
 
 

@@ -1,23 +1,39 @@
-import re
+import re, time
 from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
 from deep_translator import GoogleTranslator
 
+def batch_translate_google(data_list, source_langauge='en', target_language='en'):
+    try:
+        if len(data_list) == 0 or not isinstance(data_list, list) :
+            return [], True
+        translator = GoogleTranslator(source=source_langauge, target=target_language)
+        value_list = [data.get('en', '').strip() for data in data_list]
 
-def batch_translate_google(data_list, source_langauge, target_language):
-    translator = GoogleTranslator(source=source_langauge, target=target_language)
-    value_list = [data['en'].strip() for data in data_list]
-    translated_value_list = translator.translate_batch(value_list)
-    for index, data in enumerate(data_list):
-        data['en'] = translated_value_list[index]
-    return data_list
+        joined_list = ' ||| '.join(value_list)
+        translated_result = translator.translate(joined_list)
+        translated_value_list = translated_result.split('|||')
+
+        if len(value_list) != len(translated_value_list):
+            translated_value_list = translator.translate_batch(value_list)
+
+        for index, data in enumerate(data_list):
+            data['en'] = translated_value_list[index].strip()
+        return data_list, True
+    except Exception as e:
+        return str(e), False
 
 def text_translate_google(text_to_translate, source_langauge, target_language):
-    text_to_translate = text_to_translate.strip()
-    target_language = target_language.strip()
-    # Built-in function call handles the text translation matrix locally
-    translated_result = GoogleTranslator(source=source_langauge, target=target_language).translate(text_to_translate)
-    return translated_result
+    try:
+        if text_to_translate == '' or not isinstance(text_to_translate, str):
+            return "No Text Provided", True
+        text_to_translate = text_to_translate.strip()
+        target_language = target_language.strip()
+        # Built-in function call handles the text translation matrix locally
+        translated_result = GoogleTranslator(source=source_langauge, target=target_language).translate(text_to_translate)
+        return translated_result, True
+    except Exception as e:
+        return str(e), False
 
 def dynamic_sanskrit_transliterate(text, target_lang, source_lang='devanagari'):
     """
@@ -62,3 +78,41 @@ def dynamic_sanskrit_transliterate(text, target_lang, source_lang='devanagari'):
         raw_output = raw_output.replace('ʼ', '').replace("'", "").replace("’", "")
 
     return raw_output
+
+def translate_large_text_with_google(mixed_text, source_lang='en', target_lang='en'):
+    try:
+        if mixed_text == '' or not isinstance(mixed_text, str):
+            return "No Text Provided", True
+        # Initialize GoogleTranslator with Sanskrit (sa) and Tamil (ta)
+        translator = GoogleTranslator(source=source_lang, target=target_lang)
+        cleaned_text = re.sub(r'[\u0980-\u09FF]', '', mixed_text)
+        # Split text by sentences to keep translations meaningful
+        sentences = cleaned_text.split('. ')
+
+        current_chunk = ""
+        translated_chunks = []
+        chunk_size = 3500
+        for sentence in sentences:
+            # Check if adding this sentence stays within our safe limit
+            if len(current_chunk) + len(sentence) < chunk_size:
+                current_chunk += sentence + ". "
+            else:
+                # Translate the ready chunk
+                print(f"Translating batch ({len(current_chunk)} characters)...")
+                translated_text = translator.translate(current_chunk)
+                translated_chunks.append(translated_text)
+
+                # Brief pause to avoid hitting Google's rate limits
+                time.sleep(1)
+
+                # Start the next chunk
+                current_chunk = sentence + ". "
+
+        # Process the final remaining chunk
+        if current_chunk:
+            translated_text = translator.translate(current_chunk)
+            translated_chunks.append(translated_text)
+
+        return " ".join(translated_chunks), True
+    except Exception as e:
+        return str(e), False
