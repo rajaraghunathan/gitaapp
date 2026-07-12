@@ -321,7 +321,7 @@
                     loadActiveChapterQuiz(chapterId);
                 } else if (flattenedVerseList.length > 0) {
                     const verseButton = verseList[0];
-                    verseButton.onclick = () => loadVerse('en', targetedId, chapterId, verseId);
+                    verseButton.onclick = () => loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     verseButton.click();
                     // loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     loadActiveChapterQuiz(flattenedVerseList[0].chapter);

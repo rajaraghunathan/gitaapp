@@ -96,7 +96,10 @@
 
                     </div>
                     <div class="col-sm-10">
-                        <h6 id="current-shloka"></h6>
+                        <div class="text-center">
+                            <i id="c-name" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.1rem"></i>
+                            <i id="v-num" class="p-2" style="font-weight: bold; color: darkblue; font-size: 1.1rem"></i>
+                        </div>
                         <div class="tab-content ">
                             <!-- VERSE FORM -->
                             <div class="tab-pane fade show active" id="shloka-pane" role="tabpanel">
@@ -534,6 +537,7 @@
                 const listContainer = document.getElementById('verseList');
                 listContainer.innerHTML = '';
                 flattenedVerseList.length = 0
+                document.getElementById("c-name").textContent = 'CH.' + chapters[0].chapter_number + ' - ' + chapters[0].name
                 chapters.forEach(v => {
                     const li = document.createElement('li');
                     li.className = "verse-item dropdown-item d-flex justify-content-between align-items-center";
@@ -596,7 +600,7 @@
         // Cache coordinates to locate verse & commentaries
         activeVerseChapterNum = parseInt(ch);
         activeVerseNumber = parseInt(vn);
-        document.getElementById("current-shloka").textContent = 'Chapter: ' + ch + ' ; Verse: ' + vn
+        document.getElementById("v-num").textContent = 'Verse: ' + vn
 
         const idx = flattenedVerseList.findIndex(item => item.verse == vn);
         document.getElementById('verse-prev-btn').disabled = (idx === 0);
