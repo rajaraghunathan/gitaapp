@@ -712,7 +712,6 @@
     function speakSanskritShloka(event) {
         event.stopPropagation();
         const shlokaText = event.target.nextElementSibling.innerText;
-        console.log(shlokaText)
         // const shlokaText = document.getElementById('input_shloka').innerText;
         if (!shlokaText) return;
         const language = {'en':'en-IN', 'ta':'ta-IN','te':'te-IN','sa':'hi-IN'}

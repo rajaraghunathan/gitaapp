@@ -1,7 +1,7 @@
 import os, json, uuid, re, requests, io, csv
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template, make_response
 from database import db
-from models import Student, Verse, AcharyaComment, Comment
+from models import Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil
 from zoneinfo import ZoneInfo
 
 admin = Blueprint("admin", __name__)
@@ -351,3 +351,64 @@ def admin_csv_export(data_type):
     response.headers["Content-Disposition"] = f"attachment; filename={filename}"
     response.headers["Content-type"] = "text/csv"
     return response
+
+@admin.route('/admin/quiz', methods=['GET'])
+def admin_quiz_get():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    lang = request.args.get('lang', 'en')
+    chapter = int(request.args.get('chapter', 1))
+    table = QuizQuestion if lang == 'en' else QuizQuestionTamil if lang == 'ta' else None
+    if not table:
+        return jsonify({'message': 'Data does not exist'})
+    quiz = db.session.query(table).where(table.chapter == chapter).order_by(table.id).all()
+    quiz_list = [{
+        k: v for k, v in q.__dict__.items() if not k.startswith('_')
+    } for q in quiz]
+    return jsonify(quiz_list)
+
+@admin.route('/admin/quiz/update', methods=['POST'])
+def admin_quiz_update():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    payload = request.get_json()
+    lang = payload.get('lang')
+    chapter = int(payload.get('chapter'))
+    questions = payload.get('questions')
+
+    table = QuizQuestion if lang == 'en' else QuizQuestionTamil
+
+    try:
+        for item in questions:
+            status = item.get('status')
+            item_id = item.get('id')
+            if status == 'new':
+                question_entry = table(
+                    chapter=item["chapter"],
+                    question=item["question"],
+                    option_a=item["option_a"],
+                    option_b=item["option_b"],
+                    option_c=item["option_c"],
+                    option_d=item["option_d"],
+                    correct_answer=item["correct_answer"]
+                )
+                db.session.add(question_entry)
+            elif status == 'updated':
+                quiz = table.query.get(item_id)
+                quiz.question = item["question"]
+                quiz.option_a = item["option_a"]
+                quiz.option_b = item["option_b"]
+                quiz.option_c = item["option_c"]
+                quiz.option_d = item["option_d"]
+                quiz.correct_answer = item["correct_answer"]
+            elif status == 'deleted':
+                quiz = table.query.get(item_id)
+                if quiz:
+                    db.session.delete(quiz)
+
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'DB Updated Successfully'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Database update failed", "details": str(e)}), 500

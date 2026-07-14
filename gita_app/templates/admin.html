@@ -15,6 +15,9 @@
             <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
                 <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
             </button>
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="loadQuizList()">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Quiz
+            </button>
             <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
                 <i class="fa-solid fa-pen-to-square me-2"></i> Students
             </button>
@@ -326,7 +329,21 @@
                 </div>
             </div>
 
+            <!-- Tab Pane Quiz: Quiz Edit Content -->
+            <div class="tab-pane fade" id="quiz-pane" role="tabpanel" aria-labelledby="quiz-tab">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                        <h5 id="quiz-h5">Interactive Quiz</h5>
+                        <button type="button" class="btn btn-success btn-sm" onclick="addNewQuiz()" >Add Quiz</button>
+                    </div>
+                    <div id="quizQuestionsContainer" class="card-body overflow-y-auto" style="height: 60vh;">
 
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-success" onclick="updateQuizToDB()">Commit To DB</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
 </div>
@@ -408,6 +425,7 @@
     let flattenedChapterList = [];
     const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa'}
     const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit'}
+    let quizData = []
 
     document.addEventListener("DOMContentLoaded", () => {
         initializeChapterList();
@@ -553,7 +571,6 @@
                     listContainer.appendChild(li);
                     flattenedVerseList.push({ id: v.id, chapter: v.chapter_number, verse: v.verse_number })
                 });
-
                 const lastVid = {{ vid or 'null'}}
                 const lastChapter = {{ chapter or 'null' }}
                 const lastVerse = {{ verse or 'null'}}
@@ -568,6 +585,9 @@
                 const idx = flattenedChapterList.findIndex(item => item.chapter == chapterNum);
                 document.getElementById('chapter-prev-btn').disabled = (idx === 0);
                 document.getElementById('chapter-next-btn').disabled = (idx === flattenedChapterList.length - 1);
+
+                activeVerseChapterNum = chapterNum;
+                fetchQuizList();
             });
     }
 
@@ -1712,6 +1732,180 @@
         document.getElementById(`${id}NewContent`).textContent = description;
     }
 
+    function fetchQuizList() {
+        const lang = currentMeaningLanguage || 'en';
+        const chapter = activeVerseChapterNum || 1;
+        const payload = {lang: lang, chapter: chapter};
+        const params = new URLSearchParams(payload).toString();
+        const url = '/admin/quiz'
+        const urlWithParams = `${url}?${params}`;
+        fetch(urlWithParams,{method: 'GET'}).then(res=>res.json()).then(quiz=>{
+            quizData = quiz
+            quizData.map(q=>{q.status = 'server';})
+            // quizData.forEach((q, idx) =>{
+            //     q.status = 'server';
+            // })
+        }).catch(err => showToast(err.message, "danger"));
+    }
 
+    function loadQuizList() {
+        const container = document.getElementById('quizQuestionsContainer');
+        container.innerHTML = '';
+        const h5QuizEl = document.getElementById("quiz-h5");
+        h5QuizEl.innerHTML = "";
+        if (quizData.length === 0) {
+            h5QuizEl.innerHTML = "Interactive Quiz - No evaluation assessments registered yet for this CH." + activeVerseChapterNum + " segment.";
+            return;
+        }
+        const noofquiz = quizData.reduce((count, quiz) =>{
+            return quiz.status !== 'deleted' ? count+1 : count
+        },0);
+        h5QuizEl.textContent = "Interactive Quiz for CH." + activeVerseChapterNum + " segment. Total Questions: " + noofquiz;
+        quizData.forEach((q, idx) =>{
+            //It only executes the right side if the left side evaluates to true
+            q.status !== 'deleted' && container.appendChild(renderQuiz(q, idx));
+        })
+    }
+
+    function renderQuiz(q,idx) {
+        const qBlock = document.createElement('div');
+        qBlock.className = 'mb-4 p-2 border-bottom border-light';
+        qBlock.innerHTML = `
+            <div class="input-group mb-1">
+                <span class="input-group-text text-bg-info">Q-${idx + 1}</span>
+                <textarea style="font-size: 0.9rem;" rows="1" class="form-control question">${q.question}</textarea>
+            </div>
+            <div class="input-group mb-1">
+                <span class="input-group-text text-bg-danger">A: </span>
+                <input style="font-size: 0.9rem;" type="text" class="form-control opt-a" value="${q.option_a}">
+            </div>
+            <div class="input-group mb-1">
+                <span class="input-group-text text-bg-danger">B: </span>
+                <input style="font-size: 0.9rem;" type="text" class="form-control opt-b" value="${q.option_b}">
+            </div>
+            <div class="input-group mb-1">
+                <span class="input-group-text text-bg-danger">C: </span>
+                <input style="font-size: 0.9rem;" type="text" class="form-control opt-c" value="${q.option_c}">
+            </div>
+            <div class="input-group mb-1">
+                <span class="input-group-text text-bg-danger">D: </span>
+                <input style="font-size: 0.9rem;" type="text" class="form-control opt-d" value="${q.option_d}">
+            </div>
+            <div class="input-group mb-1">
+                <span class="input-group-text text-bg-success">Answer: </span>
+                <input type="text" class="form-control text-bg-info answer" value="${q.correct_answer}">
+                <span class="input-group-text">${q.status}</span>
+                <span class="input-group-text">Id-${q.id}</span>
+                <span style="cursor: pointer;" class="input-group-text bg-success p-2" onclick="updateQuiz(${q.id}, '${q.status}')">Update</span>
+                <span style="cursor: pointer;" class="input-group-text bg-danger p-2" onclick="deleteQuiz(${q.id}, '${q.status}')">Delete</span>
+            </div>
+        `;
+        qBlock.setAttribute('data-question-id', q.id);
+        return qBlock;
+    }
+
+    function addNewQuiz() {
+        const tempID = Math.floor(100000 + Math.random() * 900000);
+        const newQuiz = {status:'new', id:tempID, question:'', option_a:'', option_b:'', option_c:'', option_d:'',
+            correct_answer:'', chapter:activeVerseChapterNum};
+        const container = document.getElementById('quizQuestionsContainer');
+        if (container.children[0]) {
+            container.children[0].before(renderQuiz(newQuiz,quizData.length));
+        } else {
+            container.appendChild(renderQuiz(newQuiz,quizData.length))
+        }
+        quizData.push(newQuiz);
+        const noofquiz = quizData.reduce((count, quiz) =>{
+            return quiz.status !== 'deleted' ? count+1 : count
+        },0);
+        const h5QuizEl = document.getElementById("quiz-h5");
+        h5QuizEl.textContent = "Interactive Quiz for CH." + activeVerseChapterNum + " segment. Total Questions: " + noofquiz;
+        showToast("Added New Empty Quiz", "success");
+    }
+
+    function updateQuiz(quizId, status) {
+        const divEl = document.querySelector(`div[data-question-id="${quizId}"]`);
+
+        const questionInput = divEl.querySelector('textarea');
+        if (questionInput && questionInput.value.trim() === "") {
+            showToast("Question cannot be empty", "danger");
+            return;
+        }
+
+        const inputs = divEl.querySelectorAll ('input');
+        for (const input of inputs) {
+            if (input.value.trim() === "") {
+                showToast("Options and Answer cannot be empty", "danger");
+                return;
+            }
+        }
+
+        const quiz = {
+            chapter:activeVerseChapterNum,
+            status:status,
+            id:quizId,
+            question:divEl.querySelector ('.question').value.trim(),
+            option_a:divEl.querySelector ('.opt-a').value.trim(),
+            option_b:divEl.querySelector ('.opt-b').value.trim(),
+            option_c:divEl.querySelector ('.opt-c').value.trim(),
+            option_d:divEl.querySelector ('.opt-d').value.trim(),
+            correct_answer:divEl.querySelector ('.answer').value.trim()
+        };
+        const index = quizData.findIndex(item => item.id === quizId);
+        if (status === 'new') {
+            Object.keys(quizData[index]).forEach(key =>{
+                quizData[index][key] = quiz[key];
+            })
+            showToast("Added New Quiz", "success");
+        } else {
+            const isEqual = deepObjEqual(quiz, quizData[index])
+            if (isEqual) { showToast("No Changes Found", "warning"); return; }
+            Object.keys(quizData[index]).forEach(key=>{
+                if (key === 'status') {quizData[index][key] = 'updated'; }
+                else {quizData[index][key] = quiz[key];}
+            })
+            divEl.replaceWith(renderQuiz(quizData[index],index));
+            showToast("Updated the Quiz", "success");
+        }
+    }
+
+    function deleteQuiz(quizId, status) {
+        const userConfirmed = confirm('Do you want to delete the quiz?');
+        if (!userConfirmed) {return;}
+        const index = quizData.findIndex(item => item.id === quizId);
+        (status === 'new') ? quizData.splice(index, 1) : quizData[index].status = 'deleted';
+        const divEl = document.querySelector(`div[data-question-id="${quizId}"]`);
+        divEl.remove();
+        const noofquiz = quizData.reduce((count, quiz) =>{
+            return quiz.status !== 'deleted' ? count+1 : count
+        },0);
+        const h5QuizEl = document.getElementById("quiz-h5");
+        h5QuizEl.textContent = "Interactive Quiz for CH." + activeVerseChapterNum + " segment. Total Questions: " + noofquiz;
+        showToast (`${status}-${quizId} deleted successfully`, 'success');
+    }
+
+    function updateQuizToDB() {
+        const allowedStatuses = ['new', 'updated', 'deleted'];
+        const modificationsOnly = quizData.filter(item => allowedStatuses.includes(item.status));
+        if (modificationsOnly.length === 0) {
+            showToast("No Updates to Commit", "warning");
+            return;
+        }
+        const payload = {questions: modificationsOnly, lang: currentMeaningLanguage, chapter: activeVerseChapterNum};
+        fetch('/admin/quiz/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(res => {
+            if (!res.ok) throw new Error("Server communication fault.");
+            return res.json();
+        }).then(data => {
+            if (data.success) {
+                showToast("Database mapping operational!", "success");
+                fetchQuizList();
+                document.getElementById("quiz-tab").click();
+            }
+        }).catch(err => showToast(err.message, "danger"));
+    }
 </script>
 {% endblock %}
