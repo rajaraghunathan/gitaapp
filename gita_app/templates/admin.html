@@ -15,7 +15,7 @@
             <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
                 <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
             </button>
-            <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="loadQuizList()">
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">
                 <i class="fa-solid fa-pen-to-square me-2"></i> Quiz
             </button>
             <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
@@ -331,6 +331,8 @@
 
             <!-- Tab Pane Quiz: Quiz Edit Content -->
             <div class="tab-pane fade" id="quiz-pane" role="tabpanel" aria-labelledby="quiz-tab">
+                <input type="hidden" id="quiz-lang" value="">
+                <input type="hidden" id="quiz-chapter" value="">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
                         <h5 id="quiz-h5">Interactive Quiz</h5>
@@ -551,7 +553,9 @@
         fetch(url)
             .then(res => res.json())
             .then(chapters => {
-                currentMeaningLanguage = 'en'
+                if(!currentMeaningLanguage) {
+                    currentMeaningLanguage = 'en';
+                }
                 const listContainer = document.getElementById('verseList');
                 listContainer.innerHTML = '';
                 flattenedVerseList.length = 0
@@ -585,9 +589,6 @@
                 const idx = flattenedChapterList.findIndex(item => item.chapter == chapterNum);
                 document.getElementById('chapter-prev-btn').disabled = (idx === 0);
                 document.getElementById('chapter-next-btn').disabled = (idx === flattenedChapterList.length - 1);
-
-                activeVerseChapterNum = chapterNum;
-                fetchQuizList();
             });
     }
 
@@ -631,13 +632,12 @@
         loadedMeaningLanguages["meaning"] = verse.meaning || {};
         loadedMeaningLanguages["youTube"] = verse.youtube_url || {};
         const keys = Object.keys(loadedMeaningLanguages["meaning"]);
-        const initialLang = keys.length > 0 ? keys[0] : null;
-        if (currentMeaningLanguage) {
+        const initialLang = keys.length > 0 ? keys[0] : 'en';
+        if (currentMeaningLanguage && (currentMeaningLanguage in loadedMeaningLanguages["meaning"])) {
             updateMeaningLanguageDropdownOptions(currentMeaningLanguage);
         } else {
             updateMeaningLanguageDropdownOptions(initialLang);
         }
-
         // Loads the Acharya Commentary Block
         loadCommentaryAcharya(ch,vn);
     }
@@ -1733,6 +1733,15 @@
     }
 
     function fetchQuizList() {
+        const aQzL = document.getElementById("quiz-lang").value;
+        const aQzC = parseInt(document.getElementById("quiz-chapter").value);
+        if (aQzL === currentMeaningLanguage && aQzC === activeVerseChapterNum) {
+            return;
+        }
+
+        document.getElementById("quiz-lang").value = currentMeaningLanguage;
+        document.getElementById("quiz-chapter").value = activeVerseChapterNum;
+
         const lang = currentMeaningLanguage || 'en';
         const chapter = activeVerseChapterNum || 1;
         const payload = {lang: lang, chapter: chapter};
@@ -1742,9 +1751,7 @@
         fetch(urlWithParams,{method: 'GET'}).then(res=>res.json()).then(quiz=>{
             quizData = quiz
             quizData.map(q=>{q.status = 'server';})
-            // quizData.forEach((q, idx) =>{
-            //     q.status = 'server';
-            // })
+            loadQuizList();
         }).catch(err => showToast(err.message, "danger"));
     }
 
@@ -1901,9 +1908,10 @@
             return res.json();
         }).then(data => {
             if (data.success) {
+                document.getElementById("quiz-lang").value = "";
+                document.getElementById("quiz-chapter").value = "";
                 showToast("Database mapping operational!", "success");
                 fetchQuizList();
-                document.getElementById("quiz-tab").click();
             }
         }).catch(err => showToast(err.message, "danger"));
     }
