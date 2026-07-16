@@ -83,7 +83,7 @@
                 <div class="card">
                   <div class="card-header">
                     <span class="fw-bold text-dark">Commentary:</span>
-                    <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja">Sri Ramanuja</a>
+                    <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja" aria-expanded="true">Sri Ramanuja</a>
                     <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
                     <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
                     <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
@@ -235,14 +235,18 @@
 <script>
     let globalActiveChapter = 1;
     let currentActiveId = null; //Active Verse id
-    let selectedAuthorKey = null;
     let activeVerseChapterNum = null;
     let activeVerseNumber = null;
     let loadedMeaningLanguages = {};
     let currentMeaningLanguage = null;
     let flattenedVerseList = [];
-    let flattenedChapterList = [];
     let currentEditingCommentId = null;
+    // Global entry checkpoint tracking conditions to capture variables from back end
+    let targetedId = `{{ verse_id }}` || null;
+    let chapterId = `{{ c_num }}` || null;
+    let verseId = `{{ v_num }}` || null;
+    let lastLang = `{{ language }}` || "en";
+
     const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit', 'hi': 'Hindi', 'te': 'Telugu'}
     const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa', 'Hindi': 'hi', 'Telugu': 'te'}
 
@@ -254,7 +258,6 @@
             })
         })
         // Evaluate entry checkpoint tracking conditions to maintain persistent bookmarks
-        const chapterId = {{ c_num or 'null' }}
         if (chapterId && chapterClassList[chapterId - 1]) {
             chapterClassList[chapterId - 1].click();
         } else if (chapterClassList[0]) {
@@ -269,6 +272,15 @@
                 document.getElementById("studentMenuDismiss").click();
             });
         });
+
+        const logInModal = ['studentLoginModal','studentRegisterModal','adminLoginModal'];
+        logInModal.forEach(id =>{
+            let div = document.getElementById(id);
+            if (div) {
+                div.remove();
+            }
+        })
+
     });
 
     function lockDOM() {
@@ -308,20 +320,19 @@
                 });
 
                 // Evaluate entry checkpoint tracking conditions to maintain persistent bookmarks
-                const targetedId = {{ verse_id or 'null' }}
-                const chapterId = {{ c_num or 'null' }}
-                const verseId = {{ v_num or 'null' }}
-                const lang = `{{ language }}`
                 const verseList = document.querySelectorAll('.verse-item')
                 if (targetedId && flattenedVerseList.some(item => item.id == targetedId)) {
                     const verseButton = verseList[verseId-1];
-                    verseButton.onclick = () => loadVerse(lang, targetedId, chapterId, verseId);
+                    verseButton.onclick = () => loadVerse(lastLang, targetedId, chapterId, verseId);
                     verseButton.click();
                     // loadVerse(lang, targetedId, chapterId, verseId);
                     loadActiveChapterQuiz(chapterId);
+                    lastLang='en'; targetedId=null; chapterId=null; verseId=null;
                 } else if (flattenedVerseList.length > 0) {
                     const verseButton = verseList[0];
-                    verseButton.onclick = () => loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
+                    const selectedLang = document.getElementById("lang-dropdown").innerText;
+                    const Slang = langKeys[selectedLang.trim()]
+                    verseButton.onclick = () => loadVerse(Slang, flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     verseButton.click();
                     // loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     loadActiveChapterQuiz(flattenedVerseList[0].chapter);
@@ -486,7 +497,7 @@
             let counter = 1;
             Object.entries(YTData).map(([key, val]) => {
                 headerHtml += `
-                   <a class="btn btn-sm" data-bs-toggle="collapse" href="#y-link${counter}">${key}</a>
+                   <a class="btn btn-sm" data-bs-toggle="collapse" href="#y-link${counter}" ${counter===1 ?`aria-expanded="true"`: ''}>${key}</a>
                  `
                 bodyHtml += `
                         <div id="y-link${counter}" class="youtube-div collapse ${counter===1 ?`show`: ''}" data-bs-parent="#youtube-render-div">
@@ -500,10 +511,10 @@
             const cardDiv = document.createElement('div');
             cardDiv.classList.add('card');
             const cardHeader = document.createElement('div');
-            cardHeader.classList.add('card-header');
+            cardHeader.className ='card-header';
             cardHeader.innerHTML = headerHtml;
             const cardBody = document.createElement('div');
-            cardBody.className = 'card-body p-0';
+            cardBody.className = 'card-body p-1';
             cardBody.innerHTML = bodyHtml;
             cardDiv.appendChild(cardHeader).appendChild(cardBody);
             yDiv.appendChild(cardDiv );

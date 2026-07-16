@@ -431,19 +431,13 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         initializeChapterList();
+
+        const logInModal = ['studentLoginModal','studentRegisterModal','adminLoginModal'];
+        logInModal.forEach(id =>{
+            let div = document.getElementById(id);
+            if (div) { div.remove(); }
+        })
     });
-    // window.addEventListener('pageshow', function (event) {
-    //   // 1. Get the latest navigation performance entry
-    //   const navigationEntry = performance.getEntriesByType("navigation")[0];
-    //   // 2. Check if the page loaded from the browser cache (bfcache)
-    //   const isCached = event.persisted;
-    //   // 3. Check if the navigation type is explicitly back/forward
-    //   const isBackForward = navigationEntry && navigationEntry.type === 'back_forward';
-    //   // 4. Force a fresh server reload if either condition is met
-    //   if (isCached || isBackForward) {
-    //     window.location.reload();
-    //   }
-    // });
 
     function cleanRichText(htmlInput) {
         // 1. Convert non-breaking space characters and literals into normal spaces
@@ -515,7 +509,7 @@
             listContainer.appendChild(li);
             flattenedChapterList.push({ chapter: list })
         });
-        const lastChapter = {{ chapter or 'null' }}
+        const lastChapter = `{{ chapter }}` || null;
         const chapters = listContainer.querySelectorAll('.chapter-item');
         if (lastChapter) {
             chapters[lastChapter-1].click();
@@ -575,9 +569,9 @@
                     listContainer.appendChild(li);
                     flattenedVerseList.push({ id: v.id, chapter: v.chapter_number, verse: v.verse_number })
                 });
-                const lastVid = {{ vid or 'null'}}
-                const lastChapter = {{ chapter or 'null' }}
-                const lastVerse = {{ verse or 'null'}}
+                const lastVid = `{{ vid }}` || null;
+                const lastChapter = `{{ chapter }}` || null;
+                const lastVerse = `{{ verse }}` || null;
                 const verseList = document.querySelectorAll('.verse-item')
                 if (lastVid && flattenedVerseList.some(item => item.id == lastVid)) {
                     verseList[lastVerse-1].click();
@@ -886,31 +880,30 @@
             return;
         }
         const tbody = document.getElementById('youTube-table-body');
-        let htmlContent = tbody.innerHTML;
-        htmlContent += `
-                <tr class="youtube-row-item">
-                    <td>
-                        <input type="text" class="form-control form-control-sm fn-key-input fw-bold"
-                        placeholder="Speaker Name..." form="meaning-language-form" value="" required>
-                    </td>
-                    <td style="vertical-align: top;">
-                        <div class="d-flex gap-2">
-                          <input type="url" class="input_youtube_url form-control form-control-sm fn-val-input"
-                          placeholder="https://youtube.com..." form="meaning-language-form" value="" required>
-                          <button class="btn btn-sm btn-primary" type="button" onclick="playYoutube(event)">Play</button>
-                        </div>
-                        <div class="videoWrapper mt-2" style="display: none;">
-                            <div class="video-container mb-2">
-                                <iframe class="youtubePlayer" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button>
-                    </td>
-                </tr>
-            `;
-        tbody.innerHTML = htmlContent;
+        const trow = document.createElement('tr');
+        trow.className = 'youtube-row-item';
+        trow.innerHTML = `
+            <td>
+                <input type="text" class="form-control form-control-sm fn-key-input fw-bold"
+                placeholder="Speaker Name..." form="meaning-language-form" value="" required>
+            </td>
+            <td style="vertical-align: top;">
+                <div class="d-flex gap-2">
+                  <input type="url" class="input_youtube_url form-control form-control-sm fn-val-input"
+                  placeholder="https://youtube.com..." form="meaning-language-form" value="" required>
+                  <button class="btn btn-sm btn-primary" type="button" onclick="playYoutube(event)">Play</button>
+                </div>
+                <div class="videoWrapper mt-2" style="display: none;">
+                    <div class="video-container mb-2">
+                        <iframe class="youtubePlayer" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </td>
+            <td class="text-center">
+                <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button>
+            </td>
+        `;
+        tbody.appendChild(trow);
     }
 
     // --- FOOTNOTES RENDER (Dictionary Object) ---

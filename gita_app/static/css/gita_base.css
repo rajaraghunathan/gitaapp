@@ -110,3 +110,10 @@ body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif
 .acharya-div, .acharya-admin-text-div, .shloka-text p {
     white-space: pre-wrap;
 }
+
+/* Target collapse link when the collapse is open */
+#youtube-render-div a[aria-expanded="true"], #acharya a[aria-expanded="true"] {
+    color: darkviolet;
+    background-color: lime;
+    font-weight: bold;
+}

@@ -230,7 +230,7 @@ def get_acharya_comment_student():
         # Scenario 3: Fallback workflows if neither condition is satisfied
         else:
             if name in ['siva']:
-                acharya_dict[name][lang] = source_data.get('et', '')
+                acharya_dict[name][lang] = source_data.get('en', '')
                 acharya_dict[name]['lang status'] = 'No Translation'
             else:
                 # Safe dictionary navigation fallback via .get()
