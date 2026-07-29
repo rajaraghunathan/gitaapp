@@ -180,7 +180,7 @@
                                     <div class="card">
                                       <div class="card-header">
                                         <span class="fw-bold text-dark">Commentary:</span>
-                                        <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja">Sri Ramanuja</a>
+                                        <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja" aria-expanded="true">Sri Ramanuja</a>
                                         <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
                                         <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
                                         <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
@@ -910,21 +910,9 @@
     function renderFootnotesTable(dictionaryData) {
         const tbody = document.getElementById('footnotes-table-body');
         let htmlContent = '';
-        const CHARS_PER_ROW = 100;
+        const CHARS_PER_ROW = Math.round(window.innerWidth/12);
         Object.entries(dictionaryData).forEach(([key, val]) => {
-            // Compute an approximate initial row depth based on line-breaks to avoid layout recalculation
-            const textVal = String(val);
-            const segments = textVal.split('\n');
-            let estimatedLines = 0;
-            segments.forEach(segment => {
-                if (segment.length === 0) {
-                    estimatedLines += 1; // Empty line count
-                } else {
-                    // Factor in character length for long paragraphs without \n
-                    estimatedLines += Math.ceil(segment.length / CHARS_PER_ROW);
-                }
-            });
-            const rowsCount = Math.max(1, Math.min(estimatedLines, 10));
+            const rowsCount = Math.max(1, Math.ceil(val.length / CHARS_PER_ROW));
             htmlContent += `
                 <tr class="footnote-row-item">
                     <td>
@@ -953,9 +941,9 @@
             return;
         }
         const tbody = document.getElementById('footnotes-table-body');
-        let htmlContent = tbody.innerHTML;
-        htmlContent += `
-            <tr class="footnote-row-item">
+        const trow = document.createElement('tr');
+        trow.className = 'footnote-row-item';
+        trow.innerHTML =`
                 <td>
                     <input type="text" class="form-control form-control-sm fn-key-input fw-bold" value="" required>
                 </td>
@@ -969,9 +957,8 @@
                 <td class="text-center">
                     <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button>
                 </td>
-            </tr>
         `;
-        tbody.innerHTML = htmlContent;
+        tbody.appendChild(trow);
     }
 
     // --- ANVAYAM RENDER (Array List) ---
@@ -1352,11 +1339,14 @@
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-            if (!data.success) {
+            let commentaryTranslated = "";
+            if (data.success) {
+                commentaryTranslated = data.translated_text || "";
+                showToast("Translated Content", "success");
+            } else {
                 showToast(data.message + data.details, "warning");
-                return;
+                commentaryTranslated = data.message + data.details || "";
             }
-            const commentaryTranslated = data.translated_text || "";
             createAcharyaRowElement(acharya, cleanCode, commentaryTranslated);
         } else {
             createAcharyaRowElement(acharya, 'en', '');
@@ -1770,10 +1760,12 @@
     function renderQuiz(q,idx) {
         const qBlock = document.createElement('div');
         qBlock.className = 'mb-4 p-2 border-bottom border-light';
+        const CHARS_PER_ROW = Math.round(window.innerWidth/10);
+        const rowsCount = Math.max(1, Math.ceil(q.question.length / CHARS_PER_ROW));
         qBlock.innerHTML = `
             <div class="input-group mb-1">
                 <span class="input-group-text text-bg-info">Q-${idx + 1}</span>
-                <textarea style="font-size: 0.9rem;" rows="1" class="form-control question">${q.question}</textarea>
+                <textarea style="font-size: 0.9rem;" rows="${rowsCount}" class="form-control question">${q.question}</textarea>
             </div>
             <div class="input-group mb-1">
                 <span class="input-group-text text-bg-danger">A: </span>
@@ -1908,5 +1900,27 @@
             }
         }).catch(err => showToast(err.message, "danger"));
     }
+
+    function calculateTextAreaLines(text,mW) {
+        const mirror = document.createElement('div');
+        mirror.textContent = text + '\u200B';
+        mirror.style.width = mW;
+        document.body.appendChild(mirror);
+        const styles = window.getComputedStyle(mirror);
+        const totalHeight = mirror.clientHeight;
+        const fontSize = parseFloat(styles.fontSize);
+        let fontLineHeight = parseFloat(styles.lineHeight);
+        if (isNaN(fontLineHeight)) {
+          fontLineHeight = fontSize * 1.2;
+        }
+        document.body.removeChild(mirror);
+        let lines = Math.max(1, Math.round(totalHeight / fontLineHeight));
+        console.log(lines);
+        return lines;
+    }
+
+
+
+
 </script>
 {% endblock %}
