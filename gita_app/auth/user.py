@@ -2,10 +2,12 @@ import random, re, resend, os
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template
 from flask_mail import Message
 from database import db, mail
-from models import Student, Verse, Comment
-from datetime import datetime, timedelta
+from models import Student, Verse, Comment, Chapter
+from datetime import datetime, timedelta, timezone
 from werkzeug.utils import secure_filename
 from werkzeug.security import (generate_password_hash, check_password_hash)
+from PIL import Image, ImageDraw, ImageFont
+from translate import dynamic_sanskrit_transliterate #customized function
 
 user = Blueprint("user", __name__)
 
@@ -45,7 +47,7 @@ def send_otp(email, otp, purpose):
 
         Your One-Time Password (OTP) for {purpose} is: {otp}
         This OTP is valid for 5 minutes.If you didn't request this, please ignore this email.
-
+        
         Regards,
         Gita Team
         """
@@ -127,7 +129,7 @@ def get_otp():
         "otp": otp,
         "otp_created_at": datetime.now().isoformat()  # isoformat converts datetime → string
     }
-    return jsonify({"success": True, "message": "OTP Sent Successfully."})
+    return jsonify({"success": True, "message": "OTP Sent Successfully. Check the Spam folder also"})
 
 @user.route('/api/sumbit_otp', methods=['POST'])
 def get_otp_submit():
@@ -215,7 +217,7 @@ def api_student_forgot_password():
         }
         send_otp(valid_email, otp, purpose)
         # print(valid_email, otp, purpose)
-        return jsonify({"success": True, "message": "OTP Sent to Your Email Address."})
+        return jsonify({"success": True, "message": "OTP Sent to Your Email Address. Check the Spam folder also"})
     else:
         return jsonify({"success": False, "message": "Email Address not found. Please Register."})
 
@@ -295,4 +297,178 @@ def delete_comment(cid):
     db.session.commit()
     return jsonify({"success": True})
 
+IMAGE_PATH = "./static/profile_pics/gita_daily_card.png"
+CRON_TOKEN_MAIL = os.getenv('CRON_TOKEN_MAIL')
+@user.route('/trigger-daily-email', methods=['GET'])
+def send_daily_image_email():
+    provided_token = request.args.get('token')
+    if provided_token != CRON_TOKEN_MAIL:
+        return jsonify({"error": "Unauthorized endpoint access"}), 403
+    students = Student.query.all()
+    receivers = [student.email for student in students]
+    image_filename = os.path.basename(IMAGE_PATH)
+    msg = Message(
+        subject="Daily Gita Shloka Card",
+        recipients=receivers
+    )
+    image_cid = "daily_shloka_image"
+    msg.html = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; text-align: center; background-color: #f7f7f7; padding: 20px;">
+                <h2 style="color: #2a1b14;">✨ Your Gita Shloka Today ✨</h2>                    
 
+                <!-- The magic happens here: src points directly to the CID -->
+                <div style="margin: 20px auto; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+                    <img src="cid:{image_cid}" alt="Daily Shloka Card" style="width: 100%; height: auto; display: block;" />
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #dddddd; margin-top: 30px;" />
+                <p style="font-size: 15px; color: #888888;">WebSite</p>
+                <p style="font-size: 25px; color: #858888;"><a href="https://krishateach.pythonanywhere.com/">KrishnaTeach</a></p>               
+            </body>
+        </html>
+        """
+    # Open and attach the image binary data
+    with open(IMAGE_PATH, "rb") as fp:
+        msg.attach(
+            filename=image_filename,
+            content_type=f"image/{image_filename.split('.')[-1]}",
+            data=fp.read(),
+            disposition="inline",  # Crucial: Instructs email clients not to show it as a download [1]
+            headers={"Content-ID": f"<{image_cid}>"}  # Maps the binary data directly to the HTML <img> tag [1]
+        )
+    mail.send(msg)
+    return jsonify({"status": "success. Mail Sent"}), 200
+
+
+def wrap_text(text, font, max_width):
+    """
+    Wrap text while preserving existing newline structure
+    and word sequence.
+    """
+
+    all_lines = []
+
+    # Preserve original line breaks
+    paragraphs = text.strip().splitlines()
+
+    for paragraph in paragraphs:
+
+        # Handle empty lines
+        if not paragraph.strip():
+            all_lines.append("")
+            continue
+
+        words = paragraph.split()
+        current_line = ""
+
+        for word in words:
+
+            if current_line:
+                test_line = current_line + " " + word
+            else:
+                test_line = word
+
+            bbox = font.getbbox(test_line)
+            text_width = bbox[2] - bbox[0]
+
+            if text_width <= max_width:
+                current_line = test_line
+
+            else:
+                # Save current line
+                if current_line:
+                    all_lines.append(current_line)
+
+                # Start new line with current word
+                current_line = word
+
+        # Save remaining text
+        if current_line:
+            all_lines.append(current_line)
+
+    return all_lines
+
+CRON_TOKEN_IMAGE = os.getenv('CRON_TOKEN_IMAGE')
+@user.route('/trigger-daily-card', methods=['GET'])
+def generate_daily_card():
+    provided_token = request.args.get('token')
+    if provided_token != CRON_TOKEN_IMAGE:
+        return jsonify({"error": "Unauthorized endpoint access"}), 403
+    # Fetch random data
+    chapters = Chapter.query.order_by(Chapter.num).all()
+    chapters_list = []
+    for c in chapters:
+        verses = Verse.query.filter(
+            Verse.chapter_number == c.num).all()  # Getting the number of verses in each chapter
+        chapters_list.append((c.num, len(verses)))
+    random_tup = random.sample(chapters_list, 1)
+    chapter_num = random_tup[0][0]
+    verse_num = random.randint(1, random_tup[0][1])
+    verse = Verse.query.where(Verse.chapter_number == chapter_num, Verse.verse_number == verse_num).one_or_none()
+    pat = r'<[^>]+>'
+    meaning = re.sub(pat, '', verse.meaning.get('en').get('description'))
+    verse_data = {"chapter": chapter_num, "verse": verse_num,
+        "shloka": verse.shloka,
+        "meaning": meaning
+        }
+    print(verse_data)
+    w, h = 300, 400
+    o_b, i_b = int(w * 0.03), int(h * 0.04)
+    card_base_path = "./static/profile_pics/KrishnaTeach.webp"
+    # 1. Base Canvas Preparation
+    bg_img = Image.open(card_base_path).resize((w, h), Image.Resampling.LANCZOS)
+
+    # 2. Add Semi-Transparent Overlay Tint for Maximum Text Readability
+    overlay = Image.new("RGBA", (w, h), (15, 8, 4, 195))
+    card = Image.alpha_composite(bg_img.convert("RGBA"), overlay)
+    draw = ImageDraw.Draw(card)
+
+    # 3. Draw Traditional Geometric Gold Borders
+    draw.rectangle([o_b, o_b, w - o_b, h - o_b], outline=(241, 196, 15, 140), width=2)
+    draw.rectangle([i_b, i_b, w - i_b, h - i_b], outline=(230, 126, 34, 80), width=1)
+
+    # 4. Initialize Typography
+    font_path = "./static/font/NotoSerifDevanagari-Regular.ttf"
+    title_font = ImageFont.truetype(font_path, int(w * 0.04))
+    sanskrit_font = ImageFont.truetype(font_path, int(w * 0.045))
+    meaning_font = ImageFont.truetype(font_path, int(w * 0.04))
+    footer_font = ImageFont.truetype(font_path, int(w * 0.03))
+
+    today_date = datetime.now(timezone.utc)
+    formatted_time = today_date.strftime('%d-%b-%Y')
+    draw.text((w // 2, int(h * 0.066)), formatted_time, fill=(241, 196, 15, 255), font=footer_font, anchor="mm")
+
+    # 5. Render Header/Title Block
+    title_text = f"BHAGAVAD GITA • CHAPTER {verse_data['chapter']} VERSE {verse_data['verse']}"
+    draw.text((w//2, int(h * 0.12)), title_text, fill=(241, 196, 15, 255), font=title_font, anchor="mm")
+
+    # Elegant Orange Accent Separator Line
+    draw.line([(w // 2 - int(w * 0.25), int(h * 0.15)), (w // 2 + int(w * 0.25), int(h * 0.15))], fill=(230, 126, 34, 200), width=2)
+
+    # 6. Render Devanagari Sanskrit Verses
+    draw.text((w // 2, int(h * 0.25)), "SHLOKA", fill=(241, 196, 15, 190), font=title_font, anchor="mm")
+
+    sanskrit_lines = wrap_text(verse_data['shloka'], sanskrit_font, int(w * 0.9))
+    sanskrit_block = "\n".join(sanskrit_lines)
+    draw.multiline_text((w // 2, int(h * 0.35)), sanskrit_block, fill=(255, 255, 255, 245),
+                        font=sanskrit_font, anchor="ma", align="center", spacing=10)
+
+    draw.text((w // 2, int(h * 0.5)), "MEANING", fill=(247, 115, 115, 190), font=title_font, anchor="mm")
+
+    # 7. Render Translated Meaning Block with Dynamic Text Wrapping
+    meaning_block = "\n".join(wrap_text(verse_data['meaning'].strip(), meaning_font, int(w * 0.75)))
+    draw.multiline_text((w//2, int(h * 0.52)), meaning_block, fill=(218, 223, 230),
+                        font=meaning_font, anchor="ma", align="center", spacing=7)
+
+    # 8. Bottom Footer Layout
+    footer_text = "---Gita Shloka Card---"
+    draw.text((w // 2, h - int(w * 0.1)), footer_text, fill=(230, 126, 34, 130), font=footer_font, anchor="mm")
+
+    # 9. Save and Display Inline in Colab Cell Output
+    output_filename = "gita_daily_card.png"
+    final_card = card.convert("RGB")
+    card_download_dir = "./static/profile_pics"
+    file_path = os.path.join(card_download_dir, output_filename)
+    final_card.save(file_path, "PNG")
+    return jsonify({"status": "success. Card Created"}), 200
