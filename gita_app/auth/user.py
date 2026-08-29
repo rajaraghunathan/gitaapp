@@ -297,7 +297,7 @@ def delete_comment(cid):
     db.session.commit()
     return jsonify({"success": True})
 
-IMAGE_PATH = "./static/profile_pics/gita_daily_card.png"
+
 CRON_TOKEN_MAIL = os.getenv('CRON_TOKEN_MAIL')
 @user.route('/trigger-daily-email', methods=['GET'])
 def send_daily_image_email():
@@ -306,7 +306,10 @@ def send_daily_image_email():
         return jsonify({"error": "Unauthorized endpoint access"}), 403
     students = Student.query.all()
     receivers = [student.email for student in students]
-    image_filename = os.path.basename(IMAGE_PATH)
+    image_path = "./static/profile_pics/gita_daily_card.webp"
+    if not os.path.exists(image_path):
+        return jsonify({"error": "Image Card File Not Found"}), 403
+    image_filename = os.path.basename(image_path)
     msg = Message(
         subject="Daily Gita Shloka Card",
         recipients=receivers
@@ -315,7 +318,7 @@ def send_daily_image_email():
     msg.html = f"""
         <html>
             <body style="font-family: Arial, sans-serif; text-align: center; background-color: #f7f7f7; padding: 20px;">
-                <h2 style="color: #2a1b14;">✨ Your Gita Shloka Today ✨</h2>                    
+                <h2 style="color: #2a1b14;">✨ Gita Shloka Today ✨</h2>                    
 
                 <!-- The magic happens here: src points directly to the CID -->
                 <div style="margin: 20px auto; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
@@ -329,7 +332,7 @@ def send_daily_image_email():
         </html>
         """
     # Open and attach the image binary data
-    with open(IMAGE_PATH, "rb") as fp:
+    with open(image_path, "rb") as fp:
         msg.attach(
             filename=image_filename,
             content_type=f"image/{image_filename.split('.')[-1]}",
@@ -338,6 +341,7 @@ def send_daily_image_email():
             headers={"Content-ID": f"<{image_cid}>"}  # Maps the binary data directly to the HTML <img> tag [1]
         )
     mail.send(msg)
+    os.remove(image_path)
     return jsonify({"status": "success. Mail Sent"}), 200
 
 # Helper Functions for Pillow Drawing
@@ -425,15 +429,15 @@ def generate_daily_card():
         "shloka": verse.shloka,
         "meaning": meaning
         }
-    w, h = 400, 550
-    o_b, i_b = int(w * 0.03), int(h * 0.04)
-    inc = int(h * 0.01)
     card_base_path = "./static/profile_pics/KrishnaTeach.webp"
     # 1. Base Canvas Preparation
-    bg_img = Image.open(card_base_path).resize((w, h), Image.Resampling.LANCZOS)
+    bg_img = Image.open(card_base_path)
+    w, h = bg_img.width, bg_img.height
+    o_b, i_b = int(w * 0.03), int(h * 0.04)
+    inc = int(h * 0.01)
 
     # 2. Add Semi-Transparent Overlay Tint for Maximum Text Readability
-    overlay = Image.new("RGBA", (w, h), (15, 8, 4, 195))
+    overlay = Image.new("RGBA", (w, h), (15, 8, 4, 160))
     card = Image.alpha_composite(bg_img.convert("RGBA"), overlay)
     draw = ImageDraw.Draw(card)
 
@@ -486,9 +490,9 @@ def generate_daily_card():
     draw.text((w // 2, h - int(w * 0.1)), footer_text, fill=(230, 126, 34, 130), font=footer_font, anchor="mm")
 
     # 9. Save and Display Inline in Colab Cell Output
-    output_filename = "gita_daily_card.png"
-    final_card = card.convert("RGB")
+    output_filename = "gita_daily_card.webp"
+    final_card = card.resize((w // 2, h // 2), Image.Resampling.LANCZOS).convert("RGB")
     card_download_dir = "./static/profile_pics"
     file_path = os.path.join(card_download_dir, output_filename)
-    final_card.save(file_path, "PNG")
+    final_card.save(file_path, "WEBP")
     return jsonify({"status": "success. Card Created"}), 200
