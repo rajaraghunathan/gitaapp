@@ -340,7 +340,7 @@ def send_daily_image_email():
     mail.send(msg)
     return jsonify({"status": "success. Mail Sent"}), 200
 
-
+# Helper Functions for Pillow Drawing
 def wrap_text(text, font, max_width):
     """
     Wrap text while preserving existing newline structure
@@ -389,6 +389,19 @@ def wrap_text(text, font, max_width):
 
     return all_lines
 
+def get_multiline_text_height(draw, text, font, spacing=5):
+    left, top, right, bottom = draw.multiline_textbbox(
+        (0, 0), text, font=font, spacing=spacing
+    )
+    return bottom - top
+
+def get_text_height(draw, text, font, stroke_width=0):
+    """Return the rendered height of a single-line text string."""
+    left, top, right, bottom = draw.textbbox(
+        (0, 0), text, font=font, stroke_width=stroke_width,
+    )
+    return bottom - top
+
 CRON_TOKEN_IMAGE = os.getenv('CRON_TOKEN_IMAGE')
 @user.route('/trigger-daily-card', methods=['GET'])
 def generate_daily_card():
@@ -412,9 +425,9 @@ def generate_daily_card():
         "shloka": verse.shloka,
         "meaning": meaning
         }
-    print(verse_data)
-    w, h = 300, 400
+    w, h = 400, 550
     o_b, i_b = int(w * 0.03), int(h * 0.04)
+    inc = int(h * 0.01)
     card_base_path = "./static/profile_pics/KrishnaTeach.webp"
     # 1. Base Canvas Preparation
     bg_img = Image.open(card_base_path).resize((w, h), Image.Resampling.LANCZOS)
@@ -431,34 +444,41 @@ def generate_daily_card():
     # 4. Initialize Typography
     font_path = "./static/font/NotoSerifDevanagari-Regular.ttf"
     title_font = ImageFont.truetype(font_path, int(w * 0.04))
-    sanskrit_font = ImageFont.truetype(font_path, int(w * 0.045))
+    sanskrit_font = ImageFont.truetype(font_path, int(w * 0.055))
     meaning_font = ImageFont.truetype(font_path, int(w * 0.04))
     footer_font = ImageFont.truetype(font_path, int(w * 0.03))
 
     today_date = datetime.now(timezone.utc)
     formatted_time = today_date.strftime('%d-%b-%Y')
-    draw.text((w // 2, int(h * 0.066)), formatted_time, fill=(241, 196, 15, 255), font=footer_font, anchor="mm")
+    cur_y = int(h * 0.066)
+    draw.text((w // 2, cur_y), formatted_time, fill=(241, 196, 15, 255), font=footer_font, anchor="mm")
 
     # 5. Render Header/Title Block
+    cur_y += get_text_height(draw, formatted_time, footer_font) + (2 * inc)
     title_text = f"BHAGAVAD GITA • CHAPTER {verse_data['chapter']} VERSE {verse_data['verse']}"
-    draw.text((w//2, int(h * 0.12)), title_text, fill=(241, 196, 15, 255), font=title_font, anchor="mm")
+    draw.text((w//2, cur_y), title_text, fill=(241, 196, 15, 255), font=title_font, anchor="mm")
 
     # Elegant Orange Accent Separator Line
-    draw.line([(w // 2 - int(w * 0.25), int(h * 0.15)), (w // 2 + int(w * 0.25), int(h * 0.15))], fill=(230, 126, 34, 200), width=2)
+    cur_y += get_text_height(draw, title_text, title_font) + inc
+    draw.line([(w // 2 - int(w * 0.25), cur_y), (w // 2 + int(w * 0.25), cur_y)], fill=(230, 126, 34, 200), width=2)
 
     # 6. Render Devanagari Sanskrit Verses
-    draw.text((w // 2, int(h * 0.25)), "SHLOKA", fill=(241, 196, 15, 190), font=title_font, anchor="mm")
+    cur_y += get_text_height(draw, title_text, title_font) + (2 * inc)
+    draw.text((w // 2, cur_y), "SHLOKA", fill=(241, 196, 15, 190), font=title_font, anchor="mm")
 
-    sanskrit_lines = wrap_text(verse_data['shloka'], sanskrit_font, int(w * 0.9))
+    cur_y += get_text_height(draw, "SHLOKA", title_font) + inc
+    sanskrit_lines = wrap_text(verse_data['shloka'], sanskrit_font, int(w * 0.85))
     sanskrit_block = "\n".join(sanskrit_lines)
-    draw.multiline_text((w // 2, int(h * 0.35)), sanskrit_block, fill=(255, 255, 255, 245),
-                        font=sanskrit_font, anchor="ma", align="center", spacing=10)
+    draw.multiline_text((w // 2, cur_y), sanskrit_block, fill=(255, 255, 255, 245),
+                        font=sanskrit_font, anchor="ma", align="center", spacing=8)
 
-    draw.text((w // 2, int(h * 0.5)), "MEANING", fill=(247, 115, 115, 190), font=title_font, anchor="mm")
+    cur_y += get_multiline_text_height(draw, sanskrit_block, sanskrit_font, 10) + (7 * inc)
+    draw.text((w // 2, cur_y), "MEANING", fill=(247, 115, 115, 190), font=title_font, anchor="mm")
 
     # 7. Render Translated Meaning Block with Dynamic Text Wrapping
-    meaning_block = "\n".join(wrap_text(verse_data['meaning'].strip(), meaning_font, int(w * 0.75)))
-    draw.multiline_text((w//2, int(h * 0.52)), meaning_block, fill=(218, 223, 230),
+    cur_y += get_text_height(draw, "MEANING", title_font) + inc
+    meaning_block = "\n".join(wrap_text(verse_data['meaning'].strip(), meaning_font, int(w * 0.8)))
+    draw.multiline_text((w//2, cur_y), meaning_block, fill=(218, 223, 230),
                         font=meaning_font, anchor="ma", align="center", spacing=7)
 
     # 8. Bottom Footer Layout
