@@ -436,13 +436,21 @@ def generate_daily_card():
     o_b, i_b = int(w * 0.03), int(h * 0.04)
     inc = int(h * 0.01)
 
-    # 2. Add Semi-Transparent Overlay Tint for Maximum Text Readability
-    overlay = Image.new("RGBA", (w, h), (15, 8, 4, 160))
+    overlay = Image.new("RGBA", bg_img.size, (0, 0, 0, 0))
+    overlay_canvas = ImageDraw.Draw(overlay)
+    box_coords = [o_b, o_b, w - o_b, h - o_b]
+    overlay_canvas.rounded_rectangle(
+        box_coords,
+        radius=15,
+        fill=(20, 20, 20, 180),  # Dark charcoal color with ~55% opacity
+        outline=(212, 175, 55, 60),  # Optional: Very faint gold border matching your card
+        width=2
+    )
     card = Image.alpha_composite(bg_img.convert("RGBA"), overlay)
     draw = ImageDraw.Draw(card)
 
     # 3. Draw Traditional Geometric Gold Borders
-    draw.rectangle([o_b, o_b, w - o_b, h - o_b], outline=(241, 196, 15, 140), width=2)
+    # draw.rectangle([o_b, o_b, w - o_b, h - o_b], outline=(241, 196, 15, 140), width=2)
     draw.rectangle([i_b, i_b, w - i_b, h - i_b], outline=(230, 126, 34, 80), width=1)
 
     # 4. Initialize Typography
@@ -468,22 +476,22 @@ def generate_daily_card():
 
     # 6. Render Devanagari Sanskrit Verses
     cur_y += get_text_height(draw, title_text, title_font) + (2 * inc)
-    draw.text((w // 2, cur_y), "SHLOKA", fill=(241, 196, 15, 190), font=title_font, anchor="mm")
+    draw.text((w // 2, cur_y), "*** SHLOKA ***", fill=(241, 196, 15, 190), font=title_font, anchor="mm")
 
-    cur_y += get_text_height(draw, "SHLOKA", title_font) + inc
+    cur_y += get_text_height(draw, "---SHLOKA---", title_font) + inc
     sanskrit_lines = wrap_text(verse_data['shloka'], sanskrit_font, int(w * 0.85))
     sanskrit_block = "\n".join(sanskrit_lines)
     draw.multiline_text((w // 2, cur_y), sanskrit_block, fill=(255, 255, 255, 245),
-                        font=sanskrit_font, anchor="ma", align="center", spacing=8)
+                        font=sanskrit_font, anchor="ma", align="center", spacing=15)
 
-    cur_y += get_multiline_text_height(draw, sanskrit_block, sanskrit_font, 10) + (7 * inc)
-    draw.text((w // 2, cur_y), "MEANING", fill=(247, 115, 115, 190), font=title_font, anchor="mm")
+    cur_y += get_multiline_text_height(draw, sanskrit_block, sanskrit_font, 20) + (7 * inc)
+    draw.text((w // 2, cur_y), "*** MEANING ***", fill=(247, 115, 115, 190), font=title_font, anchor="mm")
 
     # 7. Render Translated Meaning Block with Dynamic Text Wrapping
-    cur_y += get_text_height(draw, "MEANING", title_font) + inc
+    cur_y += get_text_height(draw, "---MEANING---", title_font) + inc
     meaning_block = "\n".join(wrap_text(verse_data['meaning'].strip(), meaning_font, int(w * 0.8)))
     draw.multiline_text((w//2, cur_y), meaning_block, fill=(218, 223, 230),
-                        font=meaning_font, anchor="ma", align="center", spacing=7)
+                        font=meaning_font, anchor="ma", align="center", spacing=12)
 
     # 8. Bottom Footer Layout
     footer_text = "---Gita Shloka Card---"
