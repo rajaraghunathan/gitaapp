@@ -183,7 +183,30 @@
             <li class="nav-item">
               <a class="nav-link" data-bs-dismiss="offcanvas" data-bs-toggle="pill" href="#comment-pane">Discussion</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="offcanvas" href="#gitaCard" onclick="generateGitaCard()">Card</a>
+            </li>
         </ul>
+    </div>
+
+</div>
+
+<div class="offcanvas offcanvas-end" id="gitaCard">
+    <div class="offcanvas-header">
+        {% if session.get('user_id') %}
+            <span style="font-size:0.85rem; color:#7f8c8d; font-weight:bold; margin-right:15px;">
+                🙏 Welcome, <span class="text-primary">{% if student %}{{ student.name }}{% else %}Student{% endif %}</span>
+            </span>
+        {% endif %}
+        <button id="gitaCardDismiss" type="button" class="btn-close" data-bs-dismiss="offcanvas" ></button>
+    </div>
+    <div class="offcanvas-body text-center">
+        <h5 style="color: #2a1b14;">✨ Gita Shloka Today ✨</h5>
+        <div style="margin: 20px auto; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+            <img src=""
+                 alt="KrishnaTeach.webp"
+                 style="width: 100%; height: auto; display: block;" />
+        </div>
     </div>
 
 </div>
@@ -281,6 +304,8 @@
             }
         })
 
+        const gitaCanvas = document.getElementById('gitaCard');
+        gitaCanvas.addEventListener('hidden.bs.offcanvas', function () {deleteCards()})
     });
 
     function lockDOM() {
@@ -897,7 +922,35 @@
         .catch(err => alert("Network transmission breakdown: " + err));
     }
 
+    function generateGitaCard() {
+        fetch('/trigger-daily-card', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                c: activeVerseChapterNum,
+                v: activeVerseNumber,
+                lang: currentMeaningLanguage
+            })
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Server communication fault.");
+            return res.json();
+        })
+        .then(data => {
+            if (data.status) {
+                const imgEl = document.querySelector('#gitaCard img')
+                imgEl['src'] = data.file
+                showToast(data.message, "success");
+            } else {
+                showToast(data.message, "danger");
+            }
+        })
+        .catch(err => showToast(err.message, "danger"));
+    }
 
+    function deleteCards() {
+        fetch('/deleteUserCards')
+    }
 
 
 </script>

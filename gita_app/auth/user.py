@@ -305,7 +305,7 @@ def send_daily_image_email():
     if provided_token != CRON_TOKEN_MAIL:
         return jsonify({"error": "Unauthorized endpoint access"}), 403
     students = Student.query.all()
-    receivers = [student.email for student in students]
+    receivers = ['chitraraja40@gmail.com'] if len(students) == 0 else [student.email for student in students]
     image_path = "./static/profile_pics/gita_daily_card.webp"
     if not os.path.exists(image_path):
         return jsonify({"error": "Image Card File Not Found"}), 403
@@ -407,26 +407,47 @@ def get_text_height(draw, text, font, stroke_width=0):
     return bottom - top
 
 CRON_TOKEN_IMAGE = os.getenv('CRON_TOKEN_IMAGE')
-@user.route('/trigger-daily-card', methods=['GET'])
+@user.route('/trigger-daily-card', methods=['GET', 'POST'])
 def generate_daily_card():
-    provided_token = request.args.get('token')
-    if provided_token != CRON_TOKEN_IMAGE:
-        return jsonify({"error": "Unauthorized endpoint access"}), 403
+    card_download_dir = "./static/profile_pics"
+    chapter, verse, lang = None, None, 'en'
+    if request.method == 'GET':
+        provided_token = request.args.get('token')
+        chapter = request.args.get('c')
+        verse = request.args.get('v')
+        lang = request.args.get('lang', 'en')
+        if provided_token != CRON_TOKEN_IMAGE:
+            return jsonify({"error": "Unauthorized endpoint access"}), 403
+        file_path = os.path.join(card_download_dir, 'gita_daily_card.webp')
+        if os.path.exists(file_path):
+            return jsonify({"message": "Card Already Exists"}), 200
+    if request.method == 'POST':
+        data = request.get_json() or {}
+        chapter = data.get('c', None)
+        verse = data.get('v', None)
+        lang = data.get('lang', 'en')
+
     # Fetch random data
-    chapters = Chapter.query.order_by(Chapter.num).all()
-    chapters_list = []
-    for c in chapters:
-        verses = Verse.query.filter(
-            Verse.chapter_number == c.num).all()  # Getting the number of verses in each chapter
-        chapters_list.append((c.num, len(verses)))
-    random_tup = random.sample(chapters_list, 1)
-    chapter_num = random_tup[0][0]
-    verse_num = random.randint(1, random_tup[0][1])
+    if chapter is None or verse is None:
+            chapters = Chapter.query.order_by(Chapter.num).all()
+            chapters_list = []
+            for c in chapters:
+                verses = Verse.query.filter(
+                    Verse.chapter_number == c.num).all()  # Getting the number of verses in each chapter
+                chapters_list.append((c.num, len(verses)))
+            random_tup = random.sample(chapters_list, 1)
+            chapter_num = random_tup[0][0]
+            verse_num = random.randint(1, random_tup[0][1])
+    else:
+        chapter_num = int(chapter)
+        verse_num = int(verse)
     verse = Verse.query.where(Verse.chapter_number == chapter_num, Verse.verse_number == verse_num).one_or_none()
+    if not verse:
+        return jsonify({"error": "The Requested Shloka is not available in the DataBase"}), 403
     pat = r'<[^>]+>'
-    meaning = re.sub(pat, '', verse.meaning.get('en').get('description'))
+    meaning = re.sub(pat, '', verse.meaning.get(lang).get('description'))
     verse_data = {"chapter": chapter_num, "verse": verse_num,
-        "shloka": verse.shloka,
+        "shloka": dynamic_sanskrit_transliterate(verse.shloka, lang, source_lang='devanagari') if lang != 'en' else verse.shloka,
         "meaning": meaning
         }
     card_base_path = "./static/profile_pics/KrishnaTeach.webp"
@@ -454,11 +475,16 @@ def generate_daily_card():
     draw.rectangle([i_b, i_b, w - i_b, h - i_b], outline=(230, 126, 34, 80), width=1)
 
     # 4. Initialize Typography
-    font_path = "./static/font/NotoSerifDevanagari-Regular.ttf"
-    title_font = ImageFont.truetype(font_path, int(w * 0.04))
-    sanskrit_font = ImageFont.truetype(font_path, int(w * 0.055))
-    meaning_font = ImageFont.truetype(font_path, int(w * 0.04))
-    footer_font = ImageFont.truetype(font_path, int(w * 0.03))
+    if lang == 'ta':
+        font = "./static/font/NotoSerifTamil-Regular.ttf"
+        sanskrit_font = ImageFont.truetype(font, int(w * 0.035))
+        meaning_font = ImageFont.truetype(font, int(w * 0.035))
+    else:
+        font = "./static/font/NotoSerifDevanagari-Regular.ttf"
+        sanskrit_font = ImageFont.truetype(font, int(w * 0.055))
+        meaning_font = ImageFont.truetype(font, int(w * 0.04))
+    title_font = ImageFont.truetype(font, int(w * 0.04))
+    footer_font = ImageFont.truetype(font, int(w * 0.03))
 
     today_date = datetime.now(timezone.utc)
     formatted_time = today_date.strftime('%d-%b-%Y')
@@ -479,8 +505,10 @@ def generate_daily_card():
     draw.text((w // 2, cur_y), "*** SHLOKA ***", fill=(241, 196, 15, 190), font=title_font, anchor="mm")
 
     cur_y += get_text_height(draw, "---SHLOKA---", title_font) + inc
-    sanskrit_lines = wrap_text(verse_data['shloka'], sanskrit_font, int(w * 0.85))
+    sanskrit_lines = wrap_text(verse_data['shloka'], sanskrit_font, int(w * 0.9))
     sanskrit_block = "\n".join(sanskrit_lines)
+    if lang == 'ta':
+        sanskrit_block = sanskrit_block.replace("꞉", ":")
     draw.multiline_text((w // 2, cur_y), sanskrit_block, fill=(255, 255, 255, 245),
                         font=sanskrit_font, anchor="ma", align="center", spacing=15)
 
@@ -489,7 +517,7 @@ def generate_daily_card():
 
     # 7. Render Translated Meaning Block with Dynamic Text Wrapping
     cur_y += get_text_height(draw, "---MEANING---", title_font) + inc
-    meaning_block = "\n".join(wrap_text(verse_data['meaning'].strip(), meaning_font, int(w * 0.8)))
+    meaning_block = "\n".join(wrap_text(verse_data['meaning'].strip(), meaning_font, int(w * 0.9)))
     draw.multiline_text((w//2, cur_y), meaning_block, fill=(218, 223, 230),
                         font=meaning_font, anchor="ma", align="center", spacing=12)
 
@@ -498,9 +526,28 @@ def generate_daily_card():
     draw.text((w // 2, h - int(w * 0.1)), footer_text, fill=(230, 126, 34, 130), font=footer_font, anchor="mm")
 
     # 9. Save and Display Inline in Colab Cell Output
-    output_filename = "gita_daily_card.webp"
+    if request.method == 'POST':
+        student_id = session['user_id']
+        output_filename = f"{student_id}_BG_Card_{chapter_num}_{verse_num}_{lang}.webp"
+    else:
+        output_filename = "gita_daily_card.webp"
     final_card = card.resize((w // 2, h // 2), Image.Resampling.LANCZOS).convert("RGB")
     card_download_dir = "./static/profile_pics"
     file_path = os.path.join(card_download_dir, output_filename)
     final_card.save(file_path, "WEBP")
-    return jsonify({"status": "success. Card Created"}), 200
+    response = {
+        'status': True,
+        'message': "success. Card Created",
+        'file': url_for('static', filename=f'profile_pics/{output_filename}')
+    }
+    return jsonify(response), 200
+
+@user.route('/deleteUserCards')
+def delete_user_cards():
+    card_dir = "./static/profile_pics"
+    files = os.listdir(card_dir)
+    student_id = session['user_id']
+    for file in files:
+        if f'{student_id}_BG_Card' in file:
+            os.remove(os.path.join(card_dir, file))
+    return jsonify(status='success'), 200
