@@ -334,8 +334,14 @@
                 <input type="hidden" id="quiz-lang" value="">
                 <input type="hidden" id="quiz-chapter" value="">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white gap-2">
                         <h5 id="quiz-h5">Interactive Quiz</h5>
+
+                        <select id="select-quiz-lang" onchange="changeQuizLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="ta">Tamil</option>
+                        </select>
+
                         <button type="button" class="btn btn-success btn-sm" onclick="addNewQuiz()" >Add Quiz</button>
                     </div>
                     <div id="quizQuestionsContainer" class="card-body overflow-y-auto" style="height: 60vh;">
@@ -1715,17 +1721,21 @@
         document.getElementById(`${id}NewContent`).textContent = description;
     }
 
+    function changeQuizLanguage(lang) {
+        fetchQuizList()
+    }
+
     function fetchQuizList() {
+        const selectedLang = document.getElementById('select-quiz-lang').value;
         const aQzL = document.getElementById("quiz-lang").value;
         const aQzC = parseInt(document.getElementById("quiz-chapter").value);
-        if (aQzL === currentMeaningLanguage && aQzC === activeVerseChapterNum) {
+        if (aQzL === selectedLang && aQzC === activeVerseChapterNum) {
             return;
         }
-
-        document.getElementById("quiz-lang").value = currentMeaningLanguage;
+        document.getElementById("quiz-lang").value = selectedLang;
         document.getElementById("quiz-chapter").value = activeVerseChapterNum;
 
-        const lang = currentMeaningLanguage || 'en';
+        const lang = selectedLang || 'en';
         const chapter = activeVerseChapterNum || 1;
         const payload = {lang: lang, chapter: chapter};
         const params = new URLSearchParams(payload).toString();
@@ -1879,11 +1889,23 @@
     function updateQuizToDB() {
         const allowedStatuses = ['new', 'updated', 'deleted'];
         const modificationsOnly = quizData.filter(item => allowedStatuses.includes(item.status));
+        const selectedLang = document.getElementById('select-quiz-lang').value
         if (modificationsOnly.length === 0) {
             showToast("No Updates to Commit", "warning");
             return;
         }
-        const payload = {questions: modificationsOnly, lang: currentMeaningLanguage, chapter: activeVerseChapterNum};
+
+        // combine .every() with Object.values() to achieve early-exit behavior with much less code:
+        const isValid = modificationsOnly.every(dict =>
+            Object.values(dict).every(val => val !== null && val !== undefined && val !== "")
+        );
+        if (!isValid) {
+            showToast('Update the Contents Before Committing', "danger");
+            return;
+        }
+
+        // const payload = {questions: modificationsOnly, lang: currentMeaningLanguage, chapter: activeVerseChapterNum};
+        const payload = {questions: modificationsOnly, lang: selectedLang, chapter: activeVerseChapterNum};
         fetch('/admin/quiz/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

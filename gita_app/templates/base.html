@@ -23,28 +23,34 @@
 
     <!-- Unified Application Header Menu -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-2">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand navbar-brand-custom" href="/">
                 <i class="fa-solid fa-om me-2 text-warning"></i> Gita Portal
             </a>
-            {% if session.get('user_id') and request.path == '/student-dashboard' %}
-                <a class="navbar-brand navbar-brand-custom" data-bs-toggle="offcanvas" data-bs-target="#studentMenu"
-                       style="cursor: pointer; font-size: 1.1rem;">Menu</a>
-            {% elif request.path == '/' %}
-                <a class="navbar-brand navbar-brand-custom" data-bs-toggle="offcanvas" data-bs-target="#chapterMenu"
-                       style="cursor: pointer; font-size: 1.1rem;">Menu</a>
-            {% else %}
+<!--            {% if session.get('user_id') and request.path == '/student-dashboard' %}-->
+<!--                <a class="navbar-brand navbar-brand-custom" data-bs-toggle="offcanvas" data-bs-target="#studentMenu"-->
+<!--                       style="cursor: pointer; font-size: 1.1rem;">Menu</a>-->
+<!--            {% elif request.path == '/' %}-->
+<!--                <a class="navbar-brand navbar-brand-custom" data-bs-toggle="offcanvas" data-bs-target="#chapterMenu"-->
+<!--                       style="cursor: pointer; font-size: 1.1rem;">Menu</a>-->
+<!--            {% else %}-->
 
-            {% endif %}
+<!--            {% endif %}-->
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+
             <div class="collapse navbar-collapse" id="appNavbar">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <div class="nav-item dropdown me-auto m-2">
+                  <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Home</a>
+                  <ul class="dropdown-menu">
                     <li class="nav-item"><a class="nav-link nav-link-custom" href="/"><i class="fa-solid fa-house me-1"></i> Home</a></li>
                     <li class="nav-item"><a class="nav-link nav-link-custom" href="#" onclick="alert('This platform is dedicated to imparting the timeless wisdom of the Bhagavad Gita chapter by chapter.')"><i class="fa-solid fa-circle-info me-1"></i> About</a></li>
                     <li class="nav-item"><a class="nav-link nav-link-custom" href="#" onclick="alert('For feedback or educational inquiries, reach out to krishnatomumukshu@gmail.com')"><i class="fa-solid fa-envelope me-1"></i> Contact</a></li>
-                </ul>
+                  </ul>
+                </div>
                 <div class="d-flex align-items-center gap-2">
                     {% if session.get('admin_logged_in') %}
                         <a href="/admin-dashboard" class="btn btn-warning btn-sm fw-bold"><i class="fa-solid fa-gauge me-1"></i> Admin Dashboard</a>

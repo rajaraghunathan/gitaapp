@@ -546,8 +546,10 @@ def generate_daily_card():
 def delete_user_cards():
     card_dir = "./static/profile_pics"
     files = os.listdir(card_dir)
-    student_id = session['user_id']
+    student_id = session.get('user_id')
     for file in files:
-        if f'{student_id}_BG_Card' in file:
+        if student_id and file.startswith(f'{student_id}_BG_Card'):
+            os.remove(os.path.join(card_dir, file))
+        if session.get('admin_logged_in') and f'BG_Card' in file:
             os.remove(os.path.join(card_dir, file))
     return jsonify(status='success'), 200
