@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Student Dashboard{% endblock %}
-
 {% block content %}
 
 <div class="container-fluid my-2 px-0">
     <input type="hidden" id="form_verse_id" value="">
     <input type="hidden" id="input_chapter">
     <input type="hidden" id="input_verse_number">
-    <div class="text-center">
-        <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.1rem"></i>
-    </div>
-    <div class="d-flex w-100 align-items-center gap-2 px-2 py-2">
+    <div class="sub-sticky">
+        <div class="text-center">
+            <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.1rem"></i>
+        </div>
+        <div class="d-flex w-100 align-items-center gap-2 px-2 py-2">
         <div class="dropdown mb-0 me-auto">
             <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">English</button>
             <ul class="dropdown-menu">
@@ -55,6 +55,7 @@
             <ul id="verseList" class="dropdown-menu"></ul>
         </div>
         <button class="btn btn-sm btn-primary flex-shrink-0" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">➡️</button>
+    </div>
     </div>
     <div id="div-section" class="tab-content w-100 d-block" style="width: 100% !important;">
         <!-- VERSE SECTION -->

@@ -39,6 +39,7 @@ class Verse(db.Model):
     chapter_number = db.Column(db.Integer, db.ForeignKey('chapter.num'), nullable=False)
     verse_number = db.Column(db.Integer, nullable=False)
     shloka = db.Column(db.Text, nullable=False) #In Original Devanagari
+    shlok = db.Column(MutableDict.as_mutable(JSON), nullable=True)
     meaning = db.Column(MutableDict.as_mutable(JSON), nullable=False)
     youtube_url = db.Column(MutableDict.as_mutable(JSON), nullable=True)
     # Connects verses to their respective student comments

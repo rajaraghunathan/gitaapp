@@ -117,3 +117,10 @@ body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif
     background-color: lime;
     font-weight: bold;
 }
+
+.sub-sticky {
+  position: sticky;
+  top: 56px;
+  z-index: 1020;
+  background-color: white;
+}

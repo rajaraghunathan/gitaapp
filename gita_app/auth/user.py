@@ -547,9 +547,15 @@ def delete_user_cards():
     card_dir = "./static/profile_pics"
     files = os.listdir(card_dir)
     student_id = session.get('user_id')
+    deleted = False
     for file in files:
         if student_id and file.startswith(f'{student_id}_BG_Card'):
             os.remove(os.path.join(card_dir, file))
+            deleted = True
         if session.get('admin_logged_in') and f'BG_Card' in file:
             os.remove(os.path.join(card_dir, file))
-    return jsonify(status='success'), 200
+            deleted = True
+    if deleted == True:
+        return jsonify(status=True, message='Deleted Successfully'), 200
+    else:
+        return jsonify(status=False, message='UnAuthorized'), 403
