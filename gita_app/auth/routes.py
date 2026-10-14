@@ -50,13 +50,31 @@ def get_single_verse_user():
 
         v_dict = {k: v for k, v in verse.__dict__.items() if not k.startswith('_')}
 
-        shloka_sa = v_dict["shloka"]
-        v_dict["shloka"] = {
-            'sa': shloka_sa,
-            'ta': dynamic_sanskrit_transliterate(shloka_sa, 'ta'),
-            'te': dynamic_sanskrit_transliterate(shloka_sa, 'te'),
-            'en': dynamic_sanskrit_transliterate(shloka_sa, 'en')
-        }
+        # shloka_sa = v_dict["shloka"]
+        shloka = v_dict["shlok"].get('shloka')
+        padached = v_dict["shlok"].get('padached', '')
+        sandhi = v_dict["shlok"].get('sandhi','')
+        anvayam = v_dict["shlok"].get('anvayam', '')
+        indic_lang = 'devanagari' if lang == 'hi' else lang
+        # v_dict["shlok"] = {
+        #     'shloka': dynamic_sanskrit_transliterate(shloka, indic_lang),
+        #     'padached': dynamic_sanskrit_transliterate(padached, indic_lang),
+        #     'sandhi': dynamic_sanskrit_transliterate(sandhi, indic_lang),
+        #     'anvayam': dynamic_sanskrit_transliterate(anvayam, indic_lang)
+        # }
+        v_dict["shlok"] = [
+            {'shloka': dynamic_sanskrit_transliterate(shloka, indic_lang)},
+            {'padached': dynamic_sanskrit_transliterate(padached, indic_lang)},
+            {'sandhi': dynamic_sanskrit_transliterate(sandhi, indic_lang)},
+            {'anvayam': dynamic_sanskrit_transliterate(anvayam, indic_lang)}
+        ]
+
+        # v_dict["shloka"] = {
+        #     'sa': shloka_sa,
+        #     'ta': dynamic_sanskrit_transliterate(shloka_sa, 'ta'),
+        #     'te': dynamic_sanskrit_transliterate(shloka_sa, 'te'),
+        #     'en': dynamic_sanskrit_transliterate(shloka_sa, 'en')
+        # }
 
         # CASE A: Requested language is already available in the dictionary
         if lang in v_dict["meaning"]:

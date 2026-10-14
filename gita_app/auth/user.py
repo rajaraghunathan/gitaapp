@@ -447,7 +447,8 @@ def generate_daily_card():
     pat = r'<[^>]+>'
     meaning = re.sub(pat, '', verse.meaning.get(lang).get('description'))
     verse_data = {"chapter": chapter_num, "verse": verse_num,
-        "shloka": dynamic_sanskrit_transliterate(verse.shloka, lang, source_lang='devanagari') if lang != 'en' else verse.shloka,
+        # "shloka": dynamic_sanskrit_transliterate(verse.shloka, lang, source_lang='devanagari') if lang != 'en' else verse.shloka,
+        "shloka": dynamic_sanskrit_transliterate(verse.shlok.get('shloka'), lang, source_lang='devanagari') if lang != 'en' else verse.shlok.get('shloka'),
         "meaning": meaning
         }
     card_base_path = "./static/profile_pics/KrishnaTeach.webp"

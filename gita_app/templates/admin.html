@@ -108,10 +108,36 @@
                             <div class="tab-pane fade show active" id="shloka-pane" role="tabpanel">
                                 <!-- Form Shloka Card -->
                                 <form id="meaning-language-form" class="card mb-2" onsubmit="saveCurrentFormContext(event)">
-                                    <div class="card shadow-sm border-primary mb-2">
-                                      <span class="input-group-text"><strong>Sanskrit Shloka</strong></span>
-                                      <textarea id="input_shloka" class="form-control" rows="3" required placeholder="Paste Sanskrit characters..."></textarea>
+                                    <div id="shloka-div">
+                                        <div class="card shadow-sm border-primary mb-2">
+                                            <div class="card-header">
+                                                <a class="btn btn-sm" data-bs-toggle="collapse" href="#sh-shloka" aria-expanded="true">SHLOKA</a>
+                                                <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-padached">PADA</a>
+                                                <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-sandhi">SANDHI</a>
+                                                <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-anvayam">ANVAYAM</a>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="sh-shloka" class="collapse show" data-bs-parent="#shloka-div">
+                                                    <textarea id="input_shloka" class="form-control" rows="3" required placeholder="Paste Sanskrit characters..."></textarea>
+                                                </div>
+                                                <div id="sh-padached" class="collapse" data-bs-parent="#shloka-div">
+                                                    <textarea id="input_padached" class="form-control" rows="3" required placeholder="Paste Pada characters..."></textarea>
+                                                </div>
+                                                <div id="sh-sandhi" class="collapse" data-bs-parent="#shloka-div">
+                                                    <textarea id="input_sandhi" class="form-control" rows="3" required placeholder="Paste Sandhi characters..."></textarea>
+                                                </div>
+                                                <div id="sh-anvayam" class="collapse" data-bs-parent="#shloka-div">
+                                                    <textarea id="input_anvayam" class="form-control" rows="3" required placeholder="Paste Anvayam characters..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
+
+<!--                                    <div class="card shadow-sm border-primary mb-2">-->
+<!--                                      <span class="input-group-text"><strong>Sanskrit Shloka</strong></span>-->
+<!--                                      <textarea id="in_shloka" class="form-control" rows="3" required placeholder="Paste Sanskrit characters..."></textarea>-->
+<!--                                    </div>-->
                                     <div class="card shadow-sm border-primary">
                                         <div class="card-body">
                                             <!-- Fixed Description Text Block -->
@@ -615,7 +641,11 @@
         document.getElementById('form_verse_id').value = id;
         document.getElementById('input_chapter').value = ch;
         document.getElementById('input_verse_number').value = vn;
-        document.getElementById('input_shloka').value = verse.shloka;
+        // document.getElementById('input_shloka').value = verse.shloka;
+        document.getElementById('input_shloka').value = verse.shlok["shloka"];
+        document.getElementById('input_padached').value = verse.shlok["padached"] || "";
+        document.getElementById('input_sandhi').value = verse.shlok["sandhi"] || "";
+        document.getElementById('input_anvayam').value = verse.shlok["anvayam"] || "";
         // document.getElementById('input_youtube_url').value = verse.youtube_url;
 
         // Cache coordinates to locate verse & commentaries
@@ -1030,13 +1060,13 @@
     }
 
     function shlokaFormValidate() {
-        const shlokaTextEl = document.getElementById("input_shloka");
-        const sText = shlokaTextEl.value;
-        if (sText.trim() === ''){
-            document.getElementById("a-shloka").click(); //Activate shloka-pane
-            shlokaTextEl.focus();
-            return false;
-        }
+        // const shlokaTextEl = document.getElementById("input_shloka");
+        // const sText = shlokaTextEl.value;
+        // if (sText.trim() === ''){
+        //     document.getElementById("a-shloka").click(); //Activate shloka-pane
+        //     shlokaTextEl.focus();
+        //     return false;
+        // }
 
         // Check for Field Description box for emptiness
         const editor = document.getElementById('field-description');
@@ -1196,16 +1226,29 @@
         const isValid = shlokaFormValidate() //Validation step for shloka-pane and anvayam pane
         if (isValid === false) return;
 
-        const shloka = document.getElementById('input_shloka').value;
+        const box = document.getElementById("input_shloka");
+        const sText = box.value.trim();
+        if (sText === "") {
+            box.focus();
+            document.querySelectorAll("#shloka-div a").forEach((aTag, index) => {
+                if (index === 0) {
+                    aTag.click();
+                }
+            })
+            return false;
+        }
+
+        const shloka = {};
+        shloka["shloka"] = document.getElementById('input_shloka').value.trim();
+        shloka["padached"] = document.getElementById('input_padached').value.trim() || "";
+        shloka["sandhi"] = document.getElementById('input_sandhi').value.trim() || "";
+        shloka["anvayam"] = document.getElementById('input_anvayam').value.trim() || "";
 
         if (!activeVerseChapterNum || !activeVerseNumber) {
             showToast("Load the Verse First", "warning");
             return;
         }
-        if (shloka.trim() === "") {
-            showToast("Shloka Cannot be Empty", "success");
-            return;
-        }
+
         if (!validateMeaningLanguageWorkspaces(loadedMeaningLanguages["meaning"])) {
             return; // Stop the database commit process if validation fails
         }
@@ -1215,7 +1258,7 @@
             verse_number: verseNum,
             meaning: loadedMeaningLanguages["meaning"],
             youtube_urls : loadedMeaningLanguages["youTube"],
-            shloka: shloka.trim()
+            shloka: shloka
         };
 
         // Execution only reaches here if the function returned true

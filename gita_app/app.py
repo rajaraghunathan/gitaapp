@@ -91,7 +91,7 @@ def get_chapter_and_verses():
             'id': verse.id,
             'chapter_number': verse.chapter_number,
             'verse_number': verse.verse_number,
-            'shloka': verse.shloka,
+            'shloka':  verse.shlok, #verse.shloka,
             'description': verse.meaning.get('en').get('description')
         }
         # v_dict = {k: v for k, v in verse.__dict__.items()

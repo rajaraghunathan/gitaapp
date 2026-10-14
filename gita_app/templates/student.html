@@ -64,19 +64,11 @@
                 <div class="col-sm-5 mb-2">
                     <!-- Shloka Block -->
 
-                    <div id="shloka" class="carousel slide" data-bs-ride="carousel">
-                      <!-- The slideshow/carousel -->
-                      <div class="carousel-inner">
-
-                      </div>
-
-                      <!-- Left and right controls/icons -->
-                      <button class="carousel-control-prev" type="button" data-bs-target="#shloka" data-bs-slide="prev">
-                        <span style="color: black;"><-</span>
-                      </button>
-                      <button class="carousel-control-next" type="button" data-bs-target="#shloka" data-bs-slide="next">
-                        <span style="color: black;">-></span>
-                      </button>
+                    <div id="shloka-div" class="mb-2">
+                        <div class="card">
+                            <div class="card-header"></div>
+                            <div class="card-body"></div>
+                        </div>
                     </div>
 
                     <div id="youtube-render-div">
@@ -398,28 +390,61 @@
             return res.json();
         }).then(verse => {
             const listButton = document.getElementById("verse-list-button");
-            listButton.innerHTML = `${verse.chapter_number}.${verse.verse_number} ${verse.shloka.sa}`;
+            // listButton.innerHTML = `${verse.chapter_number}.${verse.verse_number} ${verse.shloka.sa}`;
+            listButton.innerHTML = `${verse.chapter_number}.${verse.verse_number} ${verse.shlok[0].shloka}`;
 
             globalActiveChapter = parseInt(ch);
             document.getElementById('form_verse_id').value = parseInt(id);
             document.getElementById('input_chapter').value = parseInt(ch);
             document.getElementById('input_verse_number').value = parseInt(vn);
-            // document.getElementById('input_shloka').innerText = verse.shloka;
 
-            const shlokaObj = verse.shloka
-            const shlokaCarousel = document.querySelector ("#shloka .carousel-inner");
-            shlokaCarousel.innerHTML = "";
-            let htmlContent = "";
-            Object.entries(shlokaObj).forEach(([key, val], index) => {
-                const activeClass = index === 0 ? 'active' : '';
-                htmlContent += `
-                    <div class="shloka-text card carousel-item ${activeClass}">
-                        <i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>
-                        <p class="px-1">${val}</p>
-                    </div>
-                `;
-            });
-            shlokaCarousel.innerHTML = htmlContent;
+            const shlokaObj = verse.shlok;
+            let htmlContent1 = "";
+            let htmlContent2 = "";
+            verse.shlok.forEach(item =>{
+                Object.entries(item).forEach(([key, val]) => {
+                    // const activeClass = key === "shloka" ? 'show' : '';
+                    // const aria = key === "shloka" ? "true" : "false";
+                    if (val !== "") {
+                        htmlContent1 += `
+                            <a class="btn btn-sm" data-bs-toggle="collapse" href="#${key}">${key.toUpperCase()}</a>
+                        `;
+                         htmlContent2 += `
+                          <div id="${key}" class="shloka-text collapse" data-bs-parent="#shloka-div">
+                              <i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>
+                              <p>${val}</p>
+                          </div>
+                        `;
+                    }
+                })
+            })
+
+
+            // Object.entries(shlokaObj).forEach(([key, val], index) => {
+            //     const activeClass = index === 0 ? 'show' : '';
+            //     if (val !== "") {
+            //         htmlContent1 += `
+            //             <a class="btn btn-sm" data-bs-toggle="collapse" href="#${key}">
+            //               ${key.toUpperCase()}
+            //             </a>
+            //         `;
+            //          htmlContent2 += `
+            //           <div id="${key}" class="shloka-text collapse ${activeClass}" data-bs-parent="#shloka-div">
+            //               <i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>
+            //               <p>${val}</p>
+            //           </div>
+            //         `;
+            //     }
+            // });
+            document.querySelector("#shloka-div .card-header").innerHTML = htmlContent1;
+            document.querySelector("#shloka-div .card-body").innerHTML = htmlContent2;
+            document.querySelectorAll("#shloka-div a").forEach((aTag) => {
+                if (aTag.getAttribute("href") === "#shloka") {
+                    aTag.click();
+                }
+            })
+
+
 
             const langDropdown = document.getElementById("lang-dropdown");
             const dropdownMenu = langDropdown.closest('.dropdown');
@@ -933,6 +958,8 @@
     }
 
     function generateGitaCard() {
+        const imgEl = document.querySelector('#gitaCard img');
+        imgEl['src'] = "";
         fetch('/trigger-daily-card', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -948,8 +975,8 @@
         })
         .then(data => {
             if (data.status) {
-                const imgEl = document.querySelector('#gitaCard img')
-                imgEl['src'] = data.file
+                // const imgEl = document.querySelector('#gitaCard img')
+                imgEl['src'] = data.file;
                 showToast(data.message, "success");
             } else {
                 showToast(data.message, "danger");

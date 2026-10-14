@@ -57,7 +57,7 @@ function renderChapterFeed(chapterNum) {
                 block.innerHTML = `
                 <div class="card-body p-4">
                     <h5 class="text-primary mb-2">Verse ${v.chapter_number}.${v.verse_number}</h5>
-                    <p class="fs-4 fw-bold text-dark font-monospace mb-3" style="line-height:1.6; white-space: pre-line;"> ${v.shloka}</p>
+                    <p class="fs-4 fw-bold text-dark font-monospace mb-3" style="line-height:1.6; white-space: pre-line;"> ${v.shloka.shloka}</p>
                     <p class="text-muted fs-6 mb-3"><strong>Translation:</strong> ${v.description}</p>
                 </div>
             `;

@@ -67,7 +67,9 @@ def update_verse_admin():
              .scalar())
     verse.meaning = meaning
     verse.youtube_url = youtube_urls
-    verse.shloka = shloka
+
+    # verse.shloka = shloka
+    verse.shlok = shloka
     db.session.commit()
 
     return jsonify({"success": True, "message": "Database updated successfully."}), 200
