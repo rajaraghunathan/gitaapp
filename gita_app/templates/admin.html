@@ -115,7 +115,6 @@
                                                 <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-padached">PADA</a>
                                                 <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-sandhi">SANDHI</a>
                                                 <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-anvayam">ANVAYAM</a>
-                                                <button type="button" class="btn btn-primary btn-sm" onclick="getAnvayam()" >GET</button>
                                             </div>
                                             <div class="card-body">
                                                 <div id="sh-shloka" class="collapse show" data-bs-parent="#shloka-div">
@@ -1983,37 +1982,6 @@ let bootstrapLangModalInstance = null;
         let lines = Math.max(1, Math.round(totalHeight / fontLineHeight));
         console.log(lines);
         return lines;
-    }
-
-    function getAnvayam() {
-        const sandhiEl =  document.getElementById('input_sandhi');
-        const anvayamEl  = document.getElementById('input_anvayam');
-        const verseEL = document.getElementById('input_padached');
-        if (sandhiEl.value.trim() !== "" || anvayamEl.value.trim() !== "") {
-            showToast("Sandhi or Anvayam Box are not Empty", "danger");
-            return;
-        }
-        const payload = {
-            'chapter' : activeVerseChapterNum,
-            'verse': activeVerseNumber
-        }
-        fetch('/admin/anvayam/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        }).then(res => {
-            if (!res.ok) throw new Error("Server communication fault.");
-            return res.json();
-        }).then(data => {
-            if (data.success) {
-                sandhiEl.value = data.anv_san.sandhi;
-                anvayamEl.value = data.anv_san.anvayam;
-                verseEL.value = data.anv_san.verse;
-                showToast("Anvayam & Sandhi are Fetched!", "success");
-            } else {
-                showToast(data.error + data.details, "danger");
-            }
-        }).catch(err => showToast(err.message, "danger"));
     }
 
 
