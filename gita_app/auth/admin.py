@@ -414,3 +414,24 @@ def admin_quiz_update():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Database update failed", "details": str(e)}), 500
+
+@admin.route('/admin/anvayam/update', methods=['POST'])
+def admin_anvayam_update():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    payload = request.get_json()
+    chap = int(payload.get('chapter'))
+    ver = int(payload.get('verse'))
+
+    headers = {'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'}
+    url = f'https://bhagavadgita.org.in/Api/Chapter/{chap}/{ver}'
+    try:
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        verse = data[0].get('VerseList')[0].get('verse_skt')
+        sandhi = data[0].get('VerseList')[0].get('sandhi_skt')
+        anv = data[0].get('VerseList')[0].get('anvaya_skt')
+        anv_san_data = {'chap': chap, 'ver': ver, 'sandhi': sandhi, 'anvayam': anv, 'verse': verse}
+        return jsonify({'success': True, 'anv_san': anv_san_data}), 200
+    except Exception as e:
+        return jsonify({'success': False, "error": "Network Error", "details": str(e)}), 500
