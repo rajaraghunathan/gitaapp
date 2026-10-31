@@ -40,6 +40,12 @@
                 <li class="dropdown-item">
                     <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#comment-pane">Discussion</a>
                 </li>
+                <li class="dropdown-item">
+                    <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#glossary-pane">Glossary</a>
+                </li>
+                 <li class="dropdown-item">
+                    <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#faq-pane">FAQ</a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li class="dropdown-item">
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#gitaCard" onclick="generateGitaCard()">Generate Card</button>
@@ -152,6 +158,54 @@
                 </div>
             </div>
 
+        </div>
+        <!-- Glossary Section -->
+        <div class="container-fluid collapse mt-2" data-bs-parent="#div-section" id="glossary-pane">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 id="glossary-h5">GLOSSARY</h5>
+                    <input type="text" id="glossarySearch" placeholder="Search Words..." onkeyup="filterGlossary()">
+                </div>
+                <div id="glossaryDiv" class="card-body overflow-y-auto" style="height: 60vh;">
+                    <table id="glossaryTable" class="table table-striped">
+                        <thead class="table-warning">
+                          <tr>
+                             <th style="width: 5%">Chapter</th>
+                              <th style="width: 5%">Verse</th>
+                              <th style="width: 25%">Word</th>
+                              <th style="width: 65%">Glossary</th>
+                          </tr>
+                        </thead>
+                        <tbody id="glossaryTbody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- FAQ Section -->
+        <div class="container-fluid collapse mt-2" data-bs-parent="#div-section" id="faq-pane">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 id="faq-h5">Frequently Asked Questions</h5>
+                    <input type="text" id="faqSearch" placeholder="Search Words..." onkeyup="filterFaq()">
+                </div>
+                <div id="faqDiv" class="card-body overflow-y-auto" style="height: 60vh;">
+                    <table id="faqTable" class="table table-striped">
+                        <thead class="table-warning">
+                          <tr>
+                             <th style="width: 5%">Chapter</th>
+                              <th style="width: 5%">Verse</th>
+                              <th style="width: 30%">Question</th>
+                              <th style="width: 60%">Answer</th>
+                          </tr>
+                        </thead>
+                        <tbody id="faqTbody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -364,8 +418,10 @@
                     // loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     loadActiveChapterQuiz(flattenedVerseList[0].chapter);
                 }
+                fetchGlossary(); fetchFaq();
                 document.getElementById("studentMenuDismiss").click();
             });
+
     }
 
     async function loadVerse (lang, id, ch, vn) {
@@ -482,6 +538,7 @@
             // Loads Student Comment Block
             cancelInlineCommentEdit();
             renderCommentsPane(id);
+
         }).catch(err => console.error("Error retrieving verse details:", err))
         .finally(() => {
             unlockDOM();
@@ -504,6 +561,7 @@
         event.target.classList.add('active');
         loadActiveChapterQuiz(activeVerseChapterNum);
         loadVerse (lang,id,ch,vn);
+        fetchGlossary(); fetchFaq();
     }
 
     function navigateToAdjacentVerse(direction) {
@@ -849,11 +907,29 @@
                             <input class="form-check-input" type="radio" name="quiz_q_${q.id}" value="D" id="opt_d_${q.id}">
                             <label class="form-check-label" for="opt_d_${q.id}" data-text="${q.D}">D) ${q.D}</label>
                         </div>
+                        <div class="form-check form-switch mb-1">
+                             <input class="form-check-input" type="checkbox" id="answer_${q.id}" onclick="showTheExplanation(event)">
+                             <label style="display: block" class="form-check-label" for="answer_${q.id}">Click to See Explanation</label>
+                             <p style="display: none" class="fw-bold mb-2">Explanation: ${q.answer || 'Not Available'}</p>
+                        </div>
                     `;
                     qBlock.setAttribute('data-question-id', q.id);
                     container.appendChild(qBlock);
                 });
             });
+    }
+
+    function showTheExplanation(event) {
+        const el = event.target;
+        const pEl = el.parentElement.querySelector('p');
+        const lableEL = el.parentElement.querySelector('label');
+        if (el.checked === true) {
+            pEl.style.display = 'block';
+            lableEL.style.display = 'none';
+        } else {
+           pEl.style.display = 'none';
+           lableEL.style.display = 'block';
+        }
     }
 
 
@@ -989,6 +1065,119 @@
         fetch('/deleteUserCards')
     }
 
+    function fetchGlossary() {
+        const selectedLang = document.getElementById("lang-dropdown").innerText;
+        const lang = langKeys[selectedLang.trim()];
+        const chapter = activeVerseChapterNum || 1;
+        fetch(`/api/student/glossary?lang=${lang}&chapter=${chapter}`)
+            .then(res => res.json())
+            .then(glossary => {
+                const tbody = document.getElementById('glossaryTbody');
+                tbody.innerHTML = '';
+                glossary.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="fw-bold text-dark">${item.chapter}</span></td>
+                        <td class="text-secondary">${item.verse}</td>
+                        <td>${item.question[lang]}</td>
+                        <td>${item.answer[lang]}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.getElementById('glossary-h5').innerText = 'Glossary:- CHAPTER-' + chapter ;
+            })
+    }
+
+    function filterGlossary() {
+      // Get the search input value and convert it to lowercase for case-insensitive matching
+      const input = document.getElementById("glossarySearch");
+      const filter = input.value.toLowerCase();
+
+      // Get the table and all rows inside the tbody
+      const table = document.getElementById("glossaryTable");
+      const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+      // Loop through all table rows
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName("td");
+
+        // Ensure the row has cells (columns) before checking text
+        if (cells.length >= 2) {
+          const firstColumnText = cells[0].textContent || cells[0].innerText;
+          const secondColumnText = cells[1].textContent || cells[1].innerText;
+          const thirdColumnText = cells[2].textContent || cells[2].innerText;
+          const fourthColumnText = cells[3].textContent || cells[3].innerText;
+
+          // Check if the filter text exists in either the first OR the second column
+          if (
+            firstColumnText.toLowerCase().indexOf(filter) > -1 ||
+            secondColumnText.toLowerCase().indexOf(filter) > -1 ||
+              thirdColumnText.toLowerCase().indexOf(filter) > -1 ||
+              fourthColumnText.toLowerCase().indexOf(filter) > -1
+          ) {
+            rows[i].style.display = ""; // Show row
+          } else {
+            rows[i].style.display = "none"; // Hide row
+          }
+        }
+      }
+    }
+
+    function fetchFaq() {
+        const selectedLang = document.getElementById("lang-dropdown").innerText;
+        const lang = langKeys[selectedLang.trim()];
+        const chapter = activeVerseChapterNum || 1;
+        fetch(`/api/student/faq?lang=${lang}&chapter=${chapter}`)
+            .then(res => res.json())
+            .then(faq => {
+                const tbody = document.getElementById('faqTbody');
+                tbody.innerHTML = '';
+                faq.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="fw-bold text-dark">${item.chapter}</span></td>
+                        <td class="text-secondary">${item.verse}</td>
+                        <td>${item.question[lang]}</td>
+                        <td>${item.answer[lang]}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.getElementById('faq-h5').innerText = 'FAQs:- CHAPTER-' + chapter ;
+            })
+    }
+
+    function filterFaq() {
+      // Get the search input value and convert it to lowercase for case-insensitive matching
+      const input = document.getElementById("faqSearch");
+      const filter = input.value.toLowerCase();
+
+      // Get the table and all rows inside the tbody
+      const table = document.getElementById("faqTable");
+      const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+      // Loop through all table rows
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName("td");
+
+        // Ensure the row has cells (columns) before checking text
+        if (cells.length >= 2) {
+          const firstColumnText = cells[0].textContent || cells[0].innerText;
+          const secondColumnText = cells[1].textContent || cells[1].innerText;
+          const thirdColumnText = cells[2].textContent || cells[2].innerText;
+          const fourthColumnText = cells[3].textContent || cells[3].innerText;
+
+          // Check if the filter text exists in either the first OR the second column
+          if (
+            firstColumnText.toLowerCase().indexOf(filter) > -1 ||
+            secondColumnText.toLowerCase().indexOf(filter) > -1 ||
+              thirdColumnText.toLowerCase().indexOf(filter) > -1 ||
+              fourthColumnText.toLowerCase().indexOf(filter) > -1
+          ) {
+            rows[i].style.display = ""; // Show row
+          } else {
+            rows[i].style.display = "none"; // Hide row
+          }
+        }
+      }
+    }
 
 </script>
 {% endblock %}

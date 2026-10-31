@@ -16,6 +16,10 @@
                     {% if not session.get('user_id') %}
                         <small class="text-secondary italic">Log in as a student to participate in classroom discussions or view streaming videos.</small>
                     {% endif %}
+                    <select id="ch-lang" onchange="loadSummary()">
+                        <option value="en" selected>English</option>
+                        <option value="ta" >Tamil</option>
+                    </select>
                 </div>
                 <!-- Selected items generated sequentially using JavaScript loop configurations -->
             </div>

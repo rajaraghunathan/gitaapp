@@ -1,7 +1,7 @@
 import os, json, uuid, re, requests, io, csv
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template, make_response
 from database import db
-from models import Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil
+from models import Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
 from zoneinfo import ZoneInfo
 
 admin = Blueprint("admin", __name__)
@@ -392,6 +392,7 @@ def admin_quiz_update():
                     option_b=item["option_b"],
                     option_c=item["option_c"],
                     option_d=item["option_d"],
+                    answer= item["answer"],
                     correct_answer=item["correct_answer"]
                 )
                 db.session.add(question_entry)
@@ -402,6 +403,7 @@ def admin_quiz_update():
                 quiz.option_b = item["option_b"]
                 quiz.option_c = item["option_c"]
                 quiz.option_d = item["option_d"]
+                quiz.answer = item["answer"]
                 quiz.correct_answer = item["correct_answer"]
             elif status == 'deleted':
                 quiz = table.query.get(item_id)
@@ -414,3 +416,109 @@ def admin_quiz_update():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Database update failed", "details": str(e)}), 500
+
+@admin.route('/admin/glossary', methods=['GET'])
+def admin_glossary_get():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    chapter = int(request.args.get('chapter', 1))
+    verse = int(request.args.get('verse', 1))
+    table = GlossaryFaq
+    glossary = db.session.query(table).where(table.chapter == chapter, table.verse == verse, table.type == 'glossary').order_by(table.id).all()
+    if not glossary:
+        return jsonify([])
+    glossary_list = [{
+        k: v for k, v in q.__dict__.items() if not k.startswith('_')
+    } for q in glossary]
+    return jsonify(glossary_list)
+
+@admin.route('/admin/glossary/update_or_delete', methods=['POST'])
+def admin_glossary_update_or_delete():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    payload = request.get_json()
+    action = payload.get('action')
+    ch = int(payload.get('chapter'))
+    ver = int(payload.get('verse'))
+    lang = payload.get('lang')
+    idx = payload.get('id')
+    question = payload.get('question')
+    answer = payload.get('answer')
+    table = GlossaryFaq
+    try:
+        if action == 'update':
+            if idx == 'new':
+                new_glossary = table(chapter=ch, verse=ver, type='glossary', question={lang:question}, answer={lang:answer})
+                db.session.add(new_glossary)
+            else:
+                glossary = db.session.query(table).where(table.id == int(idx)).scalar()
+                glossary.question[lang] = question
+                glossary.answer[lang] = answer
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Item Updated Successfully in Database'}), 200
+        if action == 'delete':
+            glossary = table.query.get(int(idx))
+            glossary.question.pop(lang)
+            glossary.answer.pop(lang)
+            db.session.commit()
+            glossary = table.query.get(int(idx))
+            if glossary.question == {}:
+                db.session.delete(glossary)
+                db.session.commit()
+            return jsonify({'success': True, 'message': 'Item Deleted Successfully in Database'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, "message": "Database update failed" + str(e)}), 500
+
+@admin.route('/admin/faq', methods=['GET'])
+def admin_faq_get():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    chapter = int(request.args.get('chapter', 1))
+    verse = int(request.args.get('verse', 1))
+    table = GlossaryFaq
+    faq = db.session.query(table).where(table.chapter == chapter, table.verse == verse, table.type == 'faq').order_by(table.id).all()
+    if not faq:
+        return jsonify([])
+    faq_list = [{
+        k: v for k, v in q.__dict__.items() if not k.startswith('_')
+    } for q in faq]
+    return jsonify(faq_list)
+
+@admin.route('/admin/faq/update_or_delete', methods=['POST'])
+def admin_faq_update_or_delete():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    payload = request.get_json()
+    action = payload.get('action')
+    ch = int(payload.get('chapter'))
+    ver = int(payload.get('verse'))
+    lang = payload.get('lang')
+    idx = payload.get('id')
+    question = payload.get('question')
+    answer = payload.get('answer')
+    table = GlossaryFaq
+    try:
+        if action == 'update':
+            if idx == 'new':
+                new_faq = table(chapter=ch, verse=ver, type='faq', question={lang:question}, answer={lang:answer})
+                db.session.add(new_faq)
+            else:
+                faq = db.session.query(table).where(table.id == int(idx)).scalar()
+                faq.question[lang] = question
+                faq.answer[lang] = answer
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'FAQ Item Updated Successfully in Database'}), 200
+        if action == 'delete':
+            faq = table.query.get(int(idx))
+            faq.question.pop(lang)
+            faq.answer.pop(lang)
+            db.session.commit()
+            faq = table.query.get(int(idx))
+            if faq.question == {}:
+                db.session.delete(faq)
+                db.session.commit()
+            return jsonify({'success': True, 'message': 'FAQ Item Deleted Successfully in Database'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, "message": "Database update failed" + str(e)}), 500

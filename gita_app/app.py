@@ -60,19 +60,22 @@ def logout():
 # --- REPOSITORY READ AND UPDATE ENGINE PIPELINES ---
 @app.route('/api/chapters', methods=['GET']) #Finalised & Working
 def get_chapters():
+    lang = request.args.get('lang')
     chapters = Chapter.query.order_by(Chapter.num).all()
     chapters_list = []
     for c in chapters:
+        summary = c.summary[lang] if c.summary.get(lang) else 'Un Available'
         verses = Verse.query.filter(Verse.chapter_number == c.num).all() #Getting the number of verses in each chapter
         chapters_list.append({
             "id": c.id, "chapter_number": c.num,
-            "name": c.name, "summary": c.summary['en'], "verse_count": len(verses) #"verses": verse_list
+            "name": c.name, "summary": summary, "verse_count": len(verses) #"verses": verse_list
         })
     return jsonify(chapters_list)
 
 @app.route('/api/chapterShlokas', methods=['GET']) #Finalised & Working
 def get_chapter_and_verses():
     chapter_num = request.args.get('chapter', type=int)
+    lang = request.args.get('lang', 'en')
     if not chapter_num:
         chapter_num = 1
 
@@ -92,7 +95,7 @@ def get_chapter_and_verses():
             'chapter_number': verse.chapter_number,
             'verse_number': verse.verse_number,
             'shloka':  verse.shlok, #verse.shloka,
-            'description': verse.meaning.get('en').get('description')
+            'description': verse.meaning.get(lang).get('description')
         }
         # v_dict = {k: v for k, v in verse.__dict__.items()
         #           if not k.startswith('_') and k not in cols_to_skip_in_verse}

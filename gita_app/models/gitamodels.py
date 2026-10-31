@@ -112,6 +112,7 @@ class QuizQuestion(db.Model):
     option_c = db.Column(db.String(200), nullable=False)
     option_d = db.Column(db.String(200), nullable=False)
     correct_answer = db.Column(db.String(10), nullable=False)  # 'a', 'B', 'C', or 'D'
+    answer = db.Column(db.Text, nullable=True, default='Explanation')
 
 class QuizQuestionTamil(db.Model):
     __tablename__ = 'quiz_question-tamil'
@@ -123,6 +124,7 @@ class QuizQuestionTamil(db.Model):
     option_c = db.Column(db.String(200), nullable=False)
     option_d = db.Column(db.String(200), nullable=False)
     correct_answer = db.Column(db.String(10), nullable=False)  # 'a', 'B', 'C', or 'D'
+    answer = db.Column(db.Text, nullable=True, default='Explanation')
 
 class QuizScore(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -133,3 +135,12 @@ class QuizScore(db.Model):
     timestamp = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     # Establish relationship to access student details easily
     student = db.relationship('Student', backref=db.backref('scores', cascade='all, delete-orphan', lazy=True))
+
+class GlossaryFaq (db.Model):
+    __tablename__ = 'glossary_faq'
+    id = db.Column(db.Integer, primary_key=True)
+    chapter = db.Column(db.Integer, nullable=False)
+    verse = db.Column(db.Integer, nullable=False)
+    type = db.Column(db.String(20), nullable=False)
+    question = db.Column(MutableDict.as_mutable(JSON), nullable=True)
+    answer = db.Column(MutableDict.as_mutable(JSON), nullable=True)

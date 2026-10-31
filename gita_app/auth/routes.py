@@ -1,7 +1,7 @@
 import os, json, translate, random, re
 from flask import Blueprint, jsonify, request, session
 from database import db
-from models import Student, Verse, Comment, AcharyaComment, QuizQuestion, QuizScore, QuizQuestionTamil
+from models import Student, Verse, Comment, AcharyaComment, QuizQuestion, QuizScore, QuizQuestionTamil, GlossaryFaq
 from datetime import datetime, timezone
 from auth.admin import safe_translate_large_text #customized function
 from deep_translator import GoogleTranslator
@@ -400,3 +400,35 @@ def get_student_progress():
         "score_percentage": score_percentage
 
     })
+
+@routes.route('/api/student/glossary', methods=['GET'])
+def get_glossary():
+    if 'user_id' not in session:
+        return jsonify({"error": "Login required"}), 401
+    lang = request.args.get('lang', 'en')
+    chapter = request.args.get('chapter', type=int)
+    table = GlossaryFaq
+    glossary = db.session.query(table).where(table.chapter == chapter, db.func.json_type(table.question, f'$.{lang}').is_not(None),
+                                     table.type == 'glossary').order_by(table.id).all()
+    if not glossary:
+        return jsonify([])
+    glossary_list = [{
+        k: v for k, v in q.__dict__.items() if not k.startswith('_')
+    } for q in glossary]
+    return jsonify(glossary_list)
+
+@routes.route('/api/student/faq', methods=['GET'])
+def get_faq():
+    if 'user_id' not in session:
+        return jsonify({"error": "Login required"}), 401
+    lang = request.args.get('lang', 'en')
+    chapter = request.args.get('chapter', type=int)
+    table = GlossaryFaq
+    faq = db.session.query(table).where(table.chapter == chapter, db.func.json_type(table.question, f'$.{lang}').is_not(None),
+                                     table.type == 'faq').order_by(table.id).all()
+    if not faq:
+        return jsonify([])
+    faq_list = [{
+        k: v for k, v in q.__dict__.items() if not k.startswith('_')
+    } for q in faq]
+    return jsonify(faq_list)

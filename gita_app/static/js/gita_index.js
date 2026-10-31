@@ -1,7 +1,8 @@
 
 document.addEventListener("DOMContentLoaded", () => { loadSummary () });
 function loadSummary () {
-    fetch('/api/chapters')
+    const lang = document.getElementById("ch-lang").value
+    fetch(`/api/chapters?lang=${lang}`)
         .then(res => res.json())
         .then(chapters => {
             const navContainer = document.getElementById('homeChaptersList');
@@ -35,8 +36,9 @@ function loadSummary () {
 }
 
 function renderChapterFeed(chapterNum) {
+    const lang = document.getElementById("ch-lang").value
     const chapter = "chapter";
-    const url = `/api/chapterShlokas?${chapter}=${chapterNum}`;
+    const url = `/api/chapterShlokas?${chapter}=${chapterNum}&lang=${lang}`;
     fetch(url)
         .then(res => res.json())
         .then(data => {

@@ -1,1 +1,4 @@
-from .gitamodels import Chapter, Verse, AcharyaComment, Student, Comment, QuizQuestion, QuizQuestionTamil, QuizScore
+from .gitamodels import (Chapter, Verse, AcharyaComment,
+                         Student, Comment, QuizQuestion,
+                         QuizQuestionTamil, QuizScore,
+                         GlossaryFaq)

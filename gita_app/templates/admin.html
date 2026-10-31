@@ -21,6 +21,12 @@
             <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
                 <i class="fa-solid fa-pen-to-square me-2"></i> Students
             </button>
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Glossary
+            </button>
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> FAQ
+            </button>
 
             <!-- Right Side: Integrated Text Styling Toolbar -->
             <div class="ms-auto d-flex align-items-center border-start ps-3 me-2" id="textToolbar">
@@ -362,12 +368,10 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white gap-2">
                         <h5 id="quiz-h5">Interactive Quiz</h5>
-
                         <select id="select-quiz-lang" onchange="changeQuizLanguage(this.value)">
                             <option value="en">English</option>
                             <option value="ta">Tamil</option>
                         </select>
-
                         <button type="button" class="btn btn-success btn-sm" onclick="addNewQuiz()" >Add Quiz</button>
                     </div>
                     <div id="quizQuestionsContainer" class="card-body overflow-y-auto" style="height: 60vh;">
@@ -376,6 +380,69 @@
                     <div class="card-footer d-flex justify-content-between align-items-center">
                         <button type="button" class="btn btn-success" onclick="updateQuizToDB()">Commit To DB</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Tab Pane Glossary: Edit Content -->
+            <div class="tab-pane fade" id="glossary-pane" role="tabpanel" aria-labelledby="glossary-tab">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 id="glossary-h4" class="text-dark mb-2">Edit: Glossary</h4>
+                    <div class="ms-auto d-flex gap-2">
+                        <button id="glossary-fetch-button" class="btn btn-sm btn-secondary" onclick="fetchGlossary()" type="button">Fetch</button>
+                        <select id="select-glossary-lang" onchange="fetchGlossary()">
+                            <option value="en">English</option>
+                            <option value="ta">Tamil</option>
+                        </select>
+                        <button class="btn btn-sm btn-secondary" onclick="addGlossaryRow()" type="button">➕ Add Row</button>
+                    </div>
+                </div>
+                <div class="table-responsive-sm" style="max-height: 68vh; overflow-y: auto;">
+                    <table class="table table-striped border">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 5%">Id</th>
+                                <th style="width: 5%">Context</th>
+                                <th style="width: 5%">Language</th>
+                                <th style="width: 20%">Word</th>
+                                <th style="width: 45%">Glossary</th>
+                                <th style="width: 20%" class="text-center">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="glossaryTbody">
+                            <!-- Loaded asynchronously over REST API routes -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Tab Pane FAQ: Edit Content -->
+            <div class="tab-pane fade" id="faq-pane" role="tabpanel" aria-labelledby="faq-tab">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 id="faq-h4" class="text-dark mb-2">Edit: FAQ</h4>
+                    <div class="ms-auto d-flex gap-2">
+                        <button id="faq-fetch-button" class="btn btn-sm btn-secondary" onclick="fetchFaq()" type="button">Fetch</button>
+                        <select id="select-faq-lang" onchange="fetchFaq()">
+                            <option value="en">English</option>
+                            <option value="ta">Tamil</option>
+                        </select>
+                        <button class="btn btn-sm btn-secondary" onclick="addFaqRow()" type="button">➕ Add Row</button>
+                    </div>
+                </div>
+                <div class="table-responsive-sm" style="max-height: 68vh; overflow-y: auto;">
+                    <table class="table table-striped border">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 5%">Id</th>
+                                <th style="width: 5%">Context</th>
+                                <th style="width: 5%">Language</th>
+                                <th style="width: 25%">Question</th>
+                                <th style="width: 40%">Answer</th>
+                                <th style="width: 20%" class="text-center">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faqTbody">
+                            <!-- Loaded asynchronously over REST API routes -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -457,9 +524,11 @@ let bootstrapLangModalInstance = null;
     let currentMeaningLanguage = null;
     let flattenedVerseList = [];
     let flattenedChapterList = [];
-    const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa'}
-    const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit'}
-    let quizData = []
+    const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa'};
+    const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit'};
+    let quizData = [];
+    let glossaryData = [];
+    let faqData = [];
 
     document.addEventListener("DOMContentLoaded", () => {
         initializeChapterList();
@@ -732,6 +801,14 @@ let bootstrapLangModalInstance = null;
 
         const youtubeData = loadedMeaningLanguages["youTube"][langCode];
         renderYoutubeTable(youtubeData || {});
+
+        // Triggering Change Events for Glossary and FAQ
+        const glossaryEl = document.getElementById("select-glossary-lang");
+        glossaryEl.value = langCode;
+        glossaryEl.dispatchEvent(new Event('change', { bubbles: true }));
+        const faqEl = document.getElementById("select-faq-lang");
+        faqEl.value = langCode;
+        faqEl.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     function addNewMeaningLanguage() {
@@ -1371,35 +1448,9 @@ let bootstrapLangModalInstance = null;
     }
 
     async function addAcharyaFieldRow(acharya) {
-        // createLanguageRowElement('', '');
-        if (acharya === 'ramanuja') {
-            const editLanguage = document.getElementById("selected-meaning-language").innerText;
-            const cleanCode = langKeys[editLanguage]
-            const payload = {
-                chapter_number: activeVerseChapterNum,
-                verse_number: activeVerseNumber,
-                acharya: acharya,
-                targetLang: cleanCode
-            }
-            const url = '/api/admin/acharya_translate';
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-            let commentaryTranslated = "";
-            if (data.success) {
-                commentaryTranslated = data.translated_text || "";
-                showToast("Translated Content", "success");
-            } else {
-                showToast(data.message + data.details, "warning");
-                commentaryTranslated = data.message + data.details || "";
-            }
-            createAcharyaRowElement(acharya, cleanCode, commentaryTranslated);
-        } else {
-            createAcharyaRowElement(acharya, 'en', '');
-        }
+        const editLanguage = document.getElementById("selected-meaning-language").innerText;
+        const cleanCode = langKeys[editLanguage]
+        createAcharyaRowElement(acharya, cleanCode, '');
     }
 
     function removeAcharyaFieldRow(elementId) {
@@ -1814,11 +1865,13 @@ let bootstrapLangModalInstance = null;
         const qBlock = document.createElement('div');
         qBlock.className = 'mb-4 p-2 border-bottom border-light';
         const CHARS_PER_ROW = Math.round(window.innerWidth/10);
-        const rowsCount = Math.max(1, Math.ceil(q.question.length / CHARS_PER_ROW));
+        const quesCount = Math.max(1, Math.ceil(q.question.length / CHARS_PER_ROW));
+        const answer = q.answer || 'Explanation';
+        const ansCount = Math.max(1, Math.ceil(answer.length / CHARS_PER_ROW));
         qBlock.innerHTML = `
             <div class="input-group mb-1">
                 <span class="input-group-text text-bg-info">Q-${idx + 1}</span>
-                <textarea style="font-size: 0.9rem;" rows="${rowsCount}" class="form-control question">${q.question}</textarea>
+                <textarea style="font-size: 0.9rem;" rows="${quesCount}" class="form-control question">${q.question}</textarea>
             </div>
             <div class="input-group mb-1">
                 <span class="input-group-text text-bg-danger">A: </span>
@@ -1837,6 +1890,10 @@ let bootstrapLangModalInstance = null;
                 <input style="font-size: 0.9rem;" type="text" class="form-control opt-d" value="${q.option_d}">
             </div>
             <div class="input-group mb-1">
+                <span class="input-group-text text-bg-danger">Explanation: </span>
+                <textarea style="font-size: 0.9rem;" rows="${ansCount || 1}" class="form-control explanation">${q.answer || answer}</textarea>
+            </div>
+            <div class="input-group mb-1">
                 <span class="input-group-text text-bg-success">Answer: </span>
                 <input type="text" class="form-control text-bg-info answer" value="${q.correct_answer}">
                 <span class="input-group-text">${q.status}</span>
@@ -1852,7 +1909,7 @@ let bootstrapLangModalInstance = null;
     function addNewQuiz() {
         const tempID = Math.floor(100000 + Math.random() * 900000);
         const newQuiz = {status:'new', id:tempID, question:'', option_a:'', option_b:'', option_c:'', option_d:'',
-            correct_answer:'', chapter:activeVerseChapterNum};
+            correct_answer:'', answer:'Explanation', chapter:activeVerseChapterNum};
         const container = document.getElementById('quizQuestionsContainer');
         if (container.children[0]) {
             container.children[0].before(renderQuiz(newQuiz,quizData.length));
@@ -1871,11 +1928,17 @@ let bootstrapLangModalInstance = null;
     function updateQuiz(quizId, status) {
         const divEl = document.querySelector(`div[data-question-id="${quizId}"]`);
 
-        const questionInput = divEl.querySelector('textarea');
-        if (questionInput && questionInput.value.trim() === "") {
-            showToast("Question cannot be empty", "danger");
-            return;
+        const textAreas = divEl.querySelectorAll('textarea');
+        for (const textArea of textAreas) {
+            if (textArea.value.trim() === "") {
+                showToast("Question and Explanation cannot be empty", "danger");
+                return;
+            }
         }
+        // if (questionInput && questionInput.value.trim() === "") {
+        //     showToast("Question cannot be empty", "danger");
+        //     return;
+        // }
 
         const inputs = divEl.querySelectorAll ('input');
         for (const input of inputs) {
@@ -1894,6 +1957,7 @@ let bootstrapLangModalInstance = null;
             option_b:divEl.querySelector ('.opt-b').value.trim(),
             option_c:divEl.querySelector ('.opt-c').value.trim(),
             option_d:divEl.querySelector ('.opt-d').value.trim(),
+            answer:divEl.querySelector ('.explanation').value.trim(),
             correct_answer:divEl.querySelector ('.answer').value.trim()
         };
         const index = quizData.findIndex(item => item.id === quizId);
@@ -1964,6 +2028,260 @@ let bootstrapLangModalInstance = null;
                 fetchQuizList();
             }
         }).catch(err => showToast(err.message, "danger"));
+    }
+
+    function fetchGlossary() {
+        const payload = {chapter: activeVerseChapterNum, verse: activeVerseNumber};
+        const params = new URLSearchParams(payload).toString();
+        const url = '/admin/glossary'
+        const urlWithParams = `${url}?${params}`;
+        const lang = document.getElementById("select-glossary-lang").value;
+        fetch(urlWithParams,{method: 'GET'}).then(res=>res.json()).then(glossary => {
+            glossaryData = glossary;
+            const filteredGlossaryData = glossaryData.filter(g => lang in g.answer);
+            const tbody = document.getElementById('glossaryTbody');
+            tbody.innerHTML = '';
+            filteredGlossaryData.forEach(item => {
+                tbody.appendChild(buildGlossaryRows(item));
+            });
+            document.getElementById('glossary-h4').innerText = `Edit Glossary:- Chapter-${activeVerseChapterNum} / Verse-${activeVerseNumber} / ${langVals[lang]}`;
+        });
+    }
+
+    function addGlossaryRow() {
+        const tbody = document.getElementById('glossaryTbody');
+        const newGlossary = {
+            id: "new",
+            lang: document.getElementById("select-glossary-lang").value,
+            chapter: activeVerseChapterNum,
+            verse: activeVerseNumber,
+            question: "",
+            answer: ""
+        }
+        if (tbody.children[0]) {
+            tbody.children[0].before(buildGlossaryRows(newGlossary));
+        } else {
+            tbody.appendChild(buildGlossaryRows(newGlossary));
+        }
+    }
+
+    function buildGlossaryRows(c) {
+        const lang = document.getElementById("select-glossary-lang").value;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><span class="fw-bold text-dark">${c.id}</span></td>
+            <td class="text-secondary">CH${c.chapter}-V${c.verse}</td>
+            <td class="text-secondary">${c.lang || Object.keys(c.question)[0]}</td>
+            <td><div contenteditable="true" class="form-control glossq">${c.question[lang] || c.question}</div></td>
+            <td><div contenteditable="true" class="form-control glossa">${c.answer[lang] || c.answer}</div></td>
+            <td class="text-center">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-dark" onclick="updateGlossary('${c.id}', this)"><i class="fa-solid fa-edit">update</i></button>
+                    <button class="btn btn-outline-danger" onclick="deleteGlossary('${c.id}',this)"><i class="fa-solid fa-trash-can">delete</i></button>
+                </div>
+            </td>
+        `;
+        return tr;
+    }
+
+    function updateGlossary(id, el) {
+        const tr = el.closest('tr');
+        const ques = cleanRichText(tr.querySelector(".glossq").innerHTML);
+        const ans = cleanRichText(tr.querySelector(".glossa").innerHTML);
+        const lang = document.getElementById("select-glossary-lang").value;
+        if (ques === "" || ans == "") {
+            showToast("Word or Glossary is missing", "warning");
+            return;
+        }
+        const filItem = glossaryData.filter(g => g.id === parseInt(id));
+        if (filItem.length !== 0 && filItem[0].question[lang] === ques && filItem[0].answer[lang] === ans) {
+            showToast("No Changes Detected", "warning");
+            return;
+        }
+        let payload = {
+            id: parseInt(id) || id,
+            action: 'update',
+            lang: lang,
+            chapter: activeVerseChapterNum,
+            verse: activeVerseNumber,
+            question: ques,
+            answer: ans
+        }
+        fetch('/admin/glossary/update_or_delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(res=>res.json()).then(data => {
+            if (data.success) {
+                showToast(data.message, "success");
+                document.getElementById("glossary-fetch-button").click();
+            } else {
+                showToast(data.message, "danger");
+            }
+        }).catch(err => showToast(err.message, "danger"));
+
+    }
+
+    function deleteGlossary(id, el) {
+        const userConfirmed = confirm('Do you want to delete the item?');
+        if (!userConfirmed) {return;}
+        if (id === "new") {
+            el.closest('tr').remove()
+        } else {
+            const tr = el.closest('tr');
+            const ques = cleanRichText(tr.querySelector(".glossq").innerHTML);
+            const ans = cleanRichText(tr.querySelector(".glossa").innerHTML);
+            const lang = document.getElementById("select-glossary-lang").value;
+            const filItem = glossaryData.filter(g => g.id === parseInt(id));
+            let payload = {
+                id: parseInt(id),
+                action: 'delete',
+                lang: lang,
+                chapter: activeVerseChapterNum,
+                verse: activeVerseNumber,
+                question: ques,
+                answer: ans
+            }
+            fetch('/admin/glossary/update_or_delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    showToast(data.message, "success");
+                    document.getElementById("glossary-fetch-button").click();
+                } else {
+                    showToast(data.message, "danger")
+                }
+            }).catch(err => showToast(err.message, "danger"));
+        }
+    }
+
+    function fetchFaq() {
+        const payload = {chapter: activeVerseChapterNum, verse: activeVerseNumber};
+        const params = new URLSearchParams(payload).toString();
+        const url = '/admin/faq'
+        const urlWithParams = `${url}?${params}`;
+        const lang = document.getElementById("select-faq-lang").value;
+        fetch(urlWithParams,{method: 'GET'}).then(res=>res.json()).then(faq => {
+            faqData = faq;
+            const filteredFaqData = faqData.filter(f => lang in f.answer);
+            const tbody = document.getElementById('faqTbody');
+            tbody.innerHTML = '';
+            filteredFaqData.forEach(item => {
+                tbody.appendChild(buildFaqRows(item));
+            });
+            document.getElementById('faq-h4').innerText = `Edit FAQs:- Chapter-${activeVerseChapterNum} / Verse-${activeVerseNumber} / ${langVals[lang]}`;
+        });
+    }
+
+    function addFaqRow() {
+        const tbody = document.getElementById('faqTbody');
+        const newFaq = {
+            id: "new",
+            lang: document.getElementById("select-faq-lang").value,
+            chapter: activeVerseChapterNum,
+            verse: activeVerseNumber,
+            question: "",
+            answer: ""
+        }
+        if (tbody.children[0]) {
+            tbody.children[0].before(buildFaqRows(newFaq));
+        } else {
+            tbody.appendChild(buildFaqRows(newFaq));
+        }
+    }
+
+    function buildFaqRows(c) {
+        const lang = document.getElementById("select-faq-lang").value;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><span class="fw-bold text-dark">${c.id}</span></td>
+            <td class="text-secondary">CH${c.chapter}-V${c.verse}</td>
+            <td class="text-secondary">${c.lang || Object.keys(c.question)[0]}</td>
+            <td><div contenteditable="true" class="form-control faqq">${c.question[lang] || c.question}</div></td>
+            <td><div contenteditable="true" class="form-control faqa">${c.answer[lang] || c.answer}</div></td>
+            <td class="text-center">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-dark" onclick="updateFaq('${c.id}', this)"><i class="fa-solid fa-edit">update</i></button>
+                    <button class="btn btn-outline-danger" onclick="deleteFaq('${c.id}',this)"><i class="fa-solid fa-trash-can">delete</i></button>
+                </div>
+            </td>
+        `;
+        return tr;
+    }
+
+    function updateFaq(id, el) {
+        const tr = el.closest('tr');
+        const ques = cleanRichText(tr.querySelector(".faqq").innerHTML);
+        const ans = cleanRichText(tr.querySelector(".faqa").innerHTML);
+        const lang = document.getElementById("select-faq-lang").value;
+        if (ques === "" || ans == "") {
+            showToast("Question or Answer is missing", "warning");
+            return;
+        }
+        const filItem = faqData.filter(f => f.id === parseInt(id));
+        if (filItem.length !== 0 && filItem[0].question[lang] === ques && filItem[0].answer[lang] === ans) {
+            showToast("No Changes Detected", "warning");
+            return;
+        }
+        let payload = {
+            id: parseInt(id) || id,
+            action: 'update',
+            lang: lang,
+            chapter: activeVerseChapterNum,
+            verse: activeVerseNumber,
+            question: ques,
+            answer: ans
+        }
+        fetch('/admin/faq/update_or_delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(res=>res.json()).then(data => {
+            if (data.success) {
+                showToast(data.message, "success");
+                document.getElementById("faq-fetch-button").click();
+            } else {
+                showToast(data.message, "danger");
+            }
+        }).catch(err => showToast(err.message, "danger"));
+
+    }
+
+    function deleteFaq(id, el) {
+        const userConfirmed = confirm('Do you want to delete the item?');
+        if (!userConfirmed) {return;}
+        if (id === "new") {
+            el.closest('tr').remove()
+        } else {
+            const tr = el.closest('tr');
+            const ques = cleanRichText(tr.querySelector(".faqa").innerHTML);
+            const ans = cleanRichText(tr.querySelector(".faqa").innerHTML);
+            const lang = document.getElementById("select-faq-lang").value;
+            const filItem = faqData.filter(f => f.id === parseInt(id));
+            let payload = {
+                id: parseInt(id),
+                action: 'delete',
+                lang: lang,
+                chapter: activeVerseChapterNum,
+                verse: activeVerseNumber,
+                question: ques,
+                answer: ans
+            }
+            fetch('/admin/faq/update_or_delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    showToast(data.message, "success");
+                    document.getElementById("faq-fetch-button").click();
+                } else {
+                    showToast(data.message, "danger")
+                }
+            }).catch(err => showToast(err.message, "danger"));
+        }
     }
 
     function calculateTextAreaLines(text,mW) {
