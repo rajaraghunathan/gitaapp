@@ -1,10 +1,9 @@
 # Helper File to Inject the YouTube link
-import os, csv, ast, re, json, unicodedata
-from sqlalchemy import create_engine, func
+import os, csv, ast, json
+from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.attributes import flag_modified
-from models import Verse, GlossaryFaq, Chapter, AcharyaComment
-from translate import remove_non_printable_from_object
+from models import Verse, GlossaryFaq, Chapter
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -105,29 +104,6 @@ def merge_data ():
 
 def print_data_from_db ():
     verse = db.query(Verse).where(Verse.chapter_number == 2).all()
-
-
-def clean_non_printable_characters():
-    records = db.query(Verse).all()
-    modified_count = 0
-    for record in records:
-        is_dirty = False
-        # Check text fields specifically
-        for column in ['shlok']:
-            value = getattr(record, column)
-            cleaned_dict = remove_non_printable_from_object(value)
-            if value != cleaned_dict:
-                setattr(record, column, cleaned_dict)
-                is_dirty = True
-        if is_dirty:
-            modified_count += 1
-    # Commit all changes to the SQLite database
-    if modified_count > 0:
-        print(f"To be cleaned {modified_count} records.")
-        db.commit()
-        print(f"Cleaned {modified_count} records.")
-    else:
-        print("No non-printable characters found.")
 
 if __name__ == '__main__':
     db_path = os.path.join(BASE_DIR, 'gita.db')
