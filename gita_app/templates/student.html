@@ -167,13 +167,13 @@
                     <input type="text" id="glossarySearch" placeholder="Search Words..." onkeyup="filterGlossary()">
                 </div>
                 <div id="glossaryDiv" class="card-body overflow-y-auto" style="height: 60vh;">
-                    <table id="glossaryTable" class="table table-striped">
+                    <table id="glossaryTable" class="table table-striped responsive-card-table">
                         <thead class="table-warning">
                           <tr>
-                             <th style="width: 5%">Chapter</th>
-                              <th style="width: 5%">Verse</th>
-                              <th style="width: 25%">Word</th>
-                              <th style="width: 65%">Glossary</th>
+                             <th scope="col" style="width: 5%">Chapter</th>
+                              <th scope="col" style="width: 5%">Verse</th>
+                              <th scope="col" style="width: 25%">Word</th>
+                              <th scope="col" style="width: 65%">Glossary</th>
                           </tr>
                         </thead>
                         <tbody id="glossaryTbody">
@@ -191,13 +191,13 @@
                     <input type="text" id="faqSearch" placeholder="Search Words..." onkeyup="filterFaq()">
                 </div>
                 <div id="faqDiv" class="card-body overflow-y-auto" style="height: 60vh;">
-                    <table id="faqTable" class="table table-striped">
+                    <table id="faqTable" class="table table-striped responsive-card-table">
                         <thead class="table-warning">
                           <tr>
-                             <th style="width: 5%">Chapter</th>
-                              <th style="width: 5%">Verse</th>
-                              <th style="width: 30%">Question</th>
-                              <th style="width: 60%">Answer</th>
+                             <th scope="col" style="width: 5%">Chapter</th>
+                              <th scope="col" style="width: 5%">Verse</th>
+                              <th scope="col" style="width: 30%">Question</th>
+                              <th scope="col" style="width: 60%">Answer</th>
                           </tr>
                         </thead>
                         <tbody id="faqTbody">
@@ -380,6 +380,7 @@
                 const listContainer = document.getElementById("verseList");
                 listContainer.innerHTML = '';
                 flattenedVerseList.length = 0
+                console.log(chapters.length, "chapters debug")
                 chapters.forEach(v => {
                     document.getElementById("chapterName").innerText = v.chapter_number + ") " + v.name
                     document.getElementById('chapter-num').innerText = "Chapter-" + v.chapter_number + ": " + v.name
@@ -457,6 +458,17 @@
             const shlokaObj = verse.shlok;
             let htmlContent1 = "";
             let htmlContent2 = "";
+            let src1 = "", src2 = "";
+            if (ch === 1 && vn > 25 && vn < 38) {
+                src1 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
+                src2 = `https://s3-ap-southeast-1.amazonaws.com/gitaverses/VerseSingle/C${ch}v${vn}.mp3`;
+            } else if (ch === 1 && vn > 37) {
+                src1 = `https://s3-ap-southeast-1.amazonaws.com/gitaverses/VerseSingle/C${ch}v${vn-1}.mp3`;
+                src2 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
+            }  else {
+                src1 = `https://s3-ap-southeast-1.amazonaws.com/gitaverses/VerseSingle/C${ch}v${vn}.mp3`;
+                src2 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
+            }
             verse.shlok.forEach(item =>{
                 Object.entries(item).forEach(([key, val]) => {
                     // const activeClass = key === "shloka" ? 'show' : '';
@@ -467,7 +479,16 @@
                         `;
                          htmlContent2 += `
                           <div id="${key}" class="shloka-text collapse" data-bs-parent="#shloka-div">
-                              <i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>
+                               ${key === 'shloka'
+                                    ? (ch === 1 && vn > 25 && vn < 38)
+                                        ? `<i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>`
+                                        : `<audio controls preload="none">
+                                               <source src="${src1}" type="audio/mpeg">
+                                               <source src="${src2}" type="audio/mpeg">
+                                               Your browser does not support the audio element.
+                                           </audio>`
+                                    : ''
+                                }
                               <p>${val}</p>
                           </div>
                         `;
@@ -475,23 +496,6 @@
                 })
             })
 
-
-            // Object.entries(shlokaObj).forEach(([key, val], index) => {
-            //     const activeClass = index === 0 ? 'show' : '';
-            //     if (val !== "") {
-            //         htmlContent1 += `
-            //             <a class="btn btn-sm" data-bs-toggle="collapse" href="#${key}">
-            //               ${key.toUpperCase()}
-            //             </a>
-            //         `;
-            //          htmlContent2 += `
-            //           <div id="${key}" class="shloka-text collapse ${activeClass}" data-bs-parent="#shloka-div">
-            //               <i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>
-            //               <p>${val}</p>
-            //           </div>
-            //         `;
-            //     }
-            // });
             document.querySelector("#shloka-div .card-header").innerHTML = htmlContent1;
             document.querySelector("#shloka-div .card-body").innerHTML = htmlContent2;
             document.querySelectorAll("#shloka-div a").forEach((aTag) => {
@@ -499,8 +503,6 @@
                     aTag.click();
                 }
             })
-
-
 
             const langDropdown = document.getElementById("lang-dropdown");
             const dropdownMenu = langDropdown.closest('.dropdown');
@@ -547,9 +549,9 @@
     }
 
     function loadLang (event, lang) {
-        const id = document.getElementById('form_verse_id').value;
-        const ch = document.getElementById('input_chapter').value;
-        const vn = document.getElementById('input_verse_number').value;
+        const id = parseInt(document.getElementById('form_verse_id').value);
+        const ch = parseInt(document.getElementById('input_chapter').value);
+        const vn = parseInt(document.getElementById('input_verse_number').value);
         if (!id) {
             showToast("Load the Verse First");
             return;
@@ -1077,10 +1079,10 @@
                 glossary.forEach(item => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td><span class="fw-bold text-dark">${item.chapter}</span></td>
-                        <td class="text-secondary">${item.verse}</td>
-                        <td>${item.question[lang]}</td>
-                        <td>${item.answer[lang]}</td>
+                        <td data-label="Chapter: "><span class="fw-bold text-dark">${item.chapter}</span></td>
+                        <td data-label="Verse: " class="text-secondary">${item.verse}</td>
+                        <td data-label="Word: ">${item.question[lang]}</td>
+                        <td data-label="Glossary: ">${item.answer[lang]}</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -1134,10 +1136,10 @@
                 faq.forEach(item => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td><span class="fw-bold text-dark">${item.chapter}</span></td>
-                        <td class="text-secondary">${item.verse}</td>
-                        <td>${item.question[lang]}</td>
-                        <td>${item.answer[lang]}</td>
+                        <td data-label="Chapter: "><span class="fw-bold text-dark">${item.chapter}</span></td>
+                        <td data-label="Verse: " class="text-secondary">${item.verse}</td>
+                        <td data-label="Question: ">${item.question[lang]}</td>
+                        <td data-label="Answer: ">${item.answer[lang]}</td>
                     `;
                     tbody.appendChild(tr);
                 });

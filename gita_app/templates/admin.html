@@ -5,30 +5,52 @@
 <div class="container-fluid my-2 px-2">
         <!-- Dashboard Switcher Controls -->
         <div class="nav d-flex align-items-center nav-pills bg-white p-2 rounded shadow-sm border sticky-top" id="adminTabs" role="tablist" style="top: 56px;">
-            <!-- Left Side: Navigation Tabs -->
-            <button class="nav-link btn-sm active text-start py-2 fw-bold" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">
-                <i class="fa-solid fa-pen-to-square me-2"></i> Shloka Manager
-            </button>
-            <button class="nav-link btn-sm text-start py-2 fw-bold" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">
-                <i class="fa-solid fa-comments me-2"></i> Discussion Queue
-            </button>
-            <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
-                <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
-            </button>
-            <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">
-                <i class="fa-solid fa-pen-to-square me-2"></i> Quiz
-            </button>
-            <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
-                <i class="fa-solid fa-pen-to-square me-2"></i> Students
-            </button>
-            <button class="nav-link btn-sm text-start py-2 fw-bold" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">
-                <i class="fa-solid fa-pen-to-square me-2"></i> Glossary
-            </button>
-            <button class="nav-link btn-sm text-start py-2 fw-bold" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">
-                <i class="fa-solid fa-pen-to-square me-2"></i> FAQ
-            </button>
-
             <!-- Right Side: Integrated Text Styling Toolbar -->
+            <div class="dropdown">
+            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+              EDIT CONTEXT MENU
+            </button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    <button class="nav-link btn-sm active text-start py-2 fw-bold" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">
+                        <i class="fa-solid fa-pen-to-square me-2"></i> Shloka Manager
+                    </button>
+                </li>
+                <li class="dropdown-item">
+                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">
+                        <i class="fa-solid fa-pen-to-square me-2"></i> Quiz
+                    </button>
+                </li>
+                <li class="dropdown-item">
+                     <button class="nav-link btn-sm text-start py-2 fw-bold" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">
+                        <i class="fa-solid fa-pen-to-square me-2"></i> Glossary
+                    </button>
+                </li>
+                <li class="dropdown-item">
+                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">
+                        <i class="fa-solid fa-pen-to-square me-2"></i> FAQ
+                    </button>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li class="dropdown-item">
+                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">
+                        <i class="fa-solid fa-comments me-2"></i> Discussion Queue
+                    </button>
+                </li>
+                <li class="dropdown-item">
+                     <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
+                        <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
+                    </button>
+                </li>
+                <li class="dropdown-item">
+                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
+                        <i class="fa-solid fa-pen-to-square me-2"></i> Students
+                    </button>
+                </li>
+
+
+            </ul>
+        </div>
             <div class="ms-auto d-flex align-items-center border-start ps-3 me-2" id="textToolbar">
                 <span class="small text-muted me-2 d-none d-md-inline" style="font-size: 11px;">Text:</span>
                 <div class="btn-group" role="group" aria-label="Text formatting">
@@ -196,7 +218,8 @@
                                         <button class="btn btn-sm btn-secondary" onclick="addAnvayamRow()" onmousedown="event.preventDefault()" type="button">➕ Add Row</button>
                                     </div>
                                     <div style="max-height: 300px; overflow-y: auto;">
-                                        <table class="table table-sm table-bordered" >
+<!--                                        class="table table-striped border responsive-card-table"-->
+                                        <table class="table table-sm table-striped responsive-card-table" >
                                         <thead class="table-light">
                                             <tr><th style="width: 40%;">Sanskrit (sa)</th><th id="anvayam-th">Translation (en)</th><th style="width: 5%;">Remove</th></tr>
                                         </thead>
@@ -397,7 +420,7 @@
                     </div>
                 </div>
                 <div class="table-responsive-sm" style="max-height: 68vh; overflow-y: auto;">
-                    <table class="table table-striped border">
+                    <table class="table table-striped border responsive-card-table">
                         <thead class="table-dark">
                             <tr>
                                 <th style="width: 5%">Id</th>
@@ -428,7 +451,7 @@
                     </div>
                 </div>
                 <div class="table-responsive-sm" style="max-height: 68vh; overflow-y: auto;">
-                    <table class="table table-striped border">
+                    <table class="table table-striped border responsive-card-table">
                         <thead class="table-dark">
                             <tr>
                                 <th style="width: 5%">Id</th>
@@ -1129,8 +1152,8 @@ let bootstrapLangModalInstance = null;
         const tr = document.createElement('tr');
         tr.className = 'anvayam-row-item';
         tr.innerHTML = `
-            <td style="white-space: pre-wrap;"><input type="text" class="form-control form-control-sm fn-key-input key-sanskrit" form="meaning-language-form" value="${saValue}" required></td>
-            <td style="white-space: pre-wrap;"><input type="text" class="form-control form-control-sm fn-val-input" form="meaning-language-form" value="${enValue}" required></td>
+            <td data-label="Word: "><input type="text" class="form-control form-control-sm fn-key-input key-sanskrit" form="meaning-language-form" value="${saValue}" required></td>
+            <td data-label="Meaning (${currentMeaningLanguage || 'en'}): "><input type="text" class="form-control form-control-sm fn-val-input" form="meaning-language-form" value="${enValue}" required></td>
             <td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()" type="button">❌</button></td>
         `;
         return tr;
@@ -2044,7 +2067,7 @@ let bootstrapLangModalInstance = null;
             filteredGlossaryData.forEach(item => {
                 tbody.appendChild(buildGlossaryRows(item));
             });
-            document.getElementById('glossary-h4').innerText = `Edit Glossary:- Chapter-${activeVerseChapterNum} / Verse-${activeVerseNumber} / ${langVals[lang]}`;
+            document.getElementById('glossary-h4').innerText = `Glossary:- CH-${activeVerseChapterNum} / V-${activeVerseNumber} / ${lang}`;
         });
     }
 
@@ -2069,12 +2092,12 @@ let bootstrapLangModalInstance = null;
         const lang = document.getElementById("select-glossary-lang").value;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><span class="fw-bold text-dark">${c.id}</span></td>
-            <td class="text-secondary">CH${c.chapter}-V${c.verse}</td>
-            <td class="text-secondary">${c.lang || Object.keys(c.question)[0]}</td>
-            <td><div contenteditable="true" class="form-control glossq">${c.question[lang] || c.question}</div></td>
-            <td><div contenteditable="true" class="form-control glossa">${c.answer[lang] || c.answer}</div></td>
-            <td class="text-center">
+            <td data-label="id: "><span class="fw-bold text-dark">${c.id}</span></td>
+            <td data-label="Context: " class="text-secondary">CH${c.chapter}-V${c.verse}</td>
+            <td data-label="Language: " class="text-secondary">${c.lang || Object.keys(c.question)[0]}</td>
+            <td data-label="Word: "><div contenteditable="true" class="form-control glossq">${c.question[lang] || c.question}</div></td>
+            <td data-label="Glossary: "><div contenteditable="true" class="form-control glossa">${c.answer[lang] || c.answer}</div></td>
+            <td data-label="Action: " class="text-center">
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-dark" onclick="updateGlossary('${c.id}', this)"><i class="fa-solid fa-edit">update</i></button>
                     <button class="btn btn-outline-danger" onclick="deleteGlossary('${c.id}',this)"><i class="fa-solid fa-trash-can">delete</i></button>
@@ -2171,7 +2194,7 @@ let bootstrapLangModalInstance = null;
             filteredFaqData.forEach(item => {
                 tbody.appendChild(buildFaqRows(item));
             });
-            document.getElementById('faq-h4').innerText = `Edit FAQs:- Chapter-${activeVerseChapterNum} / Verse-${activeVerseNumber} / ${langVals[lang]}`;
+            document.getElementById('faq-h4').innerText = `FAQs:- CH-${activeVerseChapterNum} / V-${activeVerseNumber} / ${lang}`;
         });
     }
 
@@ -2196,12 +2219,12 @@ let bootstrapLangModalInstance = null;
         const lang = document.getElementById("select-faq-lang").value;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><span class="fw-bold text-dark">${c.id}</span></td>
-            <td class="text-secondary">CH${c.chapter}-V${c.verse}</td>
-            <td class="text-secondary">${c.lang || Object.keys(c.question)[0]}</td>
-            <td><div contenteditable="true" class="form-control faqq">${c.question[lang] || c.question}</div></td>
-            <td><div contenteditable="true" class="form-control faqa">${c.answer[lang] || c.answer}</div></td>
-            <td class="text-center">
+            <td data-label="id: "><span class="fw-bold text-dark">${c.id}</span></td>
+            <td data-label="Context: " class="text-secondary">CH${c.chapter}-V${c.verse}</td>
+            <td data-label="Language: " class="text-secondary">${c.lang || Object.keys(c.question)[0]}</td>
+            <td data-label="Question: "><div contenteditable="true" class="form-control faqq">${c.question[lang] || c.question}</div></td>
+            <td data-label="Answer: "><div contenteditable="true" class="form-control faqa">${c.answer[lang] || c.answer}</div></td>
+            <td data-label="Action: " class="text-center">
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-dark" onclick="updateFaq('${c.id}', this)"><i class="fa-solid fa-edit">update</i></button>
                     <button class="btn btn-outline-danger" onclick="deleteFaq('${c.id}',this)"><i class="fa-solid fa-trash-can">delete</i></button>

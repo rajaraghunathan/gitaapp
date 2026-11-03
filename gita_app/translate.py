@@ -1,7 +1,55 @@
-import re, time
+import re, time, unicodedata
 from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
 from deep_translator import GoogleTranslator
+
+
+def remove_non_printable_from_object(any_obj):
+    strings_to_clean = []
+    def collect_strings(data):
+        if isinstance(data, dict):
+            for v in data.values(): collect_strings(v)
+        elif isinstance(data, list):
+            for item in data: collect_strings(item)
+        elif isinstance(data, str):
+            strings_to_clean.append(data)
+
+    collect_strings(any_obj)
+
+    cleaned_strings = []
+    for string in strings_to_clean:
+        cleaned_string = remove_non_printable(string)
+        cleaned_strings.append(cleaned_string)
+
+    string_iterator = iter(cleaned_strings)
+
+    def rebuild_nested(data):
+        if isinstance(data, dict):
+            return {k: rebuild_nested(v) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [rebuild_nested(item) for item in data]
+        elif isinstance(data, str):
+            return next(string_iterator, data)
+        return data
+
+    cleaned_data = rebuild_nested(any_obj)
+    return cleaned_data
+
+def remove_non_printable(dirty_text):
+    """
+    Filters out characters belonging to Unicode control 'C' categories:
+    Cc (Control), Cf (Format - includes \u200c), Cs (Surrogate), Co (Private Use), Cn (Unassigned)
+    while safely preserving normal text whitespace like spaces, tabs, and newlines.
+    """
+    if not dirty_text or not isinstance(dirty_text, str):
+        return dirty_text
+    normalized_text = unicodedata.normalize("NFC", dirty_text)
+    cleaned_text = "".join(
+        ch for ch in normalized_text
+        if not unicodedata.category(ch).startswith('C')
+        or ch in ('\n', '\r', '\t')  # Explicitly preserve standard structural layout whitespace
+    )
+    return cleaned_text
 
 def batch_translate_google(data_list, source_langauge='en', target_language='en'):
     try:

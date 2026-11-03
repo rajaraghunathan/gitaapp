@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request,flash, redirect, url_for, session,
 from database import db
 from models import Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
 from zoneinfo import ZoneInfo
+from translate import remove_non_printable_from_object
 
 admin = Blueprint("admin", __name__)
 
@@ -59,15 +60,14 @@ def update_verse_admin():
 
     chapter_number = int(payload.get('chapter_number'))
     verse_number = int(payload.get('verse_number'))
-    meaning = payload.get('meaning')
-    youtube_urls = payload.get('youtube_urls')
-    shloka = payload.get('shloka')
+    meaning = remove_non_printable_from_object(payload.get('meaning'))
+    youtube_urls = remove_non_printable_from_object(payload.get('youtube_urls'))
+    shloka = remove_non_printable_from_object(payload.get('shloka'))
     verse = (db.session.query(Verse)
              .where(Verse.chapter_number == chapter_number, Verse.verse_number == verse_number)
              .scalar())
     verse.meaning = meaning
     verse.youtube_url = youtube_urls
-
     # verse.shloka = shloka
     verse.shlok = shloka
     db.session.commit()
@@ -276,13 +276,14 @@ def update_commentaries():
 
     # 4. Compare both dictionaries
     # Fast equality check for dictionaries in Python
-    if current_db_dict == commentaries:
+    cleaned_commentary = remove_non_printable_from_object(commentaries)
+    if current_db_dict == cleaned_commentary:
         return jsonify({"status": "similar", "message": "No changes detected. Data is identical."}), 200
 
     # 5. Inject/Update the database if they are not similar
     try:
         # Assigning a new dict or modifying a MutableDict flags it as dirty for SQLAlchemy
-        setattr(record, acharya, commentaries)
+        setattr(record, acharya, cleaned_commentary)
         db.session.commit()
         return jsonify({"success": True, "message": "Database updated successfully."}), 200
 
@@ -376,7 +377,7 @@ def admin_quiz_update():
     payload = request.get_json()
     lang = payload.get('lang')
     chapter = int(payload.get('chapter'))
-    questions = payload.get('questions')
+    questions = remove_non_printable_from_object(payload.get('questions'))
 
     table = QuizQuestion if lang == 'en' else QuizQuestionTamil
 
@@ -442,8 +443,8 @@ def admin_glossary_update_or_delete():
     ver = int(payload.get('verse'))
     lang = payload.get('lang')
     idx = payload.get('id')
-    question = payload.get('question')
-    answer = payload.get('answer')
+    question = remove_non_printable_from_object(payload.get('question'))
+    answer = remove_non_printable_from_object(payload.get('answer'))
     table = GlossaryFaq
     try:
         if action == 'update':
@@ -460,11 +461,9 @@ def admin_glossary_update_or_delete():
             glossary = table.query.get(int(idx))
             glossary.question.pop(lang)
             glossary.answer.pop(lang)
-            db.session.commit()
-            glossary = table.query.get(int(idx))
             if glossary.question == {}:
                 db.session.delete(glossary)
-                db.session.commit()
+            db.session.commit()
             return jsonify({'success': True, 'message': 'Item Deleted Successfully in Database'}), 200
     except Exception as e:
         db.session.rollback()
@@ -495,8 +494,8 @@ def admin_faq_update_or_delete():
     ver = int(payload.get('verse'))
     lang = payload.get('lang')
     idx = payload.get('id')
-    question = payload.get('question')
-    answer = payload.get('answer')
+    question = remove_non_printable_from_object(payload.get('question'))
+    answer = remove_non_printable_from_object(payload.get('answer'))
     table = GlossaryFaq
     try:
         if action == 'update':
@@ -513,11 +512,9 @@ def admin_faq_update_or_delete():
             faq = table.query.get(int(idx))
             faq.question.pop(lang)
             faq.answer.pop(lang)
-            db.session.commit()
-            faq = table.query.get(int(idx))
             if faq.question == {}:
                 db.session.delete(faq)
-                db.session.commit()
+            db.session.commit()
             return jsonify({'success': True, 'message': 'FAQ Item Deleted Successfully in Database'}), 200
     except Exception as e:
         db.session.rollback()
