@@ -6,68 +6,55 @@
     <input type="hidden" id="form_verse_id" value="">
     <input type="hidden" id="input_chapter">
     <input type="hidden" id="input_verse_number">
-    <div class="sub-sticky">
+
+
+    <div class="sub-sticky py-2">
         <div class="text-center">
             <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.1rem"></i>
         </div>
         <div class="d-flex w-100 align-items-center gap-2 px-2 py-2">
-        <div class="dropdown mb-0 me-auto">
-            <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">English</button>
-            <ul class="dropdown-menu">
-                <li><button id="en-lang" type="button" class="dropdown-item active" onclick="loadLang(event, 'en')">English</button></li>
-                <li><button id="ta-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'ta')">Tamil</button></li>
-                <li><button id="hi-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'hi')">Hindi</button></li>
-                <li><button id="te-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'te')">Telugu</button></li>
-            </ul>
-        </div>
-        <div class="dropdown">
-            <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-              Select
+            <button class="fw-bold btn btn-warning bt-sm" type="button" data-bs-toggle="collapse" data-bs-target="#studentToggleMenu">
+              Menu
             </button>
-            <ul class="dropdown-menu">
-                <li class="dropdown-item">
-                    <a class="nav-link nav-link-custom" data-bs-toggle="offcanvas" href="#studentMenu">Chapter</a>
-                </li>
-                <li class="dropdown-item">
-                    <a class="nav-link nav-link-custom" data-bs-toggle="collapse" href="#s-pane">Shloka</a>
-                </li>
-                <li class="dropdown-item">
-                    <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#c-pane">Comments</a>
-                </li>
-                <li class="dropdown-item">
-                    <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#quiz-pane">Quiz</a>
-                </li>
-                <li class="dropdown-item">
-                    <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#comment-pane">Discussion</a>
-                </li>
-                <li class="dropdown-item">
-                    <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#glossary-pane">Glossary</a>
-                </li>
-                 <li class="dropdown-item">
-                    <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#faq-pane">FAQ</a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li class="dropdown-item">
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#gitaCard" onclick="generateGitaCard()">Generate Card</button>
-                </li>
-            </ul>
+            <div class="dropdown mb-0 me-auto">
+                <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">English</button>
+                <ul class="dropdown-menu">
+                    <li><button id="en-lang" type="button" class="dropdown-item active" onclick="loadLang(event, 'en')">English</button></li>
+                    <li><button id="ta-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'ta')">Tamil</button></li>
+                    <li><button id="hi-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'hi')">Hindi</button></li>
+                    <li><button id="te-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'te')">Telugu</button></li>
+                </ul>
+            </div>
+            <button class="btn btn-sm btn-primary flex-shrink-0" type="button" id="verse-prev-btn" onclick="navigateToAdjacentVerse(-1)">⬅️</button>
+            <div class="dropdown flex-grow-1" style="min-width: 0;">
+                <button id="verse-list-button" type="button" class="btn btn-warning btn-sm dropdown-toggle text-truncate w-100"
+                data-bs-toggle="dropdown">
+                1.1 धृतराष्ट्र उवाच ...
+                </button>
+                <ul id="verseList" class="dropdown-menu"></ul>
+            </div>
+            <button class="btn btn-sm btn-primary flex-shrink-0" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">➡️</button>
         </div>
-        <button class="btn btn-sm btn-primary flex-shrink-0" type="button" id="verse-prev-btn" onclick="navigateToAdjacentVerse(-1)">⬅️</button>
-        <div class="dropdown flex-grow-1" style="min-width: 0;">
-            <button id="verse-list-button" type="button" class="btn btn-warning btn-sm dropdown-toggle text-truncate w-100"
-            data-bs-toggle="dropdown">
-            1.1 धृतराष्ट्र उवाच ...
-            </button>
-            <ul id="verseList" class="dropdown-menu"></ul>
+
+        <div id="studentToggleMenu" class="collapse">
+          <div class="bg-secondary d-flex flex-wrap flex-md-nowrap gap-2 p-2">
+              <!-- Links go here -->
+              <a class="nav-link nav-link-custom" data-bs-toggle="offcanvas" href="#studentMenu">Chapter</a>
+              <a class="nav-link nav-link-custom" data-bs-toggle="collapse" href="#s-pane">Shloka</a>
+              <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#c-pane">Comments</a>
+              <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#quiz-pane">Quiz</a>
+              <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#comment-pane">Discussion</a>
+              <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#glossary-pane">Glossary</a>
+              <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#faq-pane">FAQ</a>
+              <a class="nav-link nav-link-custom" data-bs-toggle="offcanvas" href="#gitaCard" onclick="generateGitaCard()">Generate Card</a>
+          </div>
         </div>
-        <button class="btn btn-sm btn-primary flex-shrink-0" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">➡️</button>
-    </div>
     </div>
     <div id="div-section" class="tab-content w-100 d-block" style="width: 100% !important;">
         <!-- VERSE SECTION -->
         <div class="container-fluid collapse show" data-bs-parent="#div-section" id="s-pane" >
             <div class="row">
-                <div class="col-sm-5 mb-2">
+                <div class="col-sm-5 mb-2 mt-2">
                     <!-- Shloka Block -->
 
                     <div id="shloka-div" class="mb-2">
@@ -82,7 +69,7 @@
                     </div>
 
                 </div>
-                <div class="col-sm-7">
+                <div class="col-sm-7 mt-2">
                     <!-- Description Text Block -->
                     <div class="card mb-2 p-2">
                         <label class="form-label fw-bold">Description</label>
@@ -95,8 +82,28 @@
                     </div>
                     <!-- Anvayam Table Module -->
                     <div class="card mb-2 p-2">
-                        <label class="form-label fw-bold">Word Meaning</label>
-                        <p id="anvayam-div"></p>
+<!--                        <label class="form-label fw-bold">Word Meaning</label>-->
+<!--                        <p id="anvayam-div"></p>-->
+<!--                        <div class="card">-->
+<!--                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">-->
+<!--                                <h5 id="anvayam-h5">Word Meaning</h5>-->
+<!--                            </div>-->
+<!--                            <div id="anvayamDiv" class="overflow-y-auto" style="height: 60vh;">-->
+                                <table id="anvayamTable" class="table table-sm table-striped responsive-card-table">
+                                    <thead class="table-warning">
+                                      <tr>
+                                         <th scope="col" style="width: 5%">Word</th>
+                                          <th scope="col" style="width: 5%">Meaning</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="anvayamTbody">
+
+                                    </tbody>
+                                </table>
+<!--                            </div>-->
+<!--                        </div>-->
+
+
                     </div>
 
                 </div>
@@ -104,7 +111,7 @@
         </div>
         <!-- COMMENTARY SECTION -->
         <div class="container-fluid collapse" data-bs-parent="#div-section" id="c-pane" >
-            <div id="acharya">
+            <div id="acharya" class="mt-2">
                 <div class="card">
                   <div class="card-header">
                     <span class="fw-bold text-dark">Commentary:</span>
@@ -428,7 +435,7 @@
     async function loadVerse (lang, id, ch, vn) {
         document.getElementById("field-description").innerText  = "Getting The Data From The Server..."
         document.getElementById("footnotes-div").innerText  = ""
-        document.getElementById("anvayam-div").innerText  = ""
+        // document.getElementById("anvayam-div").innerText  = ""
         currentActiveId = parseInt(id);
         document.getElementById('inputActionArea').style.display = 'block';
         lockDOM();
@@ -663,21 +670,32 @@
     }
 
     function renderAnvayam(arrData) {
-        const anvayamDiv = document.getElementById('anvayam-div');
+        // const anvayamDiv = document.getElementById('anvayam-div');
+        //
+        // if (arrData && arrData.length > 0) {
+        //     // Create an array of formatted text strings
+        //     const textSegments = arrData.map(item => {
+        //         const saText = item && typeof item === 'object' ? (item.sa || '') : '';
+        //         const enText = item && typeof item === 'object' ? (item.en || '') : '';
+        //         return `<strong>${saText} --- </strong>${enText}`;
+        //     });
+        //
+        //     // Join them with a semicolon and space, eliminating any trailing punctuation
+        //     anvayamDiv.innerHTML = textSegments.join('; ') + '.';
+        // } else {
+        //     anvayamDiv.innerHTML = "<strong>Not Available</strong>";
+        // }
 
-        if (arrData && arrData.length > 0) {
-            // Create an array of formatted text strings
-            const textSegments = arrData.map(item => {
-                const saText = item && typeof item === 'object' ? (item.sa || '') : '';
-                const enText = item && typeof item === 'object' ? (item.en || '') : '';
-                return `<strong>${saText} --- </strong>${enText}`;
-            });
-
-            // Join them with a semicolon and space, eliminating any trailing punctuation
-            anvayamDiv.innerHTML = textSegments.join('; ') + '.';
-        } else {
-            anvayamDiv.innerHTML = "<strong>Not Available</strong>";
-        }
+        const tbody = document.getElementById('anvayamTbody');
+        tbody.innerHTML = '';
+        arrData.map(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-label="Word: ">${item.sa || ''}</td>
+                <td data-label="Meaning: ">${item.en || ''}</td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 
     /* --- COMMENTARY ENGINE LOGIC --- */

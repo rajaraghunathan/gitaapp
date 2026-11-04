@@ -1,7 +1,7 @@
 body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif; display: flex; min-height: 100vh; flex-direction: column; }
 .navbar-custom { background-color: #ffffff; border-bottom: 3px solid #d35400; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 .navbar-brand-custom { font-weight: bold; color: #d35400 !important; font-size: 1.4rem; display: flex; align-items: center; }
-.nav-link-custom { color: #2c3e50 !important; font-weight: 600; transition: color 0.2s; margin-left: 5px; }
+.nav-link-custom { color: #2c3e50 !important; font-weight: 600; transition: color 0.2s; margin-left: 5px; border-radius: 0.375rem; }
 .nav-link-custom:hover { color: #d35400 !important; }
 .footer-custom { background-color: #2c3e50; color: #ffffff; padding: 20px 0; margin-top: auto; border-top: 4px solid #e67e22; }
 .modal-header-custom { background-color: #d35400; color: white; }
@@ -112,7 +112,8 @@ body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif
 }
 
 /* Target collapse link when the collapse is open */
-#youtube-render-div a[aria-expanded="true"], #acharya a[aria-expanded="true"], #shloka-div a[aria-expanded="true"] {
+#youtube-render-div a[aria-expanded="true"], #acharya a[aria-expanded="true"], #shloka-div a[aria-expanded="true"],
+#studentToggleMenu a[aria-expanded="true"] {
     color: darkviolet;
     background-color: lime;
     font-weight: bold;
@@ -148,19 +149,18 @@ body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif
   /* Make every row look like an individual card */
   .responsive-card-table tr {
     display: block;
-    margin-bottom: 1rem;
-    padding: 1rem;
+    padding: 0.5rem;
     border: 1px solid #dee2e6;
     border-radius: 0.375rem;
-    background-color: #fff;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   }
 
   /* Align cell data like a row inside our card layout */
   .responsive-card-table td {
     display: block;
+      border-radius: 0.375rem;
+      background-color: rgb(81 13 38 / 22%);
     border-bottom: 1px solid #dde3e9;
-    padding: 0.5rem 0;
+      margin-bottom: 0.2rem;
   }
 
   /* Remove the bottom border from the final card property row */
@@ -182,4 +182,10 @@ audio {
     width: 100%;
     height: 35px;
     display: block; /* Eliminates accidental inline whitespace alignment issues */
+}
+
+#anvayamTbody td:first-child {
+    font-style: italic;
+    font-weight: bold;
+    color: #0000b3
 }

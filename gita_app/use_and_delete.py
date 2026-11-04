@@ -111,20 +111,18 @@ if __name__ == '__main__':
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     Base = declarative_base()
     Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
-    try:
-        # db_operations()
-        # yt_inject_db()
-        # export_data()
-        merge_data()
-        # clean_non_printable_characters()
-    except Exception as e:
-        db.rollback()
-        print(f"Error occurred, rolling back: {e}")
-        raise e
-    finally:
-        db.close()  # Always terminate the session to release file locks
-        print('Database Closed Successfully')
+
+    with SessionLocal() as db:
+        try:
+            # db_operations()
+            # yt_inject_db()
+            # export_data()
+            merge_data()
+            # clean_non_printable_characters()
+        except Exception as e:
+            db.rollback()
+            print(f"Error occurred, rolling back: {e}")
+            raise e
 
     # string ={'en': "Sample string\u200c"}
     # cleaned = remove_non_printable_from_object(string)
