@@ -1,9 +1,9 @@
 # Helper File to Inject the YouTube link
-import os, csv, ast, json
+import os, csv, ast, json, requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.attributes import flag_modified
-from models import Verse, GlossaryFaq, Chapter
+from models import Chapter, Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -49,61 +49,114 @@ def db_operations ():
     print(chapter.summary['ta'])
 
 def export_data ():
-    verse = db.query(Verse).where(Verse.chapter_number == 2).all()
-    data = []
+    table = Verse
+    col_name = 'chapter_number'
+    filter_criteria = 2
+    if hasattr(table, col_name):
+        verse = db.query(table).where(getattr(table, col_name) == filter_criteria).all()
+    else:
+        print(f"Error: {col_name} is not a valid column name on {table.__name__}")
+        verse = []
+    table_name = table.__tablename__
+    data = {'table_name': table_name, 'col_name': col_name, 'filter_criteria': filter_criteria, 'table_data':[]}
     for v in verse:
-        temp_data = {
-            'chapter_number': v.chapter_number,
-            'verse_number': v.verse_number,
-            'meaning_ta_anvayam': v.meaning.get('ta').get('anvayam'),
-            'shlok_anvayam': v.shlok.get('anvayam')
-        }
-        data.append(temp_data)
-
-    json_path = os.path.join(BASE_DIR, "json using codes", "chapter2_data.json")
+        temp_data = {k: v for k, v in v.__dict__.items() if not k.startswith('_')}
+        data['table_data'].append(temp_data)
+    json_path = os.path.join(BASE_DIR, "json using codes", f"CH2_{table_name}_data.json")
 
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 def merge_data ():
-    json_path = os.path.join(BASE_DIR, "json using codes", "chapter2_data.json")
+    # flag_modified(verse, 'meaning')
+    file_id = '1viadTOf88mAKmYdCLWYwLNjDO1lqFben'
+    # data = download_public_json(file_id)
+    json_path = os.path.join(BASE_DIR, "json using codes", f"CH2_verse_data.json")
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
+
+    table_class = {'chapter': Chapter, 'verse': Verse,
+                   'acharya_comment': AcharyaComment, 'quiz_question': QuizQuestion,
+                   'quiz_question-tamil': QuizQuestionTamil, 'glossary_faq': GlossaryFaq}
+    db_table = table_class.get(data.get('table_name'))
+    incoming_table = data.get('table_data', [])
+    incoming_col = data.get('col_name')
+    incoming_filter = data.get('filter_criteria')
+
+    # 1. Map the incoming records by their unique ID
+    incoming_records_map = {row['id']: row for row in incoming_table}
+    incoming_ids = set(incoming_records_map.keys())
+
+    # 2. Fetch all current records from the main DB for this scope (e.g., Chapter 2)
+    # Fetching them all at once avoids running a slow query inside a loop
+    existing_records = db.query(db_table).where(getattr(db_table, incoming_col) == incoming_filter).all()
+    existing_records_map = {record.id: record for record in existing_records}
+    existing_ids = set(existing_records_map.keys())
+    ids_to_delete = existing_ids - incoming_ids
+    ids_to_update = existing_ids & incoming_ids
+    ids_to_insert = incoming_ids - existing_ids
+
+    print(f'ids_to_insert: {len(ids_to_insert)}')
+    print(f'ids_to_delete: {len(ids_to_delete)}')
+    print(f'ids_to_update: {len(ids_to_update)}')
+
+    record_same = []
+    record_diff = []
+    record_new = []
+    record_deleted = []
+
+    # --- PHASE 1: HANDLE DELETIONS ---
+    for record_id in ids_to_delete:
+        print(existing_records_map[record_id])
+        # db.delete(existing_records_map[record_id])
+        record_deleted.append(record_id)
+    # db.flush()
+    # --- PHASE 2: HANDLE UPDATES ---
+    for record_id in ids_to_update:
+        current_record = existing_records_map[record_id]
+        new_data = incoming_records_map[record_id]
+
+        for key, value in new_data.items():
+            if key != 'id' and getattr(current_record, key) != value:
+                # setattr(current_record, key, value)
+                if not record_id in record_diff:
+                    record_diff.append(record_id)
+            else:
+                if not record_id in record_same:
+                    record_same.append(record_id)
+
+    # --- PHASE 3: HANDLE INSERTS ---
+    for record_id in ids_to_insert:
+        new_row_data = incoming_records_map[record_id]
+        if 'id' in new_row_data.keys():
+            new_row_data.pop('id')
+        # Unpack the dictionary safely including the original ID to keep sync intact
+        new_record = GlossaryFaq(**new_row_data)
+        # db.add(new_record)
+        record_new.append(record_id)
+
     print('Merging Data to DB')
-    mean_same = 0
-    anv_same = 0
-    record_diff = 0
+    print(f'{len(existing_records)} records found')
+    print(f'{len(record_same)} records are same')
+    print(f'{len(record_diff)} records are updated. Updated ids are {record_diff}')
+    print(f'{len(record_new)} records are inserted. Inserted ids are {record_new}')
+    print(f'{len(record_deleted)} number of records are deleted. Deleted ids are {record_deleted}')
 
-    for item in data:
-        ch = item['chapter_number']
-        ver = item['verse_number']
-        anvayam = item['shlok_anvayam']
-        anvayam_table = item['meaning_ta_anvayam']
+    # if len(record_diff) + len(record_new) + len(record_deleted) > 0:
+    #     db.commit()
+    #     print("Successfully synced all inserts, updates, and deletes! in Data Base")
 
-        verse = db.query(Verse).where(Verse.chapter_number == ch, Verse.verse_number == ver).scalar()
-        if verse.meaning.get('ta').get('anvayam') == anvayam_table:
-            mean_same += 1
-        else:
-            verse.meaning['ta']['anvayam'] = anvayam_table
-            flag_modified(verse, 'meaning')
-            record_diff += 1
-            print(f'Verse.meaning.ta.anvayam Changed for {ch}-{ver}')
-        if verse.shlok.get('anvayam') == anvayam:
-            anv_same += 1
-        else:
-            verse.shlok['anvayam'] = anvayam
-            flag_modified(verse, 'shlok')
-            record_diff += 1
-            print(f'Verse.Shlok.Anvayam Changed for {ch}-{ver}')
-
-    print(f'{mean_same} Records are same for Word Meaning Table')
-    print(f'{anv_same} Records are same for Anvayam')
-    if record_diff > 0:
-        db.commit()
-        print(f'{record_diff} Different Records are added to DB')
-
-def print_data_from_db ():
-    verse = db.query(Verse).where(Verse.chapter_number == 2).all()
+def download_public_json(file_id):
+    """Downloads a publicly shared file from Google Drive without authentication."""
+    print("Downloading JSON from Google Drive...")
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    response = requests.get(url, timeout=30)
+    # response.raise_for_status()
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        raise Exception(f"Failed to download file. Status code: {response.status_code}")
 
 if __name__ == '__main__':
     db_path = os.path.join(BASE_DIR, 'gita.db')
@@ -116,9 +169,8 @@ if __name__ == '__main__':
         try:
             # db_operations()
             # yt_inject_db()
-            # export_data()
+            export_data()
             merge_data()
-            # clean_non_printable_characters()
         except Exception as e:
             db.rollback()
             print(f"Error occurred, rolling back: {e}")

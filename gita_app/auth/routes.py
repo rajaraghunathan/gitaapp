@@ -1,5 +1,5 @@
 import os, json, translate, random, re
-from flask import Blueprint, jsonify, request, session
+from flask import Blueprint, jsonify, request, session, url_for
 from database import db
 from models import Student, Verse, Comment, AcharyaComment, QuizQuestion, QuizScore, QuizQuestionTamil, GlossaryFaq
 from datetime import datetime, timezone
@@ -68,6 +68,7 @@ def get_single_verse_user():
             {'sandhi': dynamic_sanskrit_transliterate(sandhi, indic_lang)},
             {'anvayam': dynamic_sanskrit_transliterate(anvayam, indic_lang)}
         ]
+        v_dict["audio_file"] = url_for('static', filename=f'audio/Ch{chapter_number}-{verse_number}.aac')
 
         # v_dict["shloka"] = {
         #     'sa': shloka_sa,

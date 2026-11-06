@@ -1,7 +1,7 @@
 import os, json, uuid, re, requests, io, csv
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template, make_response
 from database import db
-from models import Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
+from models import Chapter, Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
 from zoneinfo import ZoneInfo
 from translate import remove_non_printable_from_object
 
@@ -519,3 +519,88 @@ def admin_faq_update_or_delete():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, "message": "Database update failed" + str(e)}), 500
+
+# Update DB data from Local Host to Production
+@admin.route('/admin/update_db/<string:file_id>')
+def admin_update_db(file_id):
+    # flag_modified(verse, 'meaning')
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    # file_id = '1viadTOf88mAKmYdCLWYwLNjDO1lqFben'
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    response = requests.get(url, timeout=30)
+    if response.status_code == 200:
+        data = response.json()
+    else:
+        return jsonify({'Error': f"Failed to download file From Google Drive. Status code: {response.status_code}"})
+    table_class = {'chapter': Chapter, 'verse': Verse,
+                   'acharya_comment': AcharyaComment, 'quiz_question': QuizQuestion,
+                   'quiz_question-tamil': QuizQuestionTamil, 'glossary_faq': GlossaryFaq}
+    db_table = table_class.get(data.get('table_name'))
+    incoming_table = data.get('table_data', [])
+    record_same = []
+    record_diff = []
+    record_new = []
+    record_deleted = []
+
+    # 1. Map the incoming records by their unique ID
+    incoming_records_map = {row['id']: row for row in incoming_table}
+    incoming_ids = set(incoming_records_map.keys())
+
+    try:
+        # 2. Fetch all current records from the main DB for this scope (e.g., Chapter 2)
+        # Fetching them all at once avoids running a slow query inside a loop
+        incoming_col = data.get('col_name')
+        incoming_filter = data.get('filter_criteria')
+        existing_records = db.session.query(db_table).where(getattr(db_table, incoming_col) == incoming_filter).all()
+        existing_records_map = {record.id: record for record in existing_records}
+        existing_ids = set(existing_records_map.keys())
+        ids_to_delete = existing_ids - incoming_ids
+        ids_to_update = existing_ids & incoming_ids
+        ids_to_insert = incoming_ids - existing_ids
+
+        # --- PHASE 1: HANDLE DELETIONS ---
+        for record_id in ids_to_delete:
+            print(existing_records_map[record_id])
+            db.session.delete(existing_records_map[record_id])
+            record_deleted.append(record_id)
+        if len(record_deleted) > 0:
+            db.session.flush()
+
+        # --- PHASE 2: HANDLE UPDATES ---
+        for record_id in ids_to_update:
+            current_record = existing_records_map[record_id]
+            new_data = incoming_records_map[record_id]
+
+            for key, value in new_data.items():
+                if key != 'id' and getattr(current_record, key) != value:
+                    setattr(current_record, key, value)
+                    if not record_id in record_diff:
+                        record_diff.append(record_id)
+                else:
+                    if not record_id in record_same:
+                        record_same.append(record_id)
+
+        # --- PHASE 3: HANDLE INSERTS ---
+        for record_id in ids_to_insert:
+            new_row_data = incoming_records_map[record_id]
+            if 'id' in new_row_data.keys():
+                new_row_data.pop('id')
+            # Unpack the dictionary safely including the original ID to keep sync intact
+            new_record = GlossaryFaq(**new_row_data)
+            db.session.add(new_record)
+            record_new.append(record_id)
+
+        if len(record_diff) + len(record_new) + len(record_deleted) > 0:
+            db.session.commit()
+            print("Successfully synced all inserts, updates, and deletes! in Data Base")
+        return jsonify({'success': True,
+                        'found': f'{len(existing_records)} records found in {data.get('table_name')}',
+                        'same': f'{len(record_same)} records are same',
+                        'Updated': f'{len(record_diff)} records are updated. Updated ids are {record_diff}',
+                        'Inserted': f'{len(record_new)} records are inserted. Inserted ids are {record_new}',
+                        'Deleted': f'{len(record_deleted)} number of records are deleted. Deleted ids are {record_deleted}',
+                        'message': 'All inserts, updates, and deletes! Synced Successfully in Database'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, "message": "Database update failed", 'error': str(e)}), 500

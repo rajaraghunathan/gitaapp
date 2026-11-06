@@ -465,10 +465,11 @@
             const shlokaObj = verse.shlok;
             let htmlContent1 = "";
             let htmlContent2 = "";
-            let src1 = "", src2 = "";
+            let src1 = "", src2 = "", src3 = "";
             if (ch === 1 && vn > 25 && vn < 38) {
-                src1 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
-                src2 = `https://s3-ap-southeast-1.amazonaws.com/gitaverses/VerseSingle/C${ch}v${vn}.mp3`;
+                src2 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
+                src1 = verse.audio_file;
+                src3 = `https://s3-ap-southeast-1.amazonaws.com/gitaverses/VerseSingle/C${ch}v${vn}.mp3`;
             } else if (ch === 1 && vn > 37) {
                 src1 = `https://s3-ap-southeast-1.amazonaws.com/gitaverses/VerseSingle/C${ch}v${vn-1}.mp3`;
                 src2 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
@@ -476,6 +477,7 @@
                 src1 = `https://s3-ap-southeast-1.amazonaws.com/gitaverses/VerseSingle/C${ch}v${vn}.mp3`;
                 src2 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
             }
+            `<!--<i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>-->`
             verse.shlok.forEach(item =>{
                 Object.entries(item).forEach(([key, val]) => {
                     // const activeClass = key === "shloka" ? 'show' : '';
@@ -488,7 +490,12 @@
                           <div id="${key}" class="shloka-text collapse" data-bs-parent="#shloka-div">
                                ${key === 'shloka'
                                     ? (ch === 1 && vn > 25 && vn < 38)
-                                        ? `<i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>`
+                                        ?
+                                            `<audio controls preload="none">
+                                               <source src="${src1}" type="audio/aac">
+                                               <source src="${src2}" type="audio/mpeg">
+                                               Your browser does not support the audio element.
+                                           </audio>`
                                         : `<audio controls preload="none">
                                                <source src="${src1}" type="audio/mpeg">
                                                <source src="${src2}" type="audio/mpeg">
