@@ -1,5 +1,7 @@
 # Helper File to Inject the YouTube link
+from pathlib import Path
 import os, csv, ast, json, requests
+from datetime import datetime, timedelta, timezone
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.attributes import flag_modified
@@ -49,9 +51,9 @@ def db_operations ():
     print(chapter.summary['ta'])
 
 def export_data ():
-    table = Verse
-    col_name = 'chapter_number'
-    filter_criteria = 2
+    table = GlossaryFaq
+    col_name = 'chapter'
+    filter_criteria = 1
     if hasattr(table, col_name):
         verse = db.query(table).where(getattr(table, col_name) == filter_criteria).all()
     else:
@@ -62,7 +64,9 @@ def export_data ():
     for v in verse:
         temp_data = {k: v for k, v in v.__dict__.items() if not k.startswith('_')}
         data['table_data'].append(temp_data)
-    json_path = os.path.join(BASE_DIR, "json using codes", f"CH2_{table_name}_data.json")
+    today_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+    file_name_construct = f"local_db_{col_name}_{filter_criteria}_{table_name}_{today_date}.json"
+    json_path = os.path.join(BASE_DIR, "static", "json_files", file_name_construct)
 
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
@@ -170,12 +174,9 @@ if __name__ == '__main__':
             # db_operations()
             # yt_inject_db()
             export_data()
-            merge_data()
+            # merge_data()
         except Exception as e:
             db.rollback()
             print(f"Error occurred, rolling back: {e}")
             raise e
 
-    # string ={'en': "Sample string\u200c"}
-    # cleaned = remove_non_printable_from_object(string)
-    # print(cleaned)

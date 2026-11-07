@@ -4,53 +4,56 @@
 {% block content %}
 <div class="container-fluid my-2 px-2">
         <!-- Dashboard Switcher Controls -->
-        <div class="nav d-flex align-items-center nav-pills bg-white p-2 rounded shadow-sm border sticky-top" id="adminTabs" role="tablist" style="top: 56px;">
+        <div class="nav d-flex align-items-center nav-pills bg-white p-2 rounded shadow-sm border sticky-top" id="adminTabs" style="top: 56px;">
             <!-- Right Side: Integrated Text Styling Toolbar -->
-            <div class="dropdown">
-            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-              EDIT CONTEXT MENU
+            <button class="fw-bold btn btn-warning bt-sm" type="button" data-bs-toggle="collapse" data-bs-target="#adminToggleMenu">
+              Menu
             </button>
-            <ul class="dropdown-menu">
-                <li class="dropdown-item">
-                    <button class="nav-link btn-sm active text-start py-2 fw-bold" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">
-                        <i class="fa-solid fa-pen-to-square me-2"></i> Shloka Manager
-                    </button>
-                </li>
-                <li class="dropdown-item">
-                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">
-                        <i class="fa-solid fa-pen-to-square me-2"></i> Quiz
-                    </button>
-                </li>
-                <li class="dropdown-item">
-                     <button class="nav-link btn-sm text-start py-2 fw-bold" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">
-                        <i class="fa-solid fa-pen-to-square me-2"></i> Glossary
-                    </button>
-                </li>
-                <li class="dropdown-item">
-                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">
-                        <i class="fa-solid fa-pen-to-square me-2"></i> FAQ
-                    </button>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li class="dropdown-item">
-                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">
-                        <i class="fa-solid fa-comments me-2"></i> Discussion Queue
-                    </button>
-                </li>
-                <li class="dropdown-item">
-                     <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
-                        <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
-                    </button>
-                </li>
-                <li class="dropdown-item">
-                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
-                        <i class="fa-solid fa-pen-to-square me-2"></i> Students
-                    </button>
-                </li>
+<!--            <div class="dropdown">-->
+<!--            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">-->
+<!--              EDIT CONTEXT MENU-->
+<!--            </button>-->
+<!--            <ul class="dropdown-menu">-->
+<!--                <li class="dropdown-item">-->
+<!--                    <button class="nav-link btn-sm active text-start py-2 fw-bold" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">-->
+<!--                        <i class="fa-solid fa-pen-to-square me-2"></i> Shloka Manager-->
+<!--                    </button>-->
+<!--                </li>-->
+<!--                <li class="dropdown-item">-->
+<!--                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">-->
+<!--                        <i class="fa-solid fa-pen-to-square me-2"></i> Quiz-->
+<!--                    </button>-->
+<!--                </li>-->
+<!--                <li class="dropdown-item">-->
+<!--                     <button class="nav-link btn-sm text-start py-2 fw-bold" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">-->
+<!--                        <i class="fa-solid fa-pen-to-square me-2"></i> Glossary-->
+<!--                    </button>-->
+<!--                </li>-->
+<!--                <li class="dropdown-item">-->
+<!--                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">-->
+<!--                        <i class="fa-solid fa-pen-to-square me-2"></i> FAQ-->
+<!--                    </button>-->
+<!--                </li>-->
+<!--                <li><hr class="dropdown-divider"></li>-->
+<!--                <li class="dropdown-item">-->
+<!--                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">-->
+<!--                        <i class="fa-solid fa-comments me-2"></i> Discussion Queue-->
+<!--                    </button>-->
+<!--                </li>-->
+<!--                <li class="dropdown-item">-->
+<!--                     <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">-->
+<!--                        <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center-->
+<!--                    </button>-->
+<!--                </li>-->
+<!--                <li class="dropdown-item">-->
+<!--                    <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">-->
+<!--                        <i class="fa-solid fa-pen-to-square me-2"></i> Students-->
+<!--                    </button>-->
+<!--                </li>-->
 
 
-            </ul>
-        </div>
+<!--            </ul>-->
+<!--        </div>-->
             <div class="ms-auto d-flex align-items-center border-start ps-3 me-2" id="textToolbar">
                 <span class="small text-muted me-2 d-none d-md-inline" style="font-size: 11px;">Text:</span>
                 <div class="btn-group" role="group" aria-label="Text formatting">
@@ -61,6 +64,42 @@
                     <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="setStyle('subscript')">X<sub>2</sub></button>
                 </div>
             </div>
+        </div>
+        <div id="adminToggleMenu" class="collapse">
+          <div class="bg-white d-flex flex-wrap flex-md-nowrap gap-2 p-2" role="tablist">
+              <!-- Links go here -->
+            <button class="nav-link btn-sm active text-start py-2 fw-bold" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Shloka Manager
+            </button>
+
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Quiz
+            </button>
+
+             <button class="nav-link btn-sm text-start py-2 fw-bold" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Glossary
+            </button>
+
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> FAQ
+            </button>
+
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">
+                <i class="fa-solid fa-comments me-2"></i> Discussion Queue
+            </button>
+
+             <button class="nav-link btn-sm text-start py-2 fw-bold" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Data Export Center
+            </button>
+
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">
+                <i class="fa-solid fa-pen-to-square me-2"></i> Students
+            </button>
+            <button class="nav-link btn-sm text-start py-2 fw-bold" id="db-tab" data-bs-toggle="pill" data-bs-target="#db-pane" type="button" role="tab" onclick="loadDbDetails()">
+                <i class="fa-solid fa-pen-to-square me-2"></i> DB
+            </button>
+
+          </div>
         </div>
 
 
@@ -468,6 +507,41 @@
                     </table>
                 </div>
             </div>
+
+            <div class="tab-pane fade" id="db-pane" role="tabpanel" aria-labelledby="db-tab">
+                <div class="row">
+                    <div class="col">
+                        <form action="/action_page.php">
+                            <label for="table-name" class="form-label">Select (Table):</label>
+                            <select class="form-select" id="table-name" name="table">
+
+                            </select>
+                            <label for="chapter" class="form-label">Select (Chapter Number):</label>
+                            <select class="form-select" id="chapter" name="criteria">
+
+                            </select>
+                            <button type="submit" class="btn btn-primary mt-3">UPLOAD TO DRIVE</button>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <form action="/action_page.php">
+                            <label for="json-file" class="form-label">Select (JSON File):</label>
+                            <select class="form-select" id="json-file" name="json-file">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                            </select>
+                            <br>
+                            <button type="submit" class="btn btn-primary mt-3">UPLOAD TO DB</button>
+                        </form>
+                    </div>
+
+                </div>
+
+
+
+            </div>
         </div>
 
 </div>
@@ -538,7 +612,7 @@
 
 {% block extra_js %}
 <script>
-let bootstrapLangModalInstance = null;
+    let bootstrapLangModalInstance = null;
     let globalActiveChapter = 1;
     let selectedAuthorKey = null;
     let activeVerseChapterNum = null;
@@ -2305,6 +2379,28 @@ let bootstrapLangModalInstance = null;
                 }
             }).catch(err => showToast(err.message, "danger"));
         }
+    }
+
+    function loadDbDetails() {
+        const db = [
+            {tableName: 'chapter', colName: 'num'},
+            {tableName: 'verse', colName: 'chapter_number'},
+            {tableName: 'acharya_comment', colName: 'chapter_number'},
+            {tableName: 'quiz_question', colName: 'chapter'},
+            {tableName: 'quiz_question-tamil', colName: 'chapter'},
+            {tableName: 'glossary_faq', colName: 'chapter'}
+        ]
+        let el = document.getElementById("table-name");
+        el.innerHTML = "";
+        db.map(item=>{
+            el.innerHTML += `<option>${item.tableName}</option>`
+        })
+        el = document.getElementById("chapter");
+        el.innerHTML = "";
+        const chapters = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+        chapters.map(item=>{
+            el.innerHTML += `<option>${item}</option>`
+        })
     }
 
     function calculateTextAreaLines(text,mW) {
