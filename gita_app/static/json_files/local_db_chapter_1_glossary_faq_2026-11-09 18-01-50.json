@@ -1,0 +1,6019 @@
+{
+  "table_name": "glossary_faq",
+  "col_name": "chapter",
+  "filter_criteria": 1,
+  "table_data": [
+    {
+      "type": "glossary",
+      "id": 1,
+      "answer": {
+        "en": "O Sanjaya !, Synonyms: Sanjaya, the one who narrated the Mahabharata war to Dhritarashtra"
+      },
+      "question": {
+        "en": "सञ्जय"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 2,
+      "answer": {
+        "en": "on the field of the working out of the Dharma"
+      },
+      "question": {
+        "en": "धर्म-क्षेत्रे"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 3,
+      "answer": {
+        "en": "on the field of Kurukshetra"
+      },
+      "question": {
+        "en": "कुरु-क्षेत्रे"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 4,
+      "answer": {
+        "en": "gathered together"
+      },
+      "question": {
+        "en": "समवेताः"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 5,
+      "answer": {
+        "en": "those eager for battle, Synonyms: one who longs for battle"
+      },
+      "question": {
+        "en": "युयुत्सवः"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 6,
+      "answer": {
+        "en": "my own people, Synonyms: mine, my, from me"
+      },
+      "question": {
+        "en": "मामकाः"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 7,
+      "answer": {
+        "en": "the sons of Pandu"
+      },
+      "question": {
+        "en": "पाण्डवाः"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 8,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 9,
+      "answer": {
+        "en": "indeed"
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 10,
+      "answer": {
+        "en": "what"
+      },
+      "question": {
+        "en": "किम्"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 11,
+      "answer": {
+        "en": "did, Synonyms: to do"
+      },
+      "question": {
+        "en": "अकुर्वत"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "glossary",
+      "id": 12,
+      "answer": {
+        "en": "tu then, Synonyms: then or at that time or in that case"
+      },
+      "question": {
+        "en": "तदा  तु"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 13,
+      "answer": {
+        "en": "the prince (king), Synonyms: a king"
+      },
+      "question": {
+        "en": "राजा"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 14,
+      "answer": {
+        "en": "Duryodhana, Synonyms: Duryodhana, the eldest son of Dhritarashtra"
+      },
+      "question": {
+        "en": "दुर्योधनः"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 15,
+      "answer": {
+        "en": "arrayed in battle order"
+      },
+      "question": {
+        "en": "व्यूढम्"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 16,
+      "answer": {
+        "en": "the army of the Pandavas"
+      },
+      "question": {
+        "en": "पाण्डव-अनीकम्"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 17,
+      "answer": {
+        "en": "having seen, Synonyms: to see"
+      },
+      "question": {
+        "en": "दृष्ट्वा"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 18,
+      "answer": {
+        "en": "to the teacher, Synonyms: the teacher, preceptor"
+      },
+      "question": {
+        "en": "आचार्यम्"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 19,
+      "answer": {
+        "en": "having approached, Synonyms: to go to approach"
+      },
+      "question": {
+        "en": "उपसङ्गम्य"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 20,
+      "answer": {
+        "en": "(these) words"
+      },
+      "question": {
+        "en": "(इदं) वचनम्"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 21,
+      "answer": {
+        "en": "spoke, Synonyms: to speak"
+      },
+      "question": {
+        "en": "अब्रवीत्"
+      },
+      "chapter": 1,
+      "verse": 2
+    },
+    {
+      "type": "glossary",
+      "id": 22,
+      "answer": {
+        "en": "O Acharya (preceptor) !, Synonyms: "
+      },
+      "question": {
+        "en": "हे आचार्य!"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 23,
+      "answer": {
+        "en": "thy, Synonyms: you"
+      },
+      "question": {
+        "en": "तव"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 24,
+      "answer": {
+        "en": "(by) intelligent, Synonyms: "
+      },
+      "question": {
+        "en": "धीमता"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 25,
+      "answer": {
+        "en": "(by) disciple, Synonyms: disciple"
+      },
+      "question": {
+        "en": "शिष्येण"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 26,
+      "answer": {
+        "en": "by Drupada’s son, Synonyms: Dhrishtadyumna, the son of Drupada"
+      },
+      "question": {
+        "en": "द्रुपद-पुत्रेण"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 27,
+      "answer": {
+        "en": "arrayed, Synonyms: arrayed in battle-order"
+      },
+      "question": {
+        "en": "व्यूढाम्"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 28,
+      "answer": {
+        "en": "of the sons of Pandu, Synonyms: the son of Pandu"
+      },
+      "question": {
+        "en": "पाण्डु-पुत्राणाम्"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 29,
+      "answer": {
+        "en": "to this, Synonyms: this"
+      },
+      "question": {
+        "en": "एताम्"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 30,
+      "answer": {
+        "en": "mighty, Synonyms: "
+      },
+      "question": {
+        "en": "महतीम्"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 31,
+      "answer": {
+        "en": "host, Synonyms: host, army"
+      },
+      "question": {
+        "en": "चमूम्"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 32,
+      "answer": {
+        "en": "behold, Synonyms: to behold, see"
+      },
+      "question": {
+        "en": "पश्य"
+      },
+      "chapter": 1,
+      "verse": 3
+    },
+    {
+      "type": "glossary",
+      "id": 33,
+      "answer": {
+        "en": "here (in this mighty army), Synonyms: here, in this connection"
+      },
+      "question": {
+        "en": "अत्र"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 34,
+      "answer": {
+        "en": "great bowmen, Synonyms: "
+      },
+      "question": {
+        "en": "महा-इषु-आसाः"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 35,
+      "answer": {
+        "en": "in the battle, Synonyms: battle"
+      },
+      "question": {
+        "en": "युधि"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 36,
+      "answer": {
+        "en": "equal to Bhima and Arjuna, Synonyms: "
+      },
+      "question": {
+        "en": "भीम-अर्जुन-समाः"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 37,
+      "answer": {
+        "en": "heroes, Synonyms: hero"
+      },
+      "question": {
+        "en": "शूराः"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 38,
+      "answer": {
+        "en": "Yuyudhana, Synonyms: Yuyudhana – the name of a hero who fought on the side of the Pandavas"
+      },
+      "question": {
+        "en": "युयुधानः"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 39,
+      "answer": {
+        "en": "Virata, Synonyms: the name of a king fighting on the side of the Pandavas in the Mahabharata war"
+      },
+      "question": {
+        "en": "विराटः"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 40,
+      "answer": {
+        "en": "one having the great car, Synonyms: "
+      },
+      "question": {
+        "en": "महारथः"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 41,
+      "answer": {
+        "en": "Drupada, Synonyms: Drupada, the king of Panchaladesha and the father of Draupadi"
+      },
+      "question": {
+        "en": "द्रुपदः"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 42,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 4
+    },
+    {
+      "type": "glossary",
+      "id": 43,
+      "answer": {
+        "en": "Dhrishtaketu, Synonyms: "
+      },
+      "question": {
+        "en": "धृष्टकेतुः"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 44,
+      "answer": {
+        "en": "Chekitana, Synonyms: the name of a Yadava prince"
+      },
+      "question": {
+        "en": "चेकितानः"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 45,
+      "answer": {
+        "en": "the valiant, Synonyms: "
+      },
+      "question": {
+        "en": "वीर्यवान्"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 46,
+      "answer": {
+        "en": "prince of Kashi, Synonyms: "
+      },
+      "question": {
+        "en": "काशिराजः"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 47,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 48,
+      "answer": {
+        "en": "Purujit, Synonyms: Purujit, the conqurer of Puru"
+      },
+      "question": {
+        "en": "पुरुजित्"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 49,
+      "answer": {
+        "en": "Kuntibhoja, Synonyms: Kuntibhoja, a king"
+      },
+      "question": {
+        "en": "कुन्तिभोजः"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 50,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 51,
+      "answer": {
+        "en": "foremost among men, Synonyms: foremost among men"
+      },
+      "question": {
+        "en": "नर-पुङ्गवः"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 52,
+      "answer": {
+        "en": "Shaibya, Synonyms: Shaibya, a king belonging to the family or country of Shibi"
+      },
+      "question": {
+        "en": "शैब्यः"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 53,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 5
+    },
+    {
+      "type": "glossary",
+      "id": 54,
+      "answer": {
+        "en": "the strong, Synonyms: the strong"
+      },
+      "question": {
+        "en": "विक्रान्तः"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 55,
+      "answer": {
+        "en": "Yudhamanyu, Synonyms: Yudhamanyu – the name of a warrior on the side of the Pandavas"
+      },
+      "question": {
+        "en": "युधामन्युः"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 56,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 57,
+      "answer": {
+        "en": "the victorious, Synonyms: "
+      },
+      "question": {
+        "en": "वीर्यवान्"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 58,
+      "answer": {
+        "en": "Uttamauja, Synonyms: Uttamauja, the one of excellent valour"
+      },
+      "question": {
+        "en": "उत्तमौजाः"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 59,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 60,
+      "answer": {
+        "en": "Subhadra’s son (Abhimanyu), Synonyms: Abhimanyu, the son of Subhadra"
+      },
+      "question": {
+        "en": "सौभद्रः"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 61,
+      "answer": {
+        "en": "the sons of Draupadi, Synonyms: the son of Draupadi"
+      },
+      "question": {
+        "en": "द्रौपदेयाः"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 62,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 63,
+      "answer": {
+        "en": "all of them, Synonyms: all, whatsoever"
+      },
+      "question": {
+        "en": "सर्वे"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 64,
+      "answer": {
+        "en": "indeed, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 65,
+      "answer": {
+        "en": "of great prowess, Synonyms: "
+      },
+      "question": {
+        "en": "महारथाः"
+      },
+      "chapter": 1,
+      "verse": 6
+    },
+    {
+      "type": "glossary",
+      "id": 66,
+      "answer": {
+        "en": "O best of the twice-born !, Synonyms: "
+      },
+      "question": {
+        "en": "हे द्विज-उत्तम!"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 67,
+      "answer": {
+        "en": "(on) our (side), Synonyms: I"
+      },
+      "question": {
+        "en": "अस्माकम्"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 68,
+      "answer": {
+        "en": "those who, Synonyms: who, which, what, whichever, whatever, that"
+      },
+      "question": {
+        "en": "ये"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 69,
+      "answer": {
+        "en": "the most distinguished, Synonyms: the most distinguished"
+      },
+      "question": {
+        "en": "विशिष्टाः"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 70,
+      "answer": {
+        "en": "of my army, Synonyms: "
+      },
+      "question": {
+        "en": "मम सैन्यस्य"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 71,
+      "answer": {
+        "en": "the leaders, Synonyms: a leader"
+      },
+      "question": {
+        "en": "नायकाः"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 72,
+      "answer": {
+        "en": "those, Synonyms: that"
+      },
+      "question": {
+        "en": "तान्"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 73,
+      "answer": {
+        "en": "also, Synonyms: indeed, but, sometimes used as a mere expletive"
+      },
+      "question": {
+        "en": "तु"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 74,
+      "answer": {
+        "en": "know, Synonyms: to understand"
+      },
+      "question": {
+        "en": "निबोध"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 75,
+      "answer": {
+        "en": "for thy, Synonyms: that you you"
+      },
+      "question": {
+        "en": "ते"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 76,
+      "answer": {
+        "en": "special notice, Synonyms: agreement, harmony, conscious-ness, a sign, a name, title for special notice"
+      },
+      "question": {
+        "en": "संज्ञार्थम्"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 77,
+      "answer": {
+        "en": "those, Synonyms: that"
+      },
+      "question": {
+        "en": "तान्"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 78,
+      "answer": {
+        "en": "I speak (or I name), Synonyms: to speak or name"
+      },
+      "question": {
+        "en": "ब्रवीमि"
+      },
+      "chapter": 1,
+      "verse": 7
+    },
+    {
+      "type": "glossary",
+      "id": 79,
+      "answer": {
+        "en": "thyself, Synonyms: you or thee"
+      },
+      "question": {
+        "en": "भवान्"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 80,
+      "answer": {
+        "en": "Bhishma, Synonyms: Bhishma, the grandsire of the Kauravas and Pandavas"
+      },
+      "question": {
+        "en": "भीष्मः"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 81,
+      "answer": {
+        "en": "and, Synonyms: "
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 82,
+      "answer": {
+        "en": "Karna, Synonyms: Karna, the eldest son of Kunti by sun-god"
+      },
+      "question": {
+        "en": "कर्णः"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 83,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 84,
+      "answer": {
+        "en": "the victorious in battle, Synonyms: the victorious in battle"
+      },
+      "question": {
+        "en": "समितिञ्जयः"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 85,
+      "answer": {
+        "en": "Kripa, Synonyms: Kripacharya, the family teacher of the Kuru clan"
+      },
+      "question": {
+        "en": "कृपः"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 86,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 87,
+      "answer": {
+        "en": "and, Synonyms: like that, in that manner, so, thus"
+      },
+      "question": {
+        "en": "तथा"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 88,
+      "answer": {
+        "en": "also, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 89,
+      "answer": {
+        "en": "Ashvatthama, Synonyms: Ashvatthama, the son of Dronacharya "
+      },
+      "question": {
+        "en": "अश्वत्थामा"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 90,
+      "answer": {
+        "en": "Vikarna, Synonyms: Vikarna, a son of Dhritarashtra"
+      },
+      "question": {
+        "en": "विकर्णः"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 91,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 92,
+      "answer": {
+        "en": "Saumadatti, Synonyms: Bhurishrava, the son of Somadatta"
+      },
+      "question": {
+        "en": "सौमदत्तिः"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 93,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 8
+    },
+    {
+      "type": "glossary",
+      "id": 94,
+      "answer": {
+        "en": "other, Synonyms: the other"
+      },
+      "question": {
+        "en": "अन्ये"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 95,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 96,
+      "answer": {
+        "en": "many, Synonyms: many"
+      },
+      "question": {
+        "en": "बहवः"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 97,
+      "answer": {
+        "en": "heroes, Synonyms: hero"
+      },
+      "question": {
+        "en": "शूराः"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 98,
+      "answer": {
+        "en": "armed with diverse weapons and missiles, Synonyms: "
+      },
+      "question": {
+        "en": "नाना-शस्त्र-प्रहरणाः"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 99,
+      "answer": {
+        "en": "they are all, Synonyms: all, whatsoever"
+      },
+      "question": {
+        "en": "सर्वे"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 100,
+      "answer": {
+        "en": "well-skilled in war, Synonyms: well-skilled in war"
+      },
+      "question": {
+        "en": "युद्ध-विशारदाः"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 101,
+      "answer": {
+        "en": "for my sake, Synonyms: for my sake"
+      },
+      "question": {
+        "en": "मदर्थे"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 102,
+      "answer": {
+        "en": "have renounced their life, Synonyms: one who has renounced his life"
+      },
+      "question": {
+        "en": "त्यक्त-जीविताः"
+      },
+      "chapter": 1,
+      "verse": 9
+    },
+    {
+      "type": "glossary",
+      "id": 103,
+      "answer": {
+        "en": "marshalled by Bhishma, Synonyms: "
+      },
+      "question": {
+        "en": "भीष्म-अभिरक्षितम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 104,
+      "answer": {
+        "en": "ours, Synonyms: I"
+      },
+      "question": {
+        "en": "अस्माकम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 105,
+      "answer": {
+        "en": "that, Synonyms: that"
+      },
+      "question": {
+        "en": "तत्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 106,
+      "answer": {
+        "en": "force/army, Synonyms: strength"
+      },
+      "question": {
+        "en": "बलम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 107,
+      "answer": {
+        "en": "unlimited, Synonyms: unlimited"
+      },
+      "question": {
+        "en": "अपर्याप्तम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 108,
+      "answer": {
+        "en": "depending on Bhima, Synonyms: "
+      },
+      "question": {
+        "en": "भीम-अभिरक्षितम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 109,
+      "answer": {
+        "en": "theirs, Synonyms: this"
+      },
+      "question": {
+        "en": "एतेषाम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 110,
+      "answer": {
+        "en": "this, Synonyms: this"
+      },
+      "question": {
+        "en": "इदम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 111,
+      "answer": {
+        "en": "force/army, Synonyms: strength"
+      },
+      "question": {
+        "en": "बलम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 112,
+      "answer": {
+        "en": "while, Synonyms: indeed, but, sometimes used as a mere expletive"
+      },
+      "question": {
+        "en": "तु"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 113,
+      "answer": {
+        "en": "limited, Synonyms: limited"
+      },
+      "question": {
+        "en": "पर्याप्तम्"
+      },
+      "chapter": 1,
+      "verse": 10
+    },
+    {
+      "type": "glossary",
+      "id": 114,
+      "answer": {
+        "en": "in all the different fronts of the battle, Synonyms: "
+      },
+      "question": {
+        "en": "सर्वेषु अयनेषु"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 115,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 116,
+      "answer": {
+        "en": "in respective divisions, Synonyms: in the respective divisions"
+      },
+      "question": {
+        "en": "यथा-भागम्"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 117,
+      "answer": {
+        "en": "standing, Synonyms: standing, situated, placed"
+      },
+      "question": {
+        "en": "अवस्थिताः"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 118,
+      "answer": {
+        "en": "sarve you all, Synonyms: "
+      },
+      "question": {
+        "en": "भवन्तः सर्वे"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 119,
+      "answer": {
+        "en": "(to) Bhishma, Synonyms: Bhishma, the grandsire of the Kauravas and Pandavas"
+      },
+      "question": {
+        "en": "भीष्मम्"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 120,
+      "answer": {
+        "en": "indeed, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 121,
+      "answer": {
+        "en": "guard, Synonyms: to protect, guard"
+      },
+      "question": {
+        "en": "अभिरक्षन्तु"
+      },
+      "chapter": 1,
+      "verse": 11
+    },
+    {
+      "type": "glossary",
+      "id": 122,
+      "answer": {
+        "en": "the ancient of the Kurus, Synonyms: the ancient of the Kurus"
+      },
+      "question": {
+        "en": "कुरु-वृद्धः"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 123,
+      "answer": {
+        "en": "the mighty, Synonyms: the mighty one"
+      },
+      "question": {
+        "en": "प्रतापवान्"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 124,
+      "answer": {
+        "en": "grandsire (Bhishma), Synonyms: grandfather, the first Creator A relation of the same rank as a grandfather"
+      },
+      "question": {
+        "en": "पितामहः"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 125,
+      "answer": {
+        "en": "his (heart – the heart of Duryodhana), Synonyms: that"
+      },
+      "question": {
+        "en": "तस्य"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 126,
+      "answer": {
+        "en": "cheering, Synonyms: "
+      },
+      "question": {
+        "en": "हर्षम् सञ्जनयन्"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 127,
+      "answer": {
+        "en": "terribly/loudly, Synonyms: terrible, loud, high"
+      },
+      "question": {
+        "en": "उच्चैः"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 128,
+      "answer": {
+        "en": "a lion's roar, Synonyms: a lion's roar"
+      },
+      "question": {
+        "en": "सिंहनादम्"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 129,
+      "answer": {
+        "en": "resounding, Synonyms: to resound or vibrate or resonate"
+      },
+      "question": {
+        "en": "विनद्य"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 130,
+      "answer": {
+        "en": "conch, Synonyms: conch"
+      },
+      "question": {
+        "en": "शङ्खम्"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 131,
+      "answer": {
+        "en": "blew, Synonyms: to blow"
+      },
+      "question": {
+        "en": "दध्मौ"
+      },
+      "chapter": 1,
+      "verse": 12
+    },
+    {
+      "type": "glossary",
+      "id": 132,
+      "answer": {
+        "en": "then, Synonyms: then"
+      },
+      "question": {
+        "en": "ततः"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 133,
+      "answer": {
+        "en": "conchs, Synonyms: conch"
+      },
+      "question": {
+        "en": "शङ्खाः"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 134,
+      "answer": {
+        "en": "kettledrums, Synonyms: kettledrum"
+      },
+      "question": {
+        "en": "भेर्यः"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 135,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 136,
+      "answer": {
+        "en": "tabors and drums and horns, Synonyms: "
+      },
+      "question": {
+        "en": "पणव-आनक-गोमुखाः"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 137,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 138,
+      "answer": {
+        "en": "suddenly (all at once), Synonyms: "
+      },
+      "question": {
+        "en": "सहसा एव"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 139,
+      "answer": {
+        "en": "blared forth, Synonyms: to strike, beat, to kill, destroy to blare forth"
+      },
+      "question": {
+        "en": "अभ्यहन्यन्त"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 140,
+      "answer": {
+        "en": "that, Synonyms: that"
+      },
+      "question": {
+        "en": "सः"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 141,
+      "answer": {
+        "en": "clamour, Synonyms: sound"
+      },
+      "question": {
+        "en": "शब्दः"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 142,
+      "answer": {
+        "en": "tremendous, Synonyms: tremendous, tumultuous"
+      },
+      "question": {
+        "en": "तुमुलः"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 143,
+      "answer": {
+        "en": "became, Synonyms: to be"
+      },
+      "question": {
+        "en": "अभवत्"
+      },
+      "chapter": 1,
+      "verse": 13
+    },
+    {
+      "type": "glossary",
+      "id": 144,
+      "answer": {
+        "en": "then, Synonyms: then"
+      },
+      "question": {
+        "en": "ततः"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 145,
+      "answer": {
+        "en": "white, Synonyms: white"
+      },
+      "question": {
+        "en": "श्वेतैः"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 146,
+      "answer": {
+        "en": "horses, Synonyms: horse"
+      },
+      "question": {
+        "en": "हयैः"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 147,
+      "answer": {
+        "en": "yoked to, Synonyms: yoked, united, harmonised, integrated"
+      },
+      "question": {
+        "en": "युक्ते"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 148,
+      "answer": {
+        "en": "in great, Synonyms: great"
+      },
+      "question": {
+        "en": "महति"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 149,
+      "answer": {
+        "en": "chariot, Synonyms: chariot"
+      },
+      "question": {
+        "en": "स्यन्दने"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 150,
+      "answer": {
+        "en": "seated, Synonyms: firm abiding, foundation"
+      },
+      "question": {
+        "en": "स्थितौ"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 151,
+      "answer": {
+        "en": "Madhava (Sri Krishna), Synonyms: Krishna, the consort of Lakshmi"
+      },
+      "question": {
+        "en": "माधवः"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 152,
+      "answer": {
+        "en": "the son of Pandu (Arjuna), Synonyms: Arjuna, a son of Pandu"
+      },
+      "question": {
+        "en": "पाण्डवः"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 153,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 154,
+      "answer": {
+        "en": "divine, Synonyms: divine"
+      },
+      "question": {
+        "en": "दिव्यौ"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 155,
+      "answer": {
+        "en": "conchs, Synonyms: conch"
+      },
+      "question": {
+        "en": "शङ्खौ"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 156,
+      "answer": {
+        "en": "blew, Synonyms: to blow"
+      },
+      "question": {
+        "en": "प्रदध्मतुः"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 157,
+      "answer": {
+        "en": "also, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 14
+    },
+    {
+      "type": "glossary",
+      "id": 158,
+      "answer": {
+        "en": "Hrishikesha (Krishna), Synonyms: Krishna, the master of all senses"
+      },
+      "question": {
+        "en": "हृषीकेशः"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 159,
+      "answer": {
+        "en": "the conch named Panchajanya, Synonyms: "
+      },
+      "question": {
+        "en": "पाञ्चजन्यम्"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 160,
+      "answer": {
+        "en": "Dhananjaya (Arjuna), Synonyms: "
+      },
+      "question": {
+        "en": "धनञ्जयः"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 161,
+      "answer": {
+        "en": "the conch named Devadatta (god-given), Synonyms: "
+      },
+      "question": {
+        "en": "देवदत्तम्"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 162,
+      "answer": {
+        "en": "of terrific deeds, Synonyms: of terrific deeds"
+      },
+      "question": {
+        "en": "भीम-कर्मा"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 163,
+      "answer": {
+        "en": "Vrikodara (Bhima, the second son of Pandu), Synonyms: "
+      },
+      "question": {
+        "en": "वृक-उदरः"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 164,
+      "answer": {
+        "en": "mighty conch, Synonyms: a mighty conch"
+      },
+      "question": {
+        "en": "महा-शङ्खम्"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 165,
+      "answer": {
+        "en": "(the conch named) Paundra, Synonyms: "
+      },
+      "question": {
+        "en": "पौण्ड्रम्"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 166,
+      "answer": {
+        "en": "blew, Synonyms: to blow"
+      },
+      "question": {
+        "en": "दध्मौ"
+      },
+      "chapter": 1,
+      "verse": 15
+    },
+    {
+      "type": "glossary",
+      "id": 167,
+      "answer": {
+        "en": "the son of Kunti, Synonyms: the son of Kunti"
+      },
+      "question": {
+        "en": "कुन्ती-पुत्रः"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 168,
+      "answer": {
+        "en": "the King, Synonyms: a king"
+      },
+      "question": {
+        "en": "राजा"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 169,
+      "answer": {
+        "en": "Yudhishthira, Synonyms: the eldest of the Pandavas"
+      },
+      "question": {
+        "en": "युधिष्ठिरः"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 170,
+      "answer": {
+        "en": "(blew the conch named) Anantavijaya, Synonyms: "
+      },
+      "question": {
+        "en": "अनन्तविजयम्"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 171,
+      "answer": {
+        "en": "Nakula (the fourth son of Pandu), Synonyms: Nakula, the fourth son of Pandu"
+      },
+      "question": {
+        "en": "नकुलः"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 172,
+      "answer": {
+        "en": "Sahadeva (the fifth son of Pandu), Synonyms: Sahadeva – the fifth son of Pandu"
+      },
+      "question": {
+        "en": "सहदेवः"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 173,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 174,
+      "answer": {
+        "en": "(blew the conchs named) Sughosha and Manipushpaka respectively, Synonyms: "
+      },
+      "question": {
+        "en": "सुघोष-मणि-पुष्पकौ"
+      },
+      "chapter": 1,
+      "verse": 16
+    },
+    {
+      "type": "glossary",
+      "id": 175,
+      "answer": {
+        "en": "O Lord of earth (Dhritarashtra) !, Synonyms: "
+      },
+      "question": {
+        "en": "हे पृथिवी-पते!"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 176,
+      "answer": {
+        "en": "of the great bow or excellent archer, Synonyms: "
+      },
+      "question": {
+        "en": "परम-इषु-आसः"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 177,
+      "answer": {
+        "en": "Kashya, the king of Kashi, Synonyms: Kashya, the king of Kashi"
+      },
+      "question": {
+        "en": "काश्यः"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 178,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 179,
+      "answer": {
+        "en": "of the great chariot or the great car-warrior, Synonyms: "
+      },
+      "question": {
+        "en": "महारथः"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 180,
+      "answer": {
+        "en": "Shikhandi (the elder son of king Drupada), Synonyms: Shikhandi, the elder son of king Drupada"
+      },
+      "question": {
+        "en": "शिखण्डी"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 181,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 182,
+      "answer": {
+        "en": "Dhrishtadyumna (the younger son of the king Drupada), Synonyms: "
+      },
+      "question": {
+        "en": "धृष्टद्युम्नः"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 183,
+      "answer": {
+        "en": "च ca and, Synonyms: "
+      },
+      "question": {
+        "en": "विराटः"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 184,
+      "answer": {
+        "en": "the unconquered, Synonyms: the unconquered"
+      },
+      "question": {
+        "en": "अपराजितः"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 185,
+      "answer": {
+        "en": "Satyaki, Synonyms: "
+      },
+      "question": {
+        "en": "सात्यकिः"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 186,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 17
+    },
+    {
+      "type": "glossary",
+      "id": 187,
+      "answer": {
+        "en": "king Drupada, Synonyms: Drupada, the king of Panchaladesha and the father of Draupadi"
+      },
+      "question": {
+        "en": "द्रुपदः"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 188,
+      "answer": {
+        "en": "the sons of Draupadi, Synonyms: the son of Draupadi"
+      },
+      "question": {
+        "en": "द्रौपदेयाः"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 189,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 190,
+      "answer": {
+        "en": "the mighty-armed, Synonyms: the mighty-armed"
+      },
+      "question": {
+        "en": "महा-बाहुः"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 191,
+      "answer": {
+        "en": "Saubhadra, Synonyms: Abhimanyu, the son of Subhadra"
+      },
+      "question": {
+        "en": "सौभद्रः"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 192,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 193,
+      "answer": {
+        "en": "on all sides, Synonyms: altogether and in every way"
+      },
+      "question": {
+        "en": "सर्वशः"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 194,
+      "answer": {
+        "en": "severally, Synonyms: "
+      },
+      "question": {
+        "en": "पृथक् पृथक्"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 195,
+      "answer": {
+        "en": "conchs, Synonyms: conch"
+      },
+      "question": {
+        "en": "शङ्खान्"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 196,
+      "answer": {
+        "en": "blew, Synonyms: to blow"
+      },
+      "question": {
+        "en": "दध्मुः"
+      },
+      "chapter": 1,
+      "verse": 18
+    },
+    {
+      "type": "glossary",
+      "id": 197,
+      "answer": {
+        "en": "that, Synonyms: that"
+      },
+      "question": {
+        "en": "सः"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 198,
+      "answer": {
+        "en": "tumultuous, Synonyms: tremendous, tumultuous"
+      },
+      "question": {
+        "en": "तुमुलः"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 199,
+      "answer": {
+        "en": "uproar, Synonyms: uproar"
+      },
+      "question": {
+        "en": "घोषः"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 200,
+      "answer": {
+        "en": "sky, Synonyms: sky"
+      },
+      "question": {
+        "en": "नभः"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 201,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 202,
+      "answer": {
+        "en": "earth, Synonyms: the earth"
+      },
+      "question": {
+        "en": "पृथिवीम्"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 203,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 204,
+      "answer": {
+        "en": "resounding, Synonyms: resounding"
+      },
+      "question": {
+        "en": "व्यनुनादयन्"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 205,
+      "answer": {
+        "en": "as well, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 206,
+      "answer": {
+        "en": "of the sons of Dhritarashtra, Synonyms: "
+      },
+      "question": {
+        "en": "धार्त्रराष्ट्राणाम्"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 207,
+      "answer": {
+        "en": "hearts, Synonyms: heart"
+      },
+      "question": {
+        "en": "हृदयानि"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 208,
+      "answer": {
+        "en": "tore, Synonyms: to respect to tear asunder or to tear to pieces or to cleave"
+      },
+      "question": {
+        "en": "व्यदारयत्"
+      },
+      "chapter": 1,
+      "verse": 19
+    },
+    {
+      "type": "glossary",
+      "id": 209,
+      "answer": {
+        "en": "O Lord of earth, Synonyms: "
+      },
+      "question": {
+        "en": "हे महीपते!"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 210,
+      "answer": {
+        "en": "then, Synonyms: and, also, then, it also shows the commencement of a literary work or of a new topic in such a work"
+      },
+      "question": {
+        "en": "अथ"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 211,
+      "answer": {
+        "en": "(he)whose emblem is an ape, Synonyms: one whose emblem is an ape"
+      },
+      "question": {
+        "en": "कपि-ध्वजः"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 212,
+      "answer": {
+        "en": "the son of Pandu (Arjuna), Synonyms: Arjuna, a son of Pandu"
+      },
+      "question": {
+        "en": "पाण्डवः"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 213,
+      "answer": {
+        "en": "standing in battle order, Synonyms: standing in order"
+      },
+      "question": {
+        "en": "व्यवस्थितान्"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 214,
+      "answer": {
+        "en": "the sons of Dhritarashtra, Synonyms: "
+      },
+      "question": {
+        "en": "धार्त्रराष्ट्रान्"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 215,
+      "answer": {
+        "en": "beholding, Synonyms: to see"
+      },
+      "question": {
+        "en": "दृष्ट्वा"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 216,
+      "answer": {
+        "en": "the flight of missiles, Synonyms: the flight of missiles"
+      },
+      "question": {
+        "en": "शस्त्र-सम्पाते"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 217,
+      "answer": {
+        "en": "having begun, Synonyms: commenced"
+      },
+      "question": {
+        "en": "प्रवृत्ते"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 218,
+      "answer": {
+        "en": "bow, Synonyms: "
+      },
+      "question": {
+        "en": "धनुः"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 219,
+      "answer": {
+        "en": "took up, Synonyms: to raise, hold, sustain"
+      },
+      "question": {
+        "en": "उद्यम्य"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 220,
+      "answer": {
+        "en": "then, Synonyms: then or at that time or in that case"
+      },
+      "question": {
+        "en": "तदा"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 221,
+      "answer": {
+        "en": "to Hrishikesha, Synonyms: Krishna, the master of all senses"
+      },
+      "question": {
+        "en": "हृषीकेशम्"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 222,
+      "answer": {
+        "en": "this, Synonyms: this"
+      },
+      "question": {
+        "en": "इदम्"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 223,
+      "answer": {
+        "en": "word, Synonyms: a sentence, speech, saying, statement, word"
+      },
+      "question": {
+        "en": "वाक्यम्"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 224,
+      "answer": {
+        "en": "spoke, Synonyms: to speak"
+      },
+      "question": {
+        "en": "आह"
+      },
+      "chapter": 1,
+      "verse": 20
+    },
+    {
+      "type": "glossary",
+      "id": 225,
+      "answer": {
+        "en": "O Achyuta (the faultless, the immovable) !, Synonyms: "
+      },
+      "question": {
+        "en": "हे अच्युत!"
+      },
+      "chapter": 1,
+      "verse": 21
+    },
+    {
+      "type": "glossary",
+      "id": 226,
+      "answer": {
+        "en": "my, Synonyms: I"
+      },
+      "question": {
+        "en": "मे"
+      },
+      "chapter": 1,
+      "verse": 21
+    },
+    {
+      "type": "glossary",
+      "id": 227,
+      "answer": {
+        "en": "chariot, Synonyms: chariot"
+      },
+      "question": {
+        "en": "रथम्"
+      },
+      "chapter": 1,
+      "verse": 21
+    },
+    {
+      "type": "glossary",
+      "id": 228,
+      "answer": {
+        "en": "between the two armies, Synonyms: "
+      },
+      "question": {
+        "en": "उभयोः सेनयोः मध्ये"
+      },
+      "chapter": 1,
+      "verse": 21
+    },
+    {
+      "type": "glossary",
+      "id": 229,
+      "answer": {
+        "en": "stay/set/put, Synonyms: to stand, stay"
+      },
+      "question": {
+        "en": "स्थापय"
+      },
+      "chapter": 1,
+      "verse": 21
+    },
+    {
+      "type": "glossary",
+      "id": 230,
+      "answer": {
+        "en": "so that, Synonyms: whatever"
+      },
+      "question": {
+        "en": "यावत्"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 231,
+      "answer": {
+        "en": "longing for battle, Synonyms: "
+      },
+      "question": {
+        "en": "योद्धु-कामान्"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 232,
+      "answer": {
+        "en": "standing, Synonyms: standing, situated, placed"
+      },
+      "question": {
+        "en": "अवस्थितान्"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 233,
+      "answer": {
+        "en": "these (myriads), Synonyms: this"
+      },
+      "question": {
+        "en": "एतान्"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 234,
+      "answer": {
+        "en": "I may view, Synonyms: "
+      },
+      "question": {
+        "en": "अहम् निरीक्षे"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 235,
+      "answer": {
+        "en": "in this holiday of fight, Synonyms: "
+      },
+      "question": {
+        "en": "अस्मिन् रण-समुद्यमे"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 236,
+      "answer": {
+        "en": "with whom, Synonyms: "
+      },
+      "question": {
+        "en": "कैः सह"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 237,
+      "answer": {
+        "en": "I have to fight, Synonyms: "
+      },
+      "question": {
+        "en": "मया योद्धव्यम्"
+      },
+      "chapter": 1,
+      "verse": 22
+    },
+    {
+      "type": "glossary",
+      "id": 238,
+      "answer": {
+        "en": "in the battle, Synonyms: battle"
+      },
+      "question": {
+        "en": "युद्धे"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 239,
+      "answer": {
+        "en": "of the evil-minded son of Dhritarashtra, Synonyms: "
+      },
+      "question": {
+        "en": "दुर्बुद्धेः धार्तराष्ट्रस्य"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 240,
+      "answer": {
+        "en": "well-wishers, Synonyms: well-wisher"
+      },
+      "question": {
+        "en": "प्रिय-चिकीर्षवः"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 241,
+      "answer": {
+        "en": "those who, Synonyms: "
+      },
+      "question": {
+        "en": "ये एते"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 242,
+      "answer": {
+        "en": "here, Synonyms: here, in this connection"
+      },
+      "question": {
+        "en": "अत्र"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 243,
+      "answer": {
+        "en": "have come, Synonyms: have come"
+      },
+      "question": {
+        "en": "समागताः"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 244,
+      "answer": {
+        "en": "to those ready to fight, Synonyms: one who is ready to fight"
+      },
+      "question": {
+        "en": "योत्स्यमानान्"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 245,
+      "answer": {
+        "en": "I look upon, Synonyms: "
+      },
+      "question": {
+        "en": "अहम् अवेक्षे"
+      },
+      "chapter": 1,
+      "verse": 23
+    },
+    {
+      "type": "glossary",
+      "id": 246,
+      "answer": {
+        "en": "O Bharata (the one born in Bharata, Dhritarashtra) !, Synonyms: "
+      },
+      "question": {
+        "en": "हे भारत"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 247,
+      "answer": {
+        "en": "by Gudakesha (one who has overcome sleep, Arjuna), Synonyms: Arjuna, the one who has overcome sleep"
+      },
+      "question": {
+        "en": "गुडाकेशेन"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 248,
+      "answer": {
+        "en": "thus, Synonyms: thus"
+      },
+      "question": {
+        "en": "एवम्"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 249,
+      "answer": {
+        "en": "addressed, Synonyms: spoken"
+      },
+      "question": {
+        "en": "उक्तः"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 250,
+      "answer": {
+        "en": "Hrishikesha (Krishna, the master of all the sense organs), Synonyms: Krishna, the master of all senses"
+      },
+      "question": {
+        "en": "हृषीकेशः"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 251,
+      "answer": {
+        "en": "in the middle of / between the two armies, Synonyms: "
+      },
+      "question": {
+        "en": "उभयोः सेनयोः मध्ये"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 252,
+      "answer": {
+        "en": "best of chariots, Synonyms: "
+      },
+      "question": {
+        "en": "रथ-उत्तमम्"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 253,
+      "answer": {
+        "en": "having stayed/set/put, Synonyms: to stand, stay"
+      },
+      "question": {
+        "en": "स्थापयित्वा"
+      },
+      "chapter": 1,
+      "verse": 24
+    },
+    {
+      "type": "glossary",
+      "id": 254,
+      "answer": {
+        "en": "in front of Bhisma, Drona, Synonyms: "
+      },
+      "question": {
+        "en": "भीष्म-द्रोण-प्रमुखतः"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 255,
+      "answer": {
+        "en": "of all the princes of earth, Synonyms: "
+      },
+      "question": {
+        "en": "सर्वेषाम् मही-क्षिताम्"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 256,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 257,
+      "answer": {
+        "en": "O Partha !, Synonyms: "
+      },
+      "question": {
+        "en": "हे 'पार्थ"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 258,
+      "answer": {
+        "en": "gathered together, Synonyms: gathered together"
+      },
+      "question": {
+        "en": "समवेतान्"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 259,
+      "answer": {
+        "en": "these Kurus, Synonyms: "
+      },
+      "question": {
+        "en": "एतान्  कुरून्"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 260,
+      "answer": {
+        "en": "behold, Synonyms: to behold, see"
+      },
+      "question": {
+        "en": "पश्य'"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 261,
+      "answer": {
+        "en": "thus, Synonyms: thus"
+      },
+      "question": {
+        "en": "इति"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 262,
+      "answer": {
+        "en": "said, Synonyms: to say, speak"
+      },
+      "question": {
+        "en": "उवाच"
+      },
+      "chapter": 1,
+      "verse": 25
+    },
+    {
+      "type": "glossary",
+      "id": 263,
+      "answer": {
+        "en": "then, Synonyms: and, also, then, it also shows the commencement of a literary work or of a new topic in such a work"
+      },
+      "question": {
+        "en": "अथ"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 264,
+      "answer": {
+        "en": "Partha (the son of Pritha, Arjuna), Synonyms: Arjuna, the son of Pritha"
+      },
+      "question": {
+        "en": "पार्थः"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 265,
+      "answer": {
+        "en": "there, Synonyms: there, in that matter, connection"
+      },
+      "question": {
+        "en": "तत्र"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 266,
+      "answer": {
+        "en": "upon opposite sides / in both the armies, Synonyms: "
+      },
+      "question": {
+        "en": "उभयोः सेनयोः अपि"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 267,
+      "answer": {
+        "en": "standing, Synonyms: established, standing"
+      },
+      "question": {
+        "en": "स्थितान्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 268,
+      "answer": {
+        "en": "uncles, Synonyms: father"
+      },
+      "question": {
+        "en": "पितॄन्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 269,
+      "answer": {
+        "en": "grandsires, Synonyms: grandsire"
+      },
+      "question": {
+        "en": "पितामहान्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 270,
+      "answer": {
+        "en": "teachers, Synonyms: the teacher, preceptor"
+      },
+      "question": {
+        "en": "आचार्यान्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 271,
+      "answer": {
+        "en": "mother’s brothers, Synonyms: mother’s brother"
+      },
+      "question": {
+        "en": "मातुलान्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 272,
+      "answer": {
+        "en": "cousins, Synonyms: "
+      },
+      "question": {
+        "en": "भ्रातॄन्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 273,
+      "answer": {
+        "en": "sons, Synonyms: "
+      },
+      "question": {
+        "en": "पुत्रान्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 274,
+      "answer": {
+        "en": "grandsons, Synonyms: grandson"
+      },
+      "question": {
+        "en": "पौत्रान्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 275,
+      "answer": {
+        "en": "and, Synonyms: like that, in that manner, so, thus"
+      },
+      "question": {
+        "en": "तथा"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 276,
+      "answer": {
+        "en": "comrades, Synonyms: friend, comrade"
+      },
+      "question": {
+        "en": "सखीन्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 277,
+      "answer": {
+        "en": "fathers-in-law, Synonyms: father-in-law"
+      },
+      "question": {
+        "en": "श्वशुरान्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 278,
+      "answer": {
+        "en": "benefactors, Synonyms: the benignant friend"
+      },
+      "question": {
+        "en": "सुहृदः"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 279,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 280,
+      "answer": {
+        "en": "as well, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 281,
+      "answer": {
+        "en": "saw, Synonyms: to see"
+      },
+      "question": {
+        "en": "अपश्यत्"
+      },
+      "chapter": 1,
+      "verse": 26
+    },
+    {
+      "type": "glossary",
+      "id": 282,
+      "answer": {
+        "en": "standing, Synonyms: standing, situated, placed"
+      },
+      "question": {
+        "en": "अवस्थितान्"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 283,
+      "answer": {
+        "en": "all these, Synonyms: "
+      },
+      "question": {
+        "en": "तान् सर्वान्"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 284,
+      "answer": {
+        "en": "kinsmen, Synonyms: "
+      },
+      "question": {
+        "en": "बन्धून्"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 285,
+      "answer": {
+        "en": "seeing / having seen, Synonyms: to see, behold, observe"
+      },
+      "question": {
+        "en": "समीक्ष्य"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 286,
+      "answer": {
+        "en": "that Kaunteya (the son of Kunti, Arjuna), Synonyms: "
+      },
+      "question": {
+        "en": "सः कौन्तेयः"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 287,
+      "answer": {
+        "en": "by great pity, Synonyms: "
+      },
+      "question": {
+        "en": "परया कृपया"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 288,
+      "answer": {
+        "en": "invaded, Synonyms: invaded"
+      },
+      "question": {
+        "en": "आविष्टः"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 289,
+      "answer": {
+        "en": "in sadness and dejection, Synonyms: overcome by depression and discouragement or sadness and dejection"
+      },
+      "question": {
+        "en": "विषीदन्"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 290,
+      "answer": {
+        "en": "this, Synonyms: this"
+      },
+      "question": {
+        "en": "इदम्"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 291,
+      "answer": {
+        "en": "uttered, Synonyms: to speak"
+      },
+      "question": {
+        "en": "अब्रवीत्"
+      },
+      "chapter": 1,
+      "verse": 27
+    },
+    {
+      "type": "glossary",
+      "id": 292,
+      "answer": {
+        "en": "O Krishna !, Synonyms: "
+      },
+      "question": {
+        "en": "हे कृष्ण"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 293,
+      "answer": {
+        "en": "arrayed, Synonyms: "
+      },
+      "question": {
+        "en": "समुपस्थितम्"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 294,
+      "answer": {
+        "en": "(longing) for battle, Synonyms: one who longs for battle"
+      },
+      "question": {
+        "en": "युयुत्सुम्"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 295,
+      "answer": {
+        "en": "these, Synonyms: this"
+      },
+      "question": {
+        "en": "इमम्"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 296,
+      "answer": {
+        "en": "my own people, Synonyms: one's own people"
+      },
+      "question": {
+        "en": "स्वजनम्"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 297,
+      "answer": {
+        "en": "seeing / having seen, Synonyms: to see"
+      },
+      "question": {
+        "en": "दृष्ट्वा"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 298,
+      "answer": {
+        "en": "my, Synonyms: I"
+      },
+      "question": {
+        "en": "मम"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 299,
+      "answer": {
+        "en": "limbs, Synonyms: limb"
+      },
+      "question": {
+        "en": "गात्राणि"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 300,
+      "answer": {
+        "en": "collapse, Synonyms: to sink down, sink into despondency, to become low in spirit, despair, collapse"
+      },
+      "question": {
+        "en": "सीदन्ति"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 301,
+      "answer": {
+        "en": "mouth, Synonyms: mouth, face"
+      },
+      "question": {
+        "en": "मुखम्"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 302,
+      "answer": {
+        "en": "is parched, Synonyms: "
+      },
+      "question": {
+        "en": "परिशुष्यति"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 303,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 28
+    },
+    {
+      "type": "glossary",
+      "id": 304,
+      "answer": {
+        "en": "in my body, Synonyms: "
+      },
+      "question": {
+        "en": "मे शरीरे"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 305,
+      "answer": {
+        "en": "quivering takes place, Synonyms: quivering"
+      },
+      "question": {
+        "en": "वेपथुः"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 306,
+      "answer": {
+        "en": "and my hair stands on end, Synonyms: "
+      },
+      "question": {
+        "en": "रोम-हर्षः च जायते"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 307,
+      "answer": {
+        "en": "from (my) hand, Synonyms: hand"
+      },
+      "question": {
+        "en": "हस्तात्"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 308,
+      "answer": {
+        "en": "Gandiva (Arjuna’s bow), Synonyms: the name of Arjuna’s bow"
+      },
+      "question": {
+        "en": "गाण्डीवम्"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 309,
+      "answer": {
+        "en": "slips, Synonyms: to fall, slip off, loose from"
+      },
+      "question": {
+        "en": "स्रंसते"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 310,
+      "answer": {
+        "en": "(all my) skin, Synonyms: skin"
+      },
+      "question": {
+        "en": "त्वक्"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 311,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 312,
+      "answer": {
+        "en": "seems to be burning, Synonyms: to burn to burn"
+      },
+      "question": {
+        "en": "परिदह्यते"
+      },
+      "chapter": 1,
+      "verse": 29
+    },
+    {
+      "type": "glossary",
+      "id": 313,
+      "answer": {
+        "en": "indeed, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 314,
+      "answer": {
+        "en": "my mind, Synonyms: "
+      },
+      "question": {
+        "en": "मे मनः"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 315,
+      "answer": {
+        "en": "seems to be whirling, Synonyms: "
+      },
+      "question": {
+        "en": "भ्रमति  इव"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 316,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 317,
+      "answer": {
+        "en": "to stand, Synonyms: to stay, remain, stand"
+      },
+      "question": {
+        "en": "अवस्थातुम्"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 318,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 319,
+      "answer": {
+        "en": "I am not able, Synonyms: "
+      },
+      "question": {
+        "en": "न शक्नोमि"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 320,
+      "answer": {
+        "en": "O Keshava (Krishna) !, Synonyms: "
+      },
+      "question": {
+        "en": "हे केशव"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 321,
+      "answer": {
+        "en": "evil/adverse omens, Synonyms: "
+      },
+      "question": {
+        "en": "विपरीतानि निमित्तानि"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 322,
+      "answer": {
+        "en": "also, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 323,
+      "answer": {
+        "en": "I see, Synonyms: to behold, see"
+      },
+      "question": {
+        "en": "पश्यामि"
+      },
+      "chapter": 1,
+      "verse": 30
+    },
+    {
+      "type": "glossary",
+      "id": 324,
+      "answer": {
+        "en": "in battle, Synonyms: battle"
+      },
+      "question": {
+        "en": "आहवे"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 325,
+      "answer": {
+        "en": "my own people, Synonyms: one's own people"
+      },
+      "question": {
+        "en": "स्वजनम्"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 326,
+      "answer": {
+        "en": "slaying / having slain, Synonyms: to slay"
+      },
+      "question": {
+        "en": "हत्वा"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 327,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 328,
+      "answer": {
+        "en": "no, Synonyms: not"
+      },
+      "question": {
+        "en": "न"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 329,
+      "answer": {
+        "en": "any good, Synonyms: greater good more splendid or beautiful, superior, preferable"
+      },
+      "question": {
+        "en": "श्रेयः"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 330,
+      "answer": {
+        "en": "I see, Synonyms: to see, perceive"
+      },
+      "question": {
+        "en": "अनुपश्यामि"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 331,
+      "answer": {
+        "en": "O Krishna, Synonyms: "
+      },
+      "question": {
+        "en": "हे कृष्ण"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 332,
+      "answer": {
+        "en": "victory, Synonyms: victory"
+      },
+      "question": {
+        "en": "विजयम्"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 333,
+      "answer": {
+        "en": "I desire not, Synonyms: "
+      },
+      "question": {
+        "en": "न (काङ्क्षे)"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 334,
+      "answer": {
+        "en": "nor kingdom, Synonyms: "
+      },
+      "question": {
+        "en": "न च राज्यम्"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 335,
+      "answer": {
+        "en": "pleasures also, Synonyms: "
+      },
+      "question": {
+        "en": "सुखानि च"
+      },
+      "chapter": 1,
+      "verse": 31
+    },
+    {
+      "type": "glossary",
+      "id": 336,
+      "answer": {
+        "en": "O Govinda !, Synonyms: "
+      },
+      "question": {
+        "en": "हे गोविन्द"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 337,
+      "answer": {
+        "en": "for/to us, Synonyms: I"
+      },
+      "question": {
+        "en": "नः"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 338,
+      "answer": {
+        "en": "what is kingdom?, Synonyms: "
+      },
+      "question": {
+        "en": "राज्येन किम्"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 339,
+      "answer": {
+        "en": "(what) enjoyment?, Synonyms: "
+      },
+      "question": {
+        "en": "भोगैः किम्"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 340,
+      "answer": {
+        "en": "what even life?, Synonyms: "
+      },
+      "question": {
+        "en": "जीवितेन वा किम्"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 341,
+      "answer": {
+        "en": "those for whose sake, Synonyms: "
+      },
+      "question": {
+        "en": "येषाम् अर्थे"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 342,
+      "answer": {
+        "en": "for us, Synonyms: I"
+      },
+      "question": {
+        "en": "नः"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 343,
+      "answer": {
+        "en": "kingdom, Synonyms: kingdom"
+      },
+      "question": {
+        "en": "राज्यम्"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 344,
+      "answer": {
+        "en": "enjoyments, Synonyms: enjoyment"
+      },
+      "question": {
+        "en": "भोगाः"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 345,
+      "answer": {
+        "en": "pleasures, Synonyms: happiness, pleasure"
+      },
+      "question": {
+        "en": "सुखानि"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 346,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 347,
+      "answer": {
+        "en": "desired, Synonyms: desired"
+      },
+      "question": {
+        "en": "काङ्क्षितम्"
+      },
+      "chapter": 1,
+      "verse": 32
+    },
+    {
+      "type": "glossary",
+      "id": 348,
+      "answer": {
+        "en": "they (those very persons) stand here in battle, Synonyms: "
+      },
+      "question": {
+        "en": "ते इमे"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 349,
+      "answer": {
+        "en": "teachers, Synonyms: the teacher, preceptor"
+      },
+      "question": {
+        "en": "आचार्याः"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 350,
+      "answer": {
+        "en": "fathers, Synonyms: father"
+      },
+      "question": {
+        "en": "पितरः"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 351,
+      "answer": {
+        "en": "sons, Synonyms: son"
+      },
+      "question": {
+        "en": "पुत्राः"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 352,
+      "answer": {
+        "en": "as well as, Synonyms: "
+      },
+      "question": {
+        "en": "तथा च एव"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 353,
+      "answer": {
+        "en": "grandsires, Synonyms: grandsire"
+      },
+      "question": {
+        "en": "पितामहाः"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 354,
+      "answer": {
+        "en": "life, Synonyms: the nervous energy, the vital breath, the outgoing breath"
+      },
+      "question": {
+        "en": "प्राणान्"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 355,
+      "answer": {
+        "en": "riches, Synonyms: "
+      },
+      "question": {
+        "en": "धनानि"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 356,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 357,
+      "answer": {
+        "en": "abandoning, Synonyms: to give up, abandon, renounce"
+      },
+      "question": {
+        "en": "त्यक्त्वा"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 358,
+      "answer": {
+        "en": "in battle, Synonyms: battle"
+      },
+      "question": {
+        "en": "युद्धे"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 359,
+      "answer": {
+        "en": "stand, Synonyms: standing, situated, placed"
+      },
+      "question": {
+        "en": "अवस्थिताः"
+      },
+      "chapter": 1,
+      "verse": 33
+    },
+    {
+      "type": "glossary",
+      "id": 360,
+      "answer": {
+        "en": "mother’s brothers, Synonyms: mother’s brother"
+      },
+      "question": {
+        "en": "मातुलाः"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 361,
+      "answer": {
+        "en": "fathers-in-law, Synonyms: "
+      },
+      "question": {
+        "en": "श्वशुराः"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 362,
+      "answer": {
+        "en": "grandsons, Synonyms: grandson"
+      },
+      "question": {
+        "en": "पौत्राः"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 363,
+      "answer": {
+        "en": "brothers-in law, Synonyms: brother-in law"
+      },
+      "question": {
+        "en": "श्यालाः"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 364,
+      "answer": {
+        "en": "and, Synonyms: like that, in that manner, so, thus"
+      },
+      "question": {
+        "en": "तथा"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 365,
+      "answer": {
+        "en": "other kith and kin, Synonyms: kith and kin"
+      },
+      "question": {
+        "en": "सम्बन्धिनः"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 366,
+      "answer": {
+        "en": "O Madhusudana (killer of the demon Madhu), Synonyms: "
+      },
+      "question": {
+        "en": "हे मधुसूदन"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 367,
+      "answer": {
+        "en": "(myself) slain, Synonyms: "
+      },
+      "question": {
+        "en": "(मां) घ्नतः"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 368,
+      "answer": {
+        "en": "though, Synonyms: even, also, and, very, even though"
+      },
+      "question": {
+        "en": "अपि"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 369,
+      "answer": {
+        "en": "these, Synonyms: this"
+      },
+      "question": {
+        "en": "एतान्"
+      },
+      "chapter": 1,
+      "verse": 34
+    },
+    {
+      "type": "glossary",
+      "id": 370,
+      "answer": {
+        "en": "the kingdom of the three worlds, Synonyms: the kingdom of the three worlds"
+      },
+      "question": {
+        "en": "त्रैलोक्य-राज्यस्य"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 371,
+      "answer": {
+        "en": "even, Synonyms: even, also, and, very, even though"
+      },
+      "question": {
+        "en": "अपि"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 372,
+      "answer": {
+        "en": "for, Synonyms: the implicit and efficient cause"
+      },
+      "question": {
+        "en": "हेतोः"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 373,
+      "answer": {
+        "en": "to slay, Synonyms: to slay"
+      },
+      "question": {
+        "en": "हन्तुम्"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 374,
+      "answer": {
+        "en": "I would not consent, Synonyms: "
+      },
+      "question": {
+        "en": "न इच्छामि"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 375,
+      "answer": {
+        "en": "for earth, Synonyms: the earth for the earth"
+      },
+      "question": {
+        "en": "महीकृते"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 376,
+      "answer": {
+        "en": "how then?, Synonyms: "
+      },
+      "question": {
+        "en": "किम् नु"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 377,
+      "answer": {
+        "en": "O Janardana !, Synonyms: "
+      },
+      "question": {
+        "en": "हे जनार्दन"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 378,
+      "answer": {
+        "en": "the sons of Dhritarashtra, Synonyms: "
+      },
+      "question": {
+        "en": "धार्तराष्ट्रान्"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 379,
+      "answer": {
+        "en": "after killing, Synonyms: to kill, slay with the prefix $ni$ (after having killed"
+      },
+      "question": {
+        "en": "निहत्य"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 380,
+      "answer": {
+        "en": "ours, Synonyms: I"
+      },
+      "question": {
+        "en": "नः"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 381,
+      "answer": {
+        "en": "what, Synonyms: what, which, who"
+      },
+      "question": {
+        "en": "का"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 382,
+      "answer": {
+        "en": "pleasures, Synonyms: pleasure, joy, gladness, grace, amity"
+      },
+      "question": {
+        "en": "प्रीतिः"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 383,
+      "answer": {
+        "en": "can be?, Synonyms: to be"
+      },
+      "question": {
+        "en": "स्यात्"
+      },
+      "chapter": 1,
+      "verse": 35
+    },
+    {
+      "type": "glossary",
+      "id": 384,
+      "answer": {
+        "en": "aggressors, Synonyms: aggressor, tormentor, oppressor"
+      },
+      "question": {
+        "en": "आततायिनः"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 385,
+      "answer": {
+        "en": "these, Synonyms: this"
+      },
+      "question": {
+        "en": "एतान्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 386,
+      "answer": {
+        "en": "slaying, Synonyms: to slay"
+      },
+      "question": {
+        "en": "हत्वा"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 387,
+      "answer": {
+        "en": "sin, Synonyms: sin, the sinner"
+      },
+      "question": {
+        "en": "पापम्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 388,
+      "answer": {
+        "en": "indeed, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 389,
+      "answer": {
+        "en": "us, Synonyms: I"
+      },
+      "question": {
+        "en": "अस्मान्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 390,
+      "answer": {
+        "en": "will take hold of, Synonyms: to adhere, rest, resort to to take hold of"
+      },
+      "question": {
+        "en": "आश्रयेत्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 391,
+      "answer": {
+        "en": "O Madhava (Krishna) !, Synonyms: "
+      },
+      "question": {
+        "en": "हे माधव"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 392,
+      "answer": {
+        "en": "so, Synonyms: that"
+      },
+      "question": {
+        "en": "तस्मात्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 393,
+      "answer": {
+        "en": "our kinsmen, Synonyms: "
+      },
+      "question": {
+        "en": "स्वबान्धवान्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 394,
+      "answer": {
+        "en": "the sons of Dhritarashtra, Synonyms: "
+      },
+      "question": {
+        "en": "धार्तराष्ट्रान्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 395,
+      "answer": {
+        "en": "to kill, Synonyms: to slay"
+      },
+      "question": {
+        "en": "हन्तुम्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 396,
+      "answer": {
+        "en": "we, Synonyms: I"
+      },
+      "question": {
+        "en": "वयम्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 397,
+      "answer": {
+        "en": "ought not, Synonyms: "
+      },
+      "question": {
+        "en": "न अर्हाः"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 398,
+      "answer": {
+        "en": "for, Synonyms: "
+      },
+      "question": {
+        "en": "हि"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 399,
+      "answer": {
+        "en": "our own people, Synonyms: one's own people"
+      },
+      "question": {
+        "en": "स्वजनम्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 400,
+      "answer": {
+        "en": "killing, Synonyms: to slay"
+      },
+      "question": {
+        "en": "हत्वा"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 401,
+      "answer": {
+        "en": "how?, Synonyms: how"
+      },
+      "question": {
+        "en": "कथम्"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 402,
+      "answer": {
+        "en": "happy, Synonyms: one who is happy"
+      },
+      "question": {
+        "en": "सुखिनः"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 403,
+      "answer": {
+        "en": "may we be, Synonyms: to be"
+      },
+      "question": {
+        "en": "स्याम"
+      },
+      "chapter": 1,
+      "verse": 36
+    },
+    {
+      "type": "glossary",
+      "id": 404,
+      "answer": {
+        "en": "O Janardana (Krishna) !, Synonyms: "
+      },
+      "question": {
+        "en": "हे जनार्दन"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 405,
+      "answer": {
+        "en": "although, Synonyms: "
+      },
+      "question": {
+        "en": "यदि अपि"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 406,
+      "answer": {
+        "en": "with a consciousness clouded with greed, Synonyms: "
+      },
+      "question": {
+        "en": "लोभ-उपहत-चेतसः"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 407,
+      "answer": {
+        "en": "these, Synonyms: this"
+      },
+      "question": {
+        "en": "एते"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 408,
+      "answer": {
+        "en": "resulting from the destruction of the family, Synonyms: done or obtained by the destruction of the family"
+      },
+      "question": {
+        "en": "कुल-क्षय-कृतम्"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 409,
+      "answer": {
+        "en": "the guilt, Synonyms: guilt, defect, misdeed"
+      },
+      "question": {
+        "en": "दोषम्"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 410,
+      "answer": {
+        "en": "in hostility to friends, Synonyms: hostility to friends"
+      },
+      "question": {
+        "en": "मित्र-द्रोहे"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 411,
+      "answer": {
+        "en": "the crime, Synonyms: a crime, sin"
+      },
+      "question": {
+        "en": "पातकम्"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 412,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 413,
+      "answer": {
+        "en": "see not, Synonyms: "
+      },
+      "question": {
+        "en": "न पश्यन्ति;"
+      },
+      "chapter": 1,
+      "verse": 37
+    },
+    {
+      "type": "glossary",
+      "id": 414,
+      "answer": {
+        "en": "resulting from the destruction of the family, Synonyms: done or obtained by the destruction of the family"
+      },
+      "question": {
+        "en": "कुल-क्षय-कृतम्"
+      },
+      "chapter": 1,
+      "verse": 38
+    },
+    {
+      "type": "glossary",
+      "id": 415,
+      "answer": {
+        "en": "the evil, Synonyms: guilt, defect, misdeed"
+      },
+      "question": {
+        "en": "दोषम्"
+      },
+      "chapter": 1,
+      "verse": 38
+    },
+    {
+      "type": "glossary",
+      "id": 416,
+      "answer": {
+        "en": "we who see, Synonyms: "
+      },
+      "question": {
+        "en": "प्रपश्यद्भिः अस्माभिः"
+      },
+      "chapter": 1,
+      "verse": 38
+    },
+    {
+      "type": "glossary",
+      "id": 417,
+      "answer": {
+        "en": "from such a sin, Synonyms: "
+      },
+      "question": {
+        "en": "अस्मात् पापात्"
+      },
+      "chapter": 1,
+      "verse": 38
+    },
+    {
+      "type": "glossary",
+      "id": 418,
+      "answer": {
+        "en": "to draw back, Synonyms: to move, proceed, exist to  draw back"
+      },
+      "question": {
+        "en": "निवर्तितुम्"
+      },
+      "chapter": 1,
+      "verse": 38
+    },
+    {
+      "type": "glossary",
+      "id": 419,
+      "answer": {
+        "en": "why should not, Synonyms: "
+      },
+      "question": {
+        "en": "कथम् न"
+      },
+      "chapter": 1,
+      "verse": 38
+    },
+    {
+      "type": "glossary",
+      "id": 420,
+      "answer": {
+        "en": "(we) have the wisdom, Synonyms: the object of knowledge, that which should be known"
+      },
+      "question": {
+        "en": "ज्ञेयम्"
+      },
+      "chapter": 1,
+      "verse": 38
+    },
+    {
+      "type": "glossary",
+      "id": 421,
+      "answer": {
+        "en": "in the annihilation of the family, Synonyms: the annihilation of the family"
+      },
+      "question": {
+        "en": "कुल-क्षये"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 422,
+      "answer": {
+        "en": "eternal, Synonyms: eternal, perpetual, ancient"
+      },
+      "question": {
+        "en": "सनातनाः"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 423,
+      "answer": {
+        "en": "traditions of the family, Synonyms: moral law of the family"
+      },
+      "question": {
+        "en": "कुल-धर्माः"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 424,
+      "answer": {
+        "en": "are destroyed, Synonyms: to perish"
+      },
+      "question": {
+        "en": "प्रणश्यन्ति"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 425,
+      "answer": {
+        "en": "and, Synonyms: and, also, even, as well"
+      },
+      "question": {
+        "en": "उत"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 426,
+      "answer": {
+        "en": "in the collapse of traditions, Synonyms: "
+      },
+      "question": {
+        "en": "धर्मे नष्टे"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 427,
+      "answer": {
+        "en": "the whole/entire, Synonyms: the whole"
+      },
+      "question": {
+        "en": "कृत्स्नम्"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 428,
+      "answer": {
+        "en": "family, Synonyms: family"
+      },
+      "question": {
+        "en": "कुलम्"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 429,
+      "answer": {
+        "en": "lawlessness, Synonyms: unrighteousness, wrong, lawlessness"
+      },
+      "question": {
+        "en": "अधर्मः"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 430,
+      "answer": {
+        "en": "overcomes/besets, Synonyms: to be to overcome, beset"
+      },
+      "question": {
+        "en": "अभिभवति"
+      },
+      "chapter": 1,
+      "verse": 39
+    },
+    {
+      "type": "glossary",
+      "id": 431,
+      "answer": {
+        "en": "O Krishna !, Synonyms: "
+      },
+      "question": {
+        "en": "हे कृष्ण"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 432,
+      "answer": {
+        "en": "owing to predominance of lawlessness, Synonyms: "
+      },
+      "question": {
+        "en": "अधर्म-अभिभवात्"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 433,
+      "answer": {
+        "en": "the women of the family, Synonyms: the women of the family"
+      },
+      "question": {
+        "en": "कुल-स्त्रियः"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 434,
+      "answer": {
+        "en": "become corrupt, Synonyms: to pollute, contaminate, become corrupt"
+      },
+      "question": {
+        "en": "प्रदुष्यन्ति"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 435,
+      "answer": {
+        "en": "O Varshneya !, Synonyms: "
+      },
+      "question": {
+        "en": "हे वार्ष्णेय"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 436,
+      "answer": {
+        "en": "women corrupted, Synonyms: "
+      },
+      "question": {
+        "en": "स्त्रीषु दुष्टासु"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 437,
+      "answer": {
+        "en": "the confusion of the varṇas (the four-fold order of the society), Synonyms: the confusion of the four-fold order of the society"
+      },
+      "question": {
+        "en": "वर्ण-सङ्करः"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 438,
+      "answer": {
+        "en": "arises, Synonyms: to take birth"
+      },
+      "question": {
+        "en": "जायते"
+      },
+      "chapter": 1,
+      "verse": 40
+    },
+    {
+      "type": "glossary",
+      "id": 439,
+      "answer": {
+        "en": "(this) confusion, Synonyms: confusion"
+      },
+      "question": {
+        "en": "सङ्करः"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 440,
+      "answer": {
+        "en": "(of) the ruiners of the family, Synonyms: the ruiner of the family"
+      },
+      "question": {
+        "en": "कुल-घ्नानाम्"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 441,
+      "answer": {
+        "en": "(of) the family, Synonyms: family"
+      },
+      "question": {
+        "en": "कुलस्य"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 442,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 443,
+      "answer": {
+        "en": "for hell, Synonyms: the Hell"
+      },
+      "question": {
+        "en": "नरकाय"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 444,
+      "answer": {
+        "en": "surely, Synonyms: "
+      },
+      "question": {
+        "en": "एव"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 445,
+      "answer": {
+        "en": "deprived of piKoa (rice offering) and libations, Synonyms: "
+      },
+      "question": {
+        "en": "लुप्त-पिण्ड-उदक-क्रियाः"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 446,
+      "answer": {
+        "en": "their, Synonyms: this"
+      },
+      "question": {
+        "en": "एषाम्"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 447,
+      "answer": {
+        "en": "ancestors, Synonyms: father"
+      },
+      "question": {
+        "en": "पितरः"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 448,
+      "answer": {
+        "en": "for, Synonyms: "
+      },
+      "question": {
+        "en": "हि"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 449,
+      "answer": {
+        "en": "fall, Synonyms: to fall"
+      },
+      "question": {
+        "en": "पतन्ति"
+      },
+      "chapter": 1,
+      "verse": 41
+    },
+    {
+      "type": "glossary",
+      "id": 450,
+      "answer": {
+        "en": "(by) the confusion of the orders, Synonyms: "
+      },
+      "question": {
+        "en": "वर्ण-सङ्कर-कारकैः"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 451,
+      "answer": {
+        "en": "by these, Synonyms: this"
+      },
+      "question": {
+        "en": "एतैः"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 452,
+      "answer": {
+        "en": "misdeeds, Synonyms: guilt, defect, misdeed"
+      },
+      "question": {
+        "en": "दोषैः"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 453,
+      "answer": {
+        "en": "of the ruiners of the family, Synonyms: the ruiner of the family"
+      },
+      "question": {
+        "en": "कुल-घ्नानाम्"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 454,
+      "answer": {
+        "en": "eternal, Synonyms: eternal, immemorial, everlasting"
+      },
+      "question": {
+        "en": "शाश्वताः"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 455,
+      "answer": {
+        "en": "aws of the race, Synonyms: laws of the race"
+      },
+      "question": {
+        "en": "जाति-धर्माः"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 456,
+      "answer": {
+        "en": "moral law of the family, Synonyms: moral law of the family"
+      },
+      "question": {
+        "en": "कुल-धर्माः"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 457,
+      "answer": {
+        "en": "and, Synonyms: and, both, also, as well as"
+      },
+      "question": {
+        "en": "च"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 458,
+      "answer": {
+        "en": "are destroyed, Synonyms: to sit down, sink down to destroy"
+      },
+      "question": {
+        "en": "उत्साद्यन्ते"
+      },
+      "chapter": 1,
+      "verse": 42
+    },
+    {
+      "type": "glossary",
+      "id": 459,
+      "answer": {
+        "en": "O Janardana !, Synonyms: "
+      },
+      "question": {
+        "en": "हे जनार्दन"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 460,
+      "answer": {
+        "en": "of them whose family morals are corrupted, Synonyms: one whose family morals are corrupted"
+      },
+      "question": {
+        "en": "उत्सन्न-कुल-धर्माणाम्"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 461,
+      "answer": {
+        "en": "of men, Synonyms: man"
+      },
+      "question": {
+        "en": "मनुष्याणाम्"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 462,
+      "answer": {
+        "en": "for ever, Synonyms: rightly regulated surely or positively"
+      },
+      "question": {
+        "en": "नियतम्"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 463,
+      "answer": {
+        "en": "in hell, Synonyms: the Hell"
+      },
+      "question": {
+        "en": "नरके"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 464,
+      "answer": {
+        "en": "abode, Synonyms: abode"
+      },
+      "question": {
+        "en": "वासः"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 465,
+      "answer": {
+        "en": "is assured, Synonyms: to become, take place, happen"
+      },
+      "question": {
+        "en": "भवति"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 466,
+      "answer": {
+        "en": "thus, Synonyms: thus"
+      },
+      "question": {
+        "en": "इति"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 467,
+      "answer": {
+        "en": "have we heard, Synonyms: to hear, study, learn to hear traditionally"
+      },
+      "question": {
+        "en": "अनुशुश्रुम"
+      },
+      "chapter": 1,
+      "verse": 43
+    },
+    {
+      "type": "glossary",
+      "id": 468,
+      "answer": {
+        "en": "alas!, Synonyms: "
+      },
+      "question": {
+        "en": "अहो! बत"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 469,
+      "answer": {
+        "en": "we, Synonyms: I"
+      },
+      "question": {
+        "en": "वयम्"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 470,
+      "answer": {
+        "en": "a great sin, Synonyms: "
+      },
+      "question": {
+        "en": "महत् पापम्"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 471,
+      "answer": {
+        "en": "to commit, Synonyms: to do, bring about"
+      },
+      "question": {
+        "en": "कर्तुम्"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 472,
+      "answer": {
+        "en": "are engaged, Synonyms: "
+      },
+      "question": {
+        "en": "व्यवसिताः"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 473,
+      "answer": {
+        "en": "that, Synonyms: that which in that, whether or if, according to context"
+      },
+      "question": {
+        "en": "यत्"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 474,
+      "answer": {
+        "en": "through greed of the pleasures of kingship, Synonyms: the greed of the pleasures of kingship"
+      },
+      "question": {
+        "en": "राज्य-सुख-लोभेन"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 475,
+      "answer": {
+        "en": "our own people, Synonyms: one's own people"
+      },
+      "question": {
+        "en": "स्वजनम्"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 476,
+      "answer": {
+        "en": "to kill, Synonyms: to slay"
+      },
+      "question": {
+        "en": "हन्तुम्"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 477,
+      "answer": {
+        "en": "(we are) endeavouring, Synonyms: ready, endeavouring, intent on"
+      },
+      "question": {
+        "en": "उद्यताः"
+      },
+      "chapter": 1,
+      "verse": 44
+    },
+    {
+      "type": "glossary",
+      "id": 478,
+      "answer": {
+        "en": "if, Synonyms: although, if"
+      },
+      "question": {
+        "en": "यदि"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 479,
+      "answer": {
+        "en": "unresisting, Synonyms: unresisting"
+      },
+      "question": {
+        "en": "अप्रतीकारम्"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 480,
+      "answer": {
+        "en": "unarmed, Synonyms: unarmed"
+      },
+      "question": {
+        "en": "अशस्त्रम्"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 481,
+      "answer": {
+        "en": "me, Synonyms: I"
+      },
+      "question": {
+        "en": "माम्"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 482,
+      "answer": {
+        "en": "armed, Synonyms: one who holds weapon in his hand, armed"
+      },
+      "question": {
+        "en": "शस्त्र-पाणयः"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 483,
+      "answer": {
+        "en": "sons of Dhritarashtra, Synonyms: "
+      },
+      "question": {
+        "en": "धार्तराष्ट्राः"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 484,
+      "answer": {
+        "en": "in the battle, Synonyms: battle"
+      },
+      "question": {
+        "en": "रणे"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 485,
+      "answer": {
+        "en": "slay, Synonyms: to slay"
+      },
+      "question": {
+        "en": "हन्युः"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 486,
+      "answer": {
+        "en": "that, Synonyms: that"
+      },
+      "question": {
+        "en": "तत्"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 487,
+      "answer": {
+        "en": "for me, Synonyms: I"
+      },
+      "question": {
+        "en": "मे"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 488,
+      "answer": {
+        "en": "(better) welfare, Synonyms: "
+      },
+      "question": {
+        "en": "क्षेमतरम्"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 489,
+      "answer": {
+        "en": "would be, Synonyms: to become"
+      },
+      "question": {
+        "en": "भवेत्"
+      },
+      "chapter": 1,
+      "verse": 45
+    },
+    {
+      "type": "glossary",
+      "id": 490,
+      "answer": {
+        "en": "on the battlefield, Synonyms: battle"
+      },
+      "question": {
+        "en": "सङ्ख्ये"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 491,
+      "answer": {
+        "en": "spirit over-whelmed with sorrow, Synonyms: spirit over-whelmed with sorrow"
+      },
+      "question": {
+        "en": "शोक-संविग्न-मानसः"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 492,
+      "answer": {
+        "en": "Arjuna, Synonyms: Arjuna, the third Pandava"
+      },
+      "question": {
+        "en": "अर्जुनः"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 493,
+      "answer": {
+        "en": "thus, Synonyms: thus"
+      },
+      "question": {
+        "en": "एवम्"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 494,
+      "answer": {
+        "en": "having spoken, Synonyms: to speak"
+      },
+      "question": {
+        "en": "उक्त्वा"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 495,
+      "answer": {
+        "en": "with arrows, Synonyms: with arrows"
+      },
+      "question": {
+        "en": "सशरम्"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 496,
+      "answer": {
+        "en": "the bow, Synonyms: "
+      },
+      "question": {
+        "en": "चापं"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 497,
+      "answer": {
+        "en": "casting down, Synonyms: to let go or fly, discharge, hurl at"
+      },
+      "question": {
+        "en": "विसृज्य"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 498,
+      "answer": {
+        "en": "on the seat of the chariot, Synonyms: "
+      },
+      "question": {
+        "en": "रथ-उपस्थे"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "glossary",
+      "id": 499,
+      "answer": {
+        "en": "sank down, Synonyms: to enter or settle down to sink down"
+      },
+      "question": {
+        "en": "उपाविशत्"
+      },
+      "chapter": 1,
+      "verse": 46
+    },
+    {
+      "type": "faq",
+      "id": 7970,
+      "answer": {
+        "ta": "கவல்கமன் என்ற தேரோட்டியின் மகன். அவர் சாஸ்திரங்களில் மிகுந்த புலமை பெற்றவராகவும், தாராள குணம் கொண்டவராகவும், பாரபட்சமின்றியும், உண்மையுடனும் தர்மத்தை உறுதியாகப் பின்பற்றுபவராகவும் இருந்தார். இந்தக் காரணங்களுக்காக, பீஷ்மர் அவரை விதுரரோடு, திருதராஷ்டிர மன்னனின் இரண்டாவது அமைச்சராக நியமித்தார்."
+      },
+      "question": {
+        "ta": "சஞ்சயன் என்பவர் யார்?"
+      },
+      "chapter": 1,
+      "verse": 1
+    },
+    {
+      "type": "faq",
+      "id": 7971,
+      "answer": {
+        "ta": "அரியானா மாநிலத்தில் உள்ள குருஷேத்திர மாவட்டத்தில், சண்டிகரிலிருந்து சுமார் 80 கி.மீ. தொலைவிலும், தில்லியிலிருந்து சுமார் 100 கி.மீ. தொலைவிலும் இந்நகரம் உள்ளது. ஸர்ஸ்வதீ நதியின் தென்புறத்திலும், த்ருஷ்வதீ நதியின் வட புறத்திலும் அதன் இடைபட்ட பகுதியில் அமைந்துள்ளது. இதற்கு மற்றொரு பெயர் ஸம்ந்தபஞ்சகம் என்பது.  இங்கு உள்ள மிகப் பிரபலமான புனிதக் குளம் பிரமசரஸ் (Brahma Sarovar) . இது சுமார் 11 ஏக்கர் பரப்பளவில் அமைந்துள்ளது.<br>வியாசர் பாரதத்தையும், மனு, மனுஸ்மிருதியையும் இங்கிருந்து தான் எழுதியதாகச் சொல்லப்படுகிறது.<br>குந்தி தேவி வழிபட்ட சிவாலயம் இங்குள்ளது. கருவறையில் சிவலிங்கத்தின் பின்னால் குந்தியின் உருவம் உள்ளது.<br>அர்ஜுனன் தன் பாணத்தால் உண்டாக்கிய தீர்த்தக் கிணறு - 'பாண கங்கா' உள்ளது"
+      },
+      "question": {
+        "ta": "குருக்ஷேத்திரம் பற்றி விவரிக்கவும்"
+      },
+      "chapter": 1,
+      "verse": 1
+    }
+  ]
+}
