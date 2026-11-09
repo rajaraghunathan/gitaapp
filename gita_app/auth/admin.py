@@ -575,7 +575,7 @@ def get_files_drive(drive):
     return json_files
 
 def upload_to_drive(json_file_name):
-    json_dir = "./static/json_files"
+    json_dir = os.join(BASE_DIR, "static", "json_files")
     files_uploaded = []
 
     drive = get_drive_service()
@@ -642,7 +642,7 @@ def export_data (table_name, col_name, filter_criteria):
     # today_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
     db_location = 'local' if BASE_DIR.startswith('E:') else 'webapp'
     file_name_construct = f"{db_location}_db_{col_name}_{filter_criteria}_{table_name}.json"
-    json_path = os.path.join("./static/json_files", file_name_construct)
+    json_path = os.path.join(BASE_DIR, "static", "json_files", file_name_construct)
     if len(data.get('table_data')) > 0:
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
