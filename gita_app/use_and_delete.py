@@ -2,7 +2,7 @@
 from pathlib import Path
 import os, csv, ast, json, requests
 from datetime import datetime, timedelta, timezone
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text, Table, MetaData
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.attributes import flag_modified
 from models import Chapter, Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
@@ -166,6 +166,7 @@ if __name__ == '__main__':
     db_path = os.path.join(BASE_DIR, 'gita.db')
     engine = create_engine(f"sqlite:///{db_path}", echo=False)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    metadata = MetaData()
     Base = declarative_base()
     Base.metadata.create_all(bind=engine)
 

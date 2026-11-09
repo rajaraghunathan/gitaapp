@@ -508,39 +508,45 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="db-pane" role="tabpanel" aria-labelledby="db-tab">
-                <div class="row">
-                    <div class="col">
-                        <form action="/action_page.php">
-                            <label for="table-name" class="form-label">Select (Table):</label>
-                            <select class="form-select" id="table-name" name="table">
+            <div class="tab-pane fade container" id="db-pane" role="tabpanel" aria-labelledby="db-tab">
+                <div class="row p-2">
+                    <div class="col-md m-2 border border-primary">
+                        <h6>JSON FILE TO GOOGLE DRIVE</h6>
+                        <form onsubmit="uploadToGoogleDrive(event,this)">
+                            <div class="input-group input-group-sm mb-2">
+                                <span class="input-group-text fw-bold">Table</span>
+                                <select class="form-select" id="table-name" name="table">
 
-                            </select>
-                            <label for="chapter" class="form-label">Select (Chapter Number):</label>
-                            <select class="form-select" id="chapter" name="criteria">
+                                </select>
+                            </div>
+                            <div class="input-group input-group-sm mb-2">
+                                <span class="input-group-text fw-bold">Chapter</span>
+                                <select class="form-select" id="chapter" name="criteria">
 
-                            </select>
-                            <button type="submit" class="btn btn-primary mt-3">UPLOAD TO DRIVE</button>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3 fw-bold">UPLOAD TO DRIVE</button>
                         </form>
-                    </div>
-                    <div class="col">
-                        <form action="/action_page.php">
-                            <label for="json-file" class="form-label">Select (JSON File):</label>
-                            <select class="form-select" id="json-file" name="json-file">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
-                            </select>
-                            <br>
-                            <button type="submit" class="btn btn-primary mt-3">UPLOAD TO DB</button>
-                        </form>
-                    </div>
+                        <div class="mt-2" id="upload-response" style="white-space: pre-wrap" >
 
+                        </div>
+                    </div>
+                    <div class="col-md m-2 border border-primary">
+                        <h6>JSON FILE TO DATA BASE</h6>
+                        <form onsubmit="updateDB(event,this)">
+                            <div class="input-group input-group-sm mb-2">
+                                <span class="input-group-text fw-bold">JSON File</span>
+                                <select class="form-select" id="json-file" name="id">
+
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3 fw-bold">UPLOAD TO DB</button>
+                        </form>
+                        <div class="mt-2" id="db-upload-response" style="white-space: pre-wrap">
+
+                        </div>
+                    </div>
                 </div>
-
-
-
             </div>
         </div>
 
@@ -2380,9 +2386,7 @@
             }).catch(err => showToast(err.message, "danger"));
         }
     }
-
-    function loadDbDetails() {
-        const db = [
+    const db = [
             {tableName: 'chapter', colName: 'num'},
             {tableName: 'verse', colName: 'chapter_number'},
             {tableName: 'acharya_comment', colName: 'chapter_number'},
@@ -2390,6 +2394,7 @@
             {tableName: 'quiz_question-tamil', colName: 'chapter'},
             {tableName: 'glossary_faq', colName: 'chapter'}
         ]
+    function loadDbDetails() {
         let el = document.getElementById("table-name");
         el.innerHTML = "";
         db.map(item=>{
@@ -2401,6 +2406,68 @@
         chapters.map(item=>{
             el.innerHTML += `<option>${item}</option>`
         })
+        document.getElementById("db-upload-response").innerHTML = "<b>Getting the Files. Please Wait...</b>"
+        el = document.getElementById("json-file");
+        el.innerHTML = "";
+        fetch("/admin/get_drive_files",{method: 'GET'}).then(res=>res.json()).then(data => {
+            data.drive_files.map(item=>{
+                el.innerHTML += `<option value="${item.id}">${item.name}</option>`
+            })
+            document.getElementById("db-upload-response").innerHTML = "<b>Files are loaded Successfully</b>"
+        });
+    }
+
+    function uploadToGoogleDrive(event,formEl) {
+        event.preventDefault();
+        const formData = new FormData(formEl);
+        const formPayload = Object.fromEntries(formData);
+        db.map(item=>{
+            if (item.tableName === formPayload.table) {
+                formPayload['col_name'] = item.colName;
+                return
+            }
+        })
+        document.getElementById("upload-response").innerHTML = "<b>Uploading the Files. Please Wait...</b>"
+        fetch('/admin/upload_drive', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formPayload)
+        }).then(res=>res.json()).then(data => {
+            if (data.success) {
+                let divMsg = "";
+                data.files_to_drive.map(item=>{
+                    divMsg += `<b>Updated\n\nFile Name:</b> ${item.file_name}\n<b>Id:</b> ${item.id}`
+                })
+                document.getElementById("upload-response").innerHTML = (divMsg === "") ?  "<b>Already Existing</b>" : divMsg
+                let el = document.getElementById("json-file");
+                el.innerHTML = "";
+                data.drive_files.map(item=>{
+                    el.innerHTML += `<option value="${item.id}">${item.name}</option>`
+                })
+                showToast(data.message, "success");
+            } else {
+                showToast(data.message, "danger");
+            }
+        }).catch(err => showToast(err.message, "danger"))
+    }
+
+    function updateDB(event,formEl) {
+        event.preventDefault();
+        const formData = new FormData(formEl);
+        const formPayload = Object.fromEntries(formData);
+        const id = formPayload["id"];
+        document.getElementById("db-upload-response").innerHTML = "<b>Updating the Database. Please Wait...</b>"
+        fetch(`/admin/update_db/${id || 'id'}`).then(res=>res.json()).then(data => {
+            const divEl = document.getElementById("db-upload-response");
+            divEl.innerHTML = "";
+            let content = "";
+            Object.entries(data).forEach(([k, v]) => {
+                content += `<b>${k}</b>: ${v} \n`
+            })
+            divEl.innerHTML = content
+            const optionToRemove = document.querySelector(`select#json-file option[value="${id}"]`);
+            if (optionToRemove) { optionToRemove.remove();}
+        });
     }
 
     function calculateTextAreaLines(text,mW) {

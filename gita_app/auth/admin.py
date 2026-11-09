@@ -1,14 +1,25 @@
 import os, json, uuid, re, requests, io, csv
+import time
+
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template, make_response
 from database import db
 from models import Chapter, Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
 from zoneinfo import ZoneInfo
 from translate import remove_non_printable_from_object
+from pathlib import Path
+from datetime import datetime
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
 admin = Blueprint("admin", __name__)
 
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) #Current File Directory
+BASE_DIR = os.path.dirname(CURRENT_DIR) #One Level Up to Next Directory
 
 # --- HTML TEMPLATE ROUTING RENDERERS ---
 
@@ -97,8 +108,6 @@ def get_acharya_comment_admin():
     else:
         return jsonify({"error": "Unauthorized"}), 403
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) #Current File Directory
-BASE_DIR = os.path.dirname(CURRENT_DIR) #One Level Up to Next Directory
 acharya_cache_file = os.path.join(BASE_DIR, "json using codes", "acharya_translations_cache.json")
 def load_acharya_cache():
     if os.path.exists(acharya_cache_file):
@@ -520,7 +529,152 @@ def admin_faq_update_or_delete():
         db.session.rollback()
         return jsonify({'success': False, "message": "Database update failed" + str(e)}), 500
 
-# Update DB data from Local Host to Production
+# Update DB data vis-à-vis local and production from Google Drive
+FOLDER_ID = "11yhz_aFxzjlTHuN1ob85eySdmNEI0fSD"
+def get_drive_service():
+    SCOPES = ["https://www.googleapis.com/auth/drive"]
+    KEY_FILE = json.loads(os.getenv('GOOGLE_OAUTH_CREDENTIALS_JSON'))
+    creds = None
+    if os.path.exists("credentials/token.json"):
+        creds = Credentials.from_authorized_user_file("credentials/token.json", SCOPES)
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    if not creds or not creds.valid:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            KEY_FILE, SCOPES
+        )
+        creds = flow.run_local_server(port=0)
+        with open("credentials/token.json", "w", encoding="utf-8") as f:
+            f.write(creds.to_json())
+    drive = build('drive', 'v3', credentials=creds)
+    return drive
+
+def get_files_drive(drive):
+    query = f"'{FOLDER_ID}' in parents and trashed = false"
+    json_files = []
+    page_token = None
+
+    while True:
+        result = drive.files().list(
+            q=query,
+            pageSize=1000,
+            pageToken=page_token,
+            fields="nextPageToken,files(id,name,mimeType)",
+        ).execute()
+
+        json_files.extend(
+            f for f in result.get("files", [])
+            if f["name"].lower().endswith(".json")
+            or f["mimeType"] == "application/json"
+        )
+
+        page_token = result.get("nextPageToken")
+        if not page_token:
+            break
+
+    return json_files
+
+def upload_to_drive(json_file_name):
+    json_dir = "./static/json_files"
+    files_uploaded = []
+
+    drive = get_drive_service()
+    file_path = os.path.join(json_dir, json_file_name)
+    json_file = Path(file_path)
+
+    # Find existing file(s) with this name in the target folder.
+    query = (
+        f"'{FOLDER_ID}' in parents and name = '{json_file.name}' and trashed = false"
+        # f"and name = '{json_file.name}' "
+        # "and trashed = false"
+    )
+    result = drive.files().list(
+        q=query,
+        fields="files(id,name)",
+    ).execute()
+
+    # Move existing match(es) to Trash.
+    for old_file in result.get("files", []):
+        drive.files().update(
+            fileId=old_file["id"],
+            body={"trashed": True},
+        ).execute()
+
+    # Upload the new file
+    metadata = {"name": json_file.name, "mimeType": "application/json", "parents": [FOLDER_ID],}
+    uploaded = drive.files().create(
+        body=metadata,
+        media_body=MediaFileUpload(
+            str(json_file),
+            mimetype="application/json",
+            resumable=True,
+        ),
+        fields="id,name",
+    ).execute()
+    files_uploaded.append({"file_name": uploaded["name"], "id": uploaded["id"]})
+    if os.path.exists(os.path.join(json_dir, json_file_name)):
+        os.remove(os.path.join(json_dir, json_file_name))
+    time.sleep(1)
+    drive_files = get_files_drive(drive)
+    drive_files.append({"name": uploaded["name"], "id": uploaded["id"]})
+    local_host = True if CURRENT_DIR.startswith('E:') else False
+    if not local_host:
+        drive_files[:] = [f for f in drive_files if f.get('name').startswith('local')]
+    else:
+        drive_files[:] = [f for f in drive_files if not f.get('name').startswith('local')]
+
+    return files_uploaded, drive_files
+
+table_class = {'chapter': Chapter, 'verse': Verse,
+                   'acharya_comment': AcharyaComment, 'quiz_question': QuizQuestion,
+                   'quiz_question-tamil': QuizQuestionTamil, 'glossary_faq': GlossaryFaq}
+
+def export_data (table_name, col_name, filter_criteria):
+    table = table_class.get(table_name)
+    if hasattr(table, col_name):
+        verse = db.session.query(table).where(getattr(table, col_name) == filter_criteria).all()
+    else:
+        verse = []
+    data = {'table_name': table_name, 'col_name': col_name, 'filter_criteria': filter_criteria, 'table_data':[]}
+    for v in verse:
+        temp_data = {k: v for k, v in v.__dict__.items() if not k.startswith('_')}
+        data['table_data'].append(temp_data)
+    # today_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+    db_location = 'local' if BASE_DIR.startswith('E:') else 'webapp'
+    file_name_construct = f"{db_location}_db_{col_name}_{filter_criteria}_{table_name}.json"
+    json_path = os.path.join("./static/json_files", file_name_construct)
+    if len(data.get('table_data')) > 0:
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+    return file_name_construct
+
+@admin.route('/admin/upload_drive', methods=['POST'])
+def admin_upload_drive():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    payload = request.get_json()
+    table_name =  payload.get('table', 'chapter')
+    criteria = int(payload.get('criteria','1'))
+    col_name = payload.get('col_name', 'num')
+    json_file_name = export_data(table_name, col_name, criteria) # It's a function
+    time.sleep(1)
+    files_uploaded, drive_files = upload_to_drive(json_file_name) # It's a function
+    return jsonify({'success': True, 'files_to_drive': files_uploaded,
+                    'drive_files': drive_files,'message': 'Uploaded Successfully'}), 200
+
+@admin.route('/admin/get_drive_files')
+def admin_get_drive_files():
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    drive = get_drive_service()
+    drive_files = get_files_drive(drive)
+    local_host = True if CURRENT_DIR.startswith('E:') else False
+    if not local_host:
+        drive_files[:] = [f for f in drive_files if f.get('name').startswith('local')]
+    else:
+        drive_files[:] = [f for f in drive_files if not f.get('name').startswith('local')]
+    return jsonify({'success': True, 'drive_files': drive_files}), 200
+
 @admin.route('/admin/update_db/<string:file_id>')
 def admin_update_db(file_id):
     # flag_modified(verse, 'meaning')
@@ -532,22 +686,19 @@ def admin_update_db(file_id):
     if response.status_code == 200:
         data = response.json()
     else:
-        return jsonify({'Error': f"Failed to download file From Google Drive. Status code: {response.status_code}"})
-    table_class = {'chapter': Chapter, 'verse': Verse,
-                   'acharya_comment': AcharyaComment, 'quiz_question': QuizQuestion,
-                   'quiz_question-tamil': QuizQuestionTamil, 'glossary_faq': GlossaryFaq}
-    db_table = table_class.get(data.get('table_name'))
-    incoming_table = data.get('table_data', [])
-    record_same = []
-    record_diff = []
-    record_new = []
-    record_deleted = []
-
-    # 1. Map the incoming records by their unique ID
-    incoming_records_map = {row['id']: row for row in incoming_table}
-    incoming_ids = set(incoming_records_map.keys())
-
+        return jsonify({'success': False, 'Error': f"Failed to download file From Google Drive. Status code: {response.status_code}"})
     try:
+        db_table = table_class.get(data.get('table_name'))
+        incoming_table = data.get('table_data', [])
+        record_same = []
+        record_diff = []
+        record_new = []
+        record_deleted = []
+
+        # 1. Map the incoming records by their unique ID
+        incoming_records_map = {row['id']: row for row in incoming_table}
+        incoming_ids = set(incoming_records_map.keys())
+
         # 2. Fetch all current records from the main DB for this scope (e.g., Chapter 2)
         # Fetching them all at once avoids running a slow query inside a loop
         incoming_col = data.get('col_name')
@@ -593,7 +744,8 @@ def admin_update_db(file_id):
 
         if len(record_diff) + len(record_new) + len(record_deleted) > 0:
             db.session.commit()
-            print("Successfully synced all inserts, updates, and deletes! in Data Base")
+        drive = get_drive_service()
+        drive.files().delete(fileId=file_id).execute()
         return jsonify({'success': True,
                         'found': f'{len(existing_records)} records found in {data.get('table_name')}',
                         'same': f'{len(record_same)} records are same',
