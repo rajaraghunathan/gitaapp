@@ -575,7 +575,7 @@ def get_files_drive(drive):
     return json_files
 
 def upload_to_drive(json_file_name):
-    json_dir = os.join(BASE_DIR, "static", "json_files")
+    json_dir = os.path.join(BASE_DIR, "static", "json_files")
     files_uploaded = []
 
     drive = get_drive_service()
