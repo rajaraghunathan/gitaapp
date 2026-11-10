@@ -2446,6 +2446,7 @@
                 })
                 showToast(data.message, "success");
             } else {
+                document.getElementById("upload-response").innerHTML = data.message;
                 showToast(data.message, "danger");
             }
         }).catch(err => showToast(err.message, "danger"))
@@ -2469,8 +2470,10 @@
                 content += `<b>${k}</b>: ${v} \n`;
             })
             divEl.innerHTML = content
-            const optionToRemove = document.querySelector(`select#json-file option[value="${id}"]`);
-            if (optionToRemove) { optionToRemove.remove();}
+            if (data.message) {
+                const optionToRemove = document.querySelector(`select#json-file option[value="${id}"]`);
+                if (optionToRemove) { optionToRemove.remove();}
+            }
         });
     }
 

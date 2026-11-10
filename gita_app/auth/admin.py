@@ -12,7 +12,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
 admin = Blueprint("admin", __name__)
 
@@ -668,7 +668,7 @@ def admin_upload_drive():
         return jsonify({'success': True, 'files_to_drive': files_uploaded,
                         'drive_files': drive_files,'message': 'Uploaded Successfully'}), 200
     else:
-        return jsonify({'success': False, 'message': str(res)}), 200
+        return jsonify({'success': False, 'message': str(res)}), 500
 
 @admin.route('/admin/get_drive_files')
 def admin_get_drive_files():
@@ -684,21 +684,47 @@ def admin_get_drive_files():
             drive_files[:] = [f for f in drive_files if not f.get('name').startswith('local')]
         return jsonify({'success': True, 'drive_files': drive_files, 'message': 'Files are loaded Successfully'}), 200
     else:
-        return jsonify({'success': False, 'drive_files': [], 'message': str(res)}), 200
+        return jsonify({'success': False, 'drive_files': [], 'message': str(res)}), 500
+
+def get_json_from_drive(drive_service, file_id):
+    try:
+        # 1. Request the file content using the file_id
+        requested = drive_service.files().get_media(fileId=file_id)
+
+        # 2. Create an in-memory byte buffer to hold the downloaded data
+        fh = io.BytesIO()
+        downloader = MediaIoBaseDownload(fh, requested)
+
+        # 3. Stream and download the file data
+        done = False
+        while done is False:
+            status, done = downloader.next_chunk()
+            print(f"Download progress: {int(status.progress() * 100)}%")
+
+        # 4. Rewind the buffer pointer to the beginning
+        fh.seek(0)
+
+        # 5. Load the bytes directly into a Python dictionary/list
+        json_data = json.loads(fh.read().decode('utf-8'))
+        return {'json_data': json_data}
+
+    except Exception as e:
+        return {'json_data': None, 'message': str(e)}
 
 @admin.route('/admin/update_db/<string:file_id>')
 def admin_update_db(file_id):
     # flag_modified(verse, 'meaning')
     if not session.get('admin_logged_in'):
         return "Unauthorized", 403
-    # file_id = '1viadTOf88mAKmYdCLWYwLNjDO1lqFben'
-    url = f"https://drive.google.com/uc?export=download&id={file_id}"
-    response = requests.get(url, timeout=30)
-    if response.status_code == 200:
-        data = response.json()
+    drive, res = get_drive_service()
+    if drive:
+        json_data = get_json_from_drive(drive, file_id)
     else:
-        return jsonify({'success': False, 'Error': f"Failed to download file From Google Drive. Status code: {response.status_code}"})
+        return jsonify({'success': False, 'message': f"Failed to get the Drive Instance. error: {str(res)}"}), 500
+    if json_data.get('json_data') is None:
+        return jsonify({'success': False, 'message': f"Failed to download data From Google Drive {json_data.get('message')}"}), 500
     try:
+        data = json_data.get('json_data')
         db_table = table_class.get(data.get('table_name'))
         incoming_table = data.get('table_data', [])
         record_same = []
@@ -755,10 +781,9 @@ def admin_update_db(file_id):
 
         if len(record_diff) + len(record_new) + len(record_deleted) > 0:
             db.session.commit()
-        drive, res = get_drive_service()
         if drive:
             drive.files().delete(fileId=file_id).execute()
-        return jsonify({'success': True,
+        return jsonify({'success': True if drive else False,
                         'found': f'{len(existing_records)} records found in {data.get('table_name')}',
                         'same': f'{len(record_same)} records are same',
                         'Updated': f'{len(record_diff)} records are updated. Updated ids are {record_diff}',
