@@ -755,8 +755,9 @@ def admin_update_db(file_id):
 
         if len(record_diff) + len(record_new) + len(record_deleted) > 0:
             db.session.commit()
-        drive = get_drive_service()
-        drive.files().delete(fileId=file_id).execute()
+        drive, res = get_drive_service()
+        if drive:
+            drive.files().delete(fileId=file_id).execute()
         return jsonify({'success': True,
                         'found': f'{len(existing_records)} records found in {data.get('table_name')}',
                         'same': f'{len(record_same)} records are same',

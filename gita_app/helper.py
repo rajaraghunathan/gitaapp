@@ -14,8 +14,8 @@ FOLDER_ID = "11yhz_aFxzjlTHuN1ob85eySdmNEI0fSD"
 KEY_FILE = json.loads(os.getenv('GOOGLE_OAUTH_CREDENTIALS_JSON'))
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
-def upload_to_drive():
-    drive_files = get_files_drive()
+def upload_to_drive(drive):
+    drive_files = get_files_drive(drive)
     json_folder = os.path.join(BASE_DIR, "static", "json_files")
     files = os.listdir(json_folder)
     file_list = []
@@ -25,7 +25,7 @@ def upload_to_drive():
     if len(file_list) == 0:
         print("No files in folder")
         return None
-    drive = get_drive_service()
+
     for file_name in file_list:
         file_path = os.path.join(BASE_DIR, "static", "json_files", file_name)
         json_file = Path(file_path)
