@@ -426,7 +426,7 @@ def get_faq():
     chapter = request.args.get('chapter', type=int)
     table = GlossaryFaq
     faq = db.session.query(table).where(table.chapter == chapter, db.func.json_type(table.question, f'$.{lang}').is_not(None),
-                                     table.type == 'faq').order_by(table.id).all()
+                                     table.type == 'faq').order_by(table.verse).all()
     if not faq:
         return jsonify([])
     faq_list = [{

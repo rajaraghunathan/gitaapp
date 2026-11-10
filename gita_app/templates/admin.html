@@ -2413,7 +2413,7 @@
             data.drive_files.map(item=>{
                 el.innerHTML += `<option value="${item.id}">${item.name}</option>`
             })
-            document.getElementById("db-upload-response").innerHTML = "<b>Files are loaded Successfully</b>"
+            document.getElementById("db-upload-response").innerHTML = `<b>${data.message}</b>`
         });
     }
 
@@ -2456,13 +2456,17 @@
         const formData = new FormData(formEl);
         const formPayload = Object.fromEntries(formData);
         const id = formPayload["id"];
-        document.getElementById("db-upload-response").innerHTML = "<b>Updating the Database. Please Wait...</b>"
+        if (id === undefined) {
+            document.getElementById("db-upload-response").innerHTML = "<b>Select a File First...</b>";
+            return;
+        }
+        document.getElementById("db-upload-response").innerHTML = "<b>Updating the Database. Please Wait...</b>";
         fetch(`/admin/update_db/${id || 'id'}`).then(res=>res.json()).then(data => {
             const divEl = document.getElementById("db-upload-response");
             divEl.innerHTML = "";
             let content = "";
             Object.entries(data).forEach(([k, v]) => {
-                content += `<b>${k}</b>: ${v} \n`
+                content += `<b>${k}</b>: ${v} \n`;
             })
             divEl.innerHTML = content
             const optionToRemove = document.querySelector(`select#json-file option[value="${id}"]`);

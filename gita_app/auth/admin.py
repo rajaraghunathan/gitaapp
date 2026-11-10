@@ -535,19 +535,24 @@ def get_drive_service():
     SCOPES = ["https://www.googleapis.com/auth/drive"]
     KEY_FILE = json.loads(os.getenv('GOOGLE_OAUTH_CREDENTIALS_JSON'))
     creds = None
-    if os.path.exists("credentials/token.json"):
-        creds = Credentials.from_authorized_user_file("credentials/token.json", SCOPES)
-    if creds and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-    if not creds or not creds.valid:
-        flow = InstalledAppFlow.from_client_secrets_file(
-            KEY_FILE, SCOPES
-        )
-        creds = flow.run_local_server(port=0)
-        with open("credentials/token.json", "w", encoding="utf-8") as f:
-            f.write(creds.to_json())
-    drive = build('drive', 'v3', credentials=creds)
-    return drive
+    try:
+        if os.path.exists("credentials/token.json"):
+            creds = Credentials.from_authorized_user_file("credentials/token.json", SCOPES)
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        if not creds or not creds.valid:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                KEY_FILE, SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+            with open("credentials/token.json", "w", encoding="utf-8") as f:
+                f.write(creds.to_json())
+        drive = build('drive', 'v3', credentials=creds)
+        return drive, 'success'
+    except Exception as e:
+        error_details = {"error_type": e.__class__.__name__, "message": str(e)}
+        return None, error_details
+
 
 def get_files_drive(drive):
     query = f"'{FOLDER_ID}' in parents and trashed = false"
@@ -574,11 +579,10 @@ def get_files_drive(drive):
 
     return json_files
 
-def upload_to_drive(json_file_name):
+def upload_to_drive(drive, json_file_name):
     json_dir = os.path.join(BASE_DIR, "static", "json_files")
     files_uploaded = []
 
-    drive = get_drive_service()
     file_path = os.path.join(json_dir, json_file_name)
     json_file = Path(file_path)
 
@@ -658,22 +662,29 @@ def admin_upload_drive():
     col_name = payload.get('col_name', 'num')
     json_file_name = export_data(table_name, col_name, criteria) # It's a function
     time.sleep(1)
-    files_uploaded, drive_files = upload_to_drive(json_file_name) # It's a function
-    return jsonify({'success': True, 'files_to_drive': files_uploaded,
-                    'drive_files': drive_files,'message': 'Uploaded Successfully'}), 200
+    drive, res = get_drive_service()
+    if drive:
+        files_uploaded, drive_files = upload_to_drive(drive, json_file_name) # It's a function
+        return jsonify({'success': True, 'files_to_drive': files_uploaded,
+                        'drive_files': drive_files,'message': 'Uploaded Successfully'}), 200
+    else:
+        return jsonify({'success': False, 'message': str(res)}), 200
 
 @admin.route('/admin/get_drive_files')
 def admin_get_drive_files():
     if not session.get('admin_logged_in'):
         return "Unauthorized", 403
-    drive = get_drive_service()
-    drive_files = get_files_drive(drive)
-    local_host = True if CURRENT_DIR.startswith('E:') else False
-    if not local_host:
-        drive_files[:] = [f for f in drive_files if f.get('name').startswith('local')]
+    drive, res = get_drive_service()
+    if drive:
+        drive_files = get_files_drive(drive)
+        local_host = True if CURRENT_DIR.startswith('E:') else False
+        if not local_host:
+            drive_files[:] = [f for f in drive_files if f.get('name').startswith('local')]
+        else:
+            drive_files[:] = [f for f in drive_files if not f.get('name').startswith('local')]
+        return jsonify({'success': True, 'drive_files': drive_files, 'message': 'Files are loaded Successfully'}), 200
     else:
-        drive_files[:] = [f for f in drive_files if not f.get('name').startswith('local')]
-    return jsonify({'success': True, 'drive_files': drive_files}), 200
+        return jsonify({'success': False, 'drive_files': [], 'message': str(res)}), 200
 
 @admin.route('/admin/update_db/<string:file_id>')
 def admin_update_db(file_id):

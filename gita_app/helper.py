@@ -51,7 +51,11 @@ def upload_to_drive():
 if __name__ == "__main__":
     # /home/KrishaTeach/gitaapp/gita_app/auth/json using codes/acharya_translations_cache.json
     # upload_to_drive()
-    drive = get_drive_service()
-    print(get_files_drive(drive))
+    drive, res = get_drive_service()
+    if drive:
+        print(get_files_drive(drive),res)
+    else:
+        print(res)
+
 
 
