@@ -1,6 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", () => { loadSummary () });
 function loadSummary () {
+    document.getElementById("canvasDismiss").click();
     const lang = document.getElementById("ch-lang").value
     fetch(`/api/chapters?lang=${lang}`)
         .then(res => res.json())
@@ -23,14 +24,20 @@ function loadSummary () {
                 // Inject Right menu bar Summary sequentially
                 const block = document.createElement('div');
                 block.className = "card shadow-sm border-0 mb-4 border-start border-4 border-warning";
+                let button = "";
+                if (ch.admin_logged) {
+                    button = `<button class="btn btn-sm btn-outline-dark" onclick="updateSummary('${ch.id}', this)"><i class="fa-solid fa-edit">Update</i></button>`
+                }
                 block.innerHTML = `
-                    <div class="card-body p-4">
+                    <div class="card-body">
                         <h5 class="text-primary mb-2">Chapter ${ch.chapter_number} - ${ch.name} </h5>
-                        <p class="text-muted fs-6 mb-3"><strong>Summary:</strong> ${ch.summary}</p>
+                        <p class="fw-bold">Summary: ${button} </p>
+                        <div ${ch.admin_logged ?`contenteditable="true"`: ''} class="text-muted mb-2 summary-value"
+                        >${ch.summary}</div>
                     </div>
                 `;
                 target.appendChild(block);
-                document.getElementById("canvasDismiss").click();
+
             });
         });
 }
@@ -67,4 +74,24 @@ function renderChapterFeed(chapterNum) {
                 document.getElementById("canvasDismiss").click();
             });
         }).catch(err => console.error("Fetch request failed:", err));
+}
+
+function updateSummary(id, el) {
+    const sumDiv = el.closest("div").querySelector(".summary-value")
+    payload = {
+        lang: document.getElementById("ch-lang").value,
+        summary: sumDiv.innerHTML
+    }
+    console.log(payload)
+    fetch(`/admin/update_ch_summary/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(res => {
+        if (res.ok) {
+            loadSummary ();
+        }
+    }).catch(error=>{
+        showToast(error.message, "danger");
+    });
 }

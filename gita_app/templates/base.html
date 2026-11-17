@@ -6,7 +6,10 @@
     <title>{% block title %}Bhagavad Gita Platform{% endblock %}</title>
     <!-- Stable Global Cloudflare CDNs for instant cross-device delivery -->
     <link rel="icon" href="data:,">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/coreui.min.css') }}">
+<!--    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro/dist/css/coreui.min.css" rel="stylesheet" />-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gita_base.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='profile_pics/Thirman.ico') }}">
     {% block extra_css %}{% endblock %}
@@ -97,9 +100,12 @@
                             <label class="form-label">Email Identity</label>
                             <input type="email" name="email" class="form-control" required placeholder="name@domain.com" autocomplete="username" >
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password Key Sequence</label>
+                        <label class="form-label">Password Key Sequence</label>
+                        <div class="mb-3 form-password">
                             <input id="student-password" type="password" name="password" class="form-control" required placeholder="••••••••" autocomplete="current-password">
+                            <button type="button" class="form-password-action" data-coreui-toggle="password" aria-pressed="false" aria-label="Toggle password visibility">
+                              <span class="form-password-action-icon"></span>
+                            </button>
                         </div>
                         <button type="submit" class="btn btn-primary fw-bold w-100">Authorize Classroom Entry</button>
                         <div class="d-flex justify-content-between">
@@ -111,12 +117,22 @@
                         <div class="row g-2">
                             <div class="col-6 mb-3">
                                 <label for="newPassword" >New Password</label>
-                                <input type="password" class="form-control" id="newPassword" minlength="8"  placeholder="Minimum 8 characters" required autocomplete="new-password">
+                                <div class="form-password">
+                                    <input type="password" class="form-control" id="newPassword" minlength="8"  placeholder="Minimum 8 characters" required autocomplete="new-password">
+                                    <button type="button" class="form-password-action" data-coreui-toggle="password" aria-pressed="false" aria-label="Toggle password visibility">
+                                      <span class="form-password-action-icon"></span>
+                                    </button>
+                                </div>
                                 <div class="invalid-feedback">Password must be at least 8 characters long.</div>
                             </div>
                             <div class="col-6 mb-3">
                                 <label for="confirmPassword" >Confirm New Password</label>
-                                <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat new password" required autocomplete="new-password">
+                                <div class="form-password">
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat new password" required autocomplete="new-password">
+                                    <button type="button" class="form-password-action" data-coreui-toggle="password" aria-pressed="false" aria-label="Toggle password visibility">
+                                      <span class="form-password-action-icon"></span>
+                                    </button>
+                                </div>
                                 <div id="confirmFeedback" class="invalid-feedback">Passwords do not match.</div>
                             </div>
                             <div class="col-6 mb-3">
@@ -156,7 +172,12 @@
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label class="form-label">Create Password</label>
-                                <input type="password" name="password" class="form-control" required minlength="8" placeholder="••••••••" autocomplete="new-password" >
+                                <div class="form-password">
+                                    <input type="password" name="password" class="form-control" required minlength="8" placeholder="••••••••" autocomplete="new-password" >
+                                    <button type="button" class="form-password-action" data-coreui-toggle="password" aria-pressed="false" aria-label="Toggle password visibility">
+                                      <span class="form-password-action-icon"></span>
+                                    </button>
+                                </div>
                                 <div class="invalid-feedback">Please enter 8 alphanumeric password.</div>
                             </div>
                             <div class="col-md-6 mb-2">
@@ -205,9 +226,12 @@
                 </div>
                 <div class="modal-body">
                     <form id="adminLoginForm" onsubmit="executeAuth(event, '/api/auth/admin', this)">
-                        <div class="mb-3">
-                            <label class="form-label">System Master Password</label>
+                        <label class="form-label">System Master Password</label>
+                        <div class="mb-3 form-password">
                             <input type="password" name="password" class="form-control" required placeholder="Enter secret key..." autocomplete="current-password" >
+                            <button type="button" class="form-password-action" data-coreui-toggle="password" aria-pressed="false" aria-label="Toggle password visibility">
+                              <span class="form-password-action-icon"></span>
+                            </button>
                         </div>
                         <button type="submit" class="btn btn-dark w-100 fw-bold">Verify Security Signature</button>
                     </form>
@@ -217,7 +241,10 @@
     </div>
 
     <!-- Script Components Packages -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/coreui.bundle.min.js') }}"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro/dist/js/coreui.bundle.min.js"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>-->
 
 <!-- using jinga This Script from base.html loads only in index.html -->
 {% if not session.get('admin_logged_in') and not session.get('user_id') %}

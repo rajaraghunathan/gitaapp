@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, text, Table, MetaData
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.attributes import flag_modified
 from models import Chapter, Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
+import translate
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -40,15 +41,20 @@ def yt_inject_db():
             print('**' * 30)
 
 def db_operations ():
-    sumary = {'num': 2,
-               'ta': 'இந்த அத்தியாயத்திற்கு ஸாங்க்யயோகம் என்று பெயர் கூறப்படுகிறது. ‘ஸங்க்யை’ என்பது ‘புத்தி’. புத்தியால் அறியப்படும் நித்யமான ஆத்மதத்துவம் ஸாங்க்யம் எனப்படுகிறது. “யோக₃ ஸநநஹநோபாய” என்கிற நிகண்டுவின் படி யோக₃ ஶப்தம் உபாயத்தைக் குறிக்கிறது. இங்கு முதலில் ஸாங்க்யம் எனப்பட்ட நித்யமான ஆத்மதத்துவத்தை அடையும் வழியான கர்மயோகம் கூறப்படுகிறது. பற்று வைக்காமல் செய்யப்படும் கர்மாநுஷ்டானமாகிற இக்கர்மயோக₃த்தைப் பற்றிய அறிவும், ஸாங்க்யம் எனப்படும், ஆத்மதத்வத்தைப் பற்றிய அறிவும் இவ்வத்தியாயத்தில் கூறப்படுகின்றன. “ஏஷா தே பி₄ஹிதா ஸாங்க்₂யே பு₄த்₃தி₄ர்யோகே₃, த்விமாம் ச்ருணு” [கீதை 2-39] [ஸாங்க்யமாகிற ஆத்மதத்துவத்தைப் பற்றிச் சொல்ல வேண்டியதைச் சொல்ல விட்டேன்? யோக விஷயத்தில் இனிவரும் வார்த்தைகளைக் கேட்பாயாக] என்கிற சலோகத்திற்கு முன் பல சுலோகங்களில் ஆத்மதத்துவத்தைப் பற்றிய அறிவும், பின் சுலோகங்கள் பலவற்றில் கர்மயோகத்தைப் பற்றிய அறிவும் கூறப்படுகின்றன. அதற்குப்பின் இக்கர்மயோக அநுஷ்டானத்தால் இச்சேதனனுக்கு ஸ்தி₂தப்ரஜ்ஞை நிலையொன்று ஏற்படுகிறது (இதுவே ஜ்ஞாநயோகம் எனப்படுகிறது) என்பதும் இந்த ஜ்ஞாநயோகத்தால் ஆத்ம ஸாக்ஷாத்காரம் ஏற்படுகிறது என்பதும், இவ்வத்தியாயத்தில் அர்ஐுனனின் மயக்கம் தெளிவதற்காகக் கூறப்படுகின்றன.'                }
-    cleaned_text = sumary.get('ta').replace('\u200c', '')
-    chapter = db.query(Chapter).filter(Chapter.num == sumary.get('num')).scalar()
-    chapter.summary['ta'] = cleaned_text
-    db.commit()
-    print ('Data added Successfully')
-    chapter = db.query(Chapter).filter(Chapter.num == sumary.get('num')).scalar()
-    print(chapter.summary['ta'])
+    sumary = {'num': 3,
+               'ta': 'சென்ற\u200c அத்தியாயத்தில்‌ கர்மயோகத்திற்குப்‌ பிறகு ஞானயோகம்‌ செய்யவேண்டும்‌ என்று கூறப்பட்டது. உலகில்‌ பல அதிகாரிகளுக்கு ஞானயோகத்தை அனுஷ்டிக்கத்தக்க ஜ்ஞாந சக்திகள்‌ கைகூடாது. அவர்கள்‌ ஞானயோகத்தைச்‌ செய்யமுயன்றால்‌, அதைச்செய்ய முடியாமல்‌ நாசத்தை அடைவர்‌.\u200c இவர்களும்‌ தன்னைப் பார்த்து ஞானயோகத்தில்‌ இழிந்து நாசத்தை அடையாமல் இருப்பதற்காக ஞானயோகத்தைச்‌ செய்யவல்ல அதிகாரியும்‌, ஞானத்தோடு கூடிய பற்றற்ற கர்மயோகத்தையே அநுஷ்டிக்கவேண்டும்‌\u200c என்றும்‌, அதனாலேயே ஸித்தி பெறலாம்‌ என்றும்‌ கூறுகிறது மூன்றாம் அத்தியாயம்‌.\nஆனால்‌ இப்படிக்‌ கர்மயோகத்தைச்‌ செய்யும்போது “நான்‌ செய்பவன்‌” என்று கர்த்ருத்வத்தைத்‌ தன்னிடமே உள்ளதாக நினையாமல்‌, முக்குணங்களால்‌ தூண்டப்பெற்றே தான்‌ காரியம்‌ செய்கையால், அந்த முக்குணங்களே செய்கின்றன எனறு கர்த்‌ருத்வத்தை அவற்றினிடத்தில்‌ அநுஸந்திக்கவேண்டும்‌.அல்லது, குணங்கள்‌ இவனைக்‌ கர்மம் செய்யத் தூண்டு\u200cம்‌ சக்தியைப்‌ பெற்றிருப்பதும்‌ ஸர்வேஶ்வரனால் எனவும், அவனே இச்‌சேதனனையும்‌ உட்புகுந்து கர்மம்‌ செய்யும்படி நியமிக்கிறான் எனவும், தன்னிடமே உள்ளதாகத் தோன்றும்‌ கர்த்ருத்வத்தை ஸர்‌வேஶ்வரனிடம்‌ உள்ளதாக இவன் அநுஸந்திக்கவேண்டும்‌. இது கர்த்ருத்வத்யாகம்‌ எனப்படுகிறது. ஆக, "ஸர்வேஶ்வரன்‌ நியமிப்பதால்‌, குணங்களால்‌ தூண்டப்பட்டு நான்‌ கர்த்தாவாகிறேன்‌" என்கிற விவேகத்துடன்‌ இ\u200cவன்‌ கர்மயோகத்தைச்‌ செய்யவேண்டும்‌ என்றதாயிற்று. இப்படிக்‌ கர்மயோகத்தின்‌ பெருமையைக்‌ கூறுகிறபடியால்‌ இவ்வத்தியாயம்‌ “கர்மயோகம்‌” என்று அழைக்கப்படுகிறது.'
+                }
+
+    cleaned_obj = translate.remove_non_printable_from_object(sumary.get('num'))
+
+    # cleaned_text = sumary.get('ta').replace('\u200c', '')
+    # chapter = db.query(Chapter).filter(Chapter.num == sumary.get('num')).scalar()
+    # chapter.summary['ta'] = cleaned_text
+    # db.commit()
+    # print ('Data added Successfully')
+    # chapter = db.query(Chapter).filter(Chapter.num == sumary.get('num')).scalar()
+    print(repr(sumary))
+    print(repr(cleaned_obj))
 
 def export_data ():
     table = GlossaryFaq
@@ -163,21 +169,22 @@ def download_public_json(file_id):
         raise Exception(f"Failed to download file. Status code: {response.status_code}")
 
 if __name__ == '__main__':
-    db_path = os.path.join(BASE_DIR, 'gita.db')
-    engine = create_engine(f"sqlite:///{db_path}", echo=False)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    metadata = MetaData()
-    Base = declarative_base()
-    Base.metadata.create_all(bind=engine)
-
-    with SessionLocal() as db:
-        try:
-            # db_operations()
-            # yt_inject_db()
-            export_data()
-            # merge_data()
-        except Exception as e:
-            db.rollback()
-            print(f"Error occurred, rolling back: {e}")
-            raise e
+    db_operations()
+    # db_path = os.path.join(BASE_DIR, 'gita.db')
+    # engine = create_engine(f"sqlite:///{db_path}", echo=False)
+    # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    # metadata = MetaData()
+    # Base = declarative_base()
+    # Base.metadata.create_all(bind=engine)
+    #
+    # with SessionLocal() as db:
+    #     try:
+    #         db_operations()
+    #         # yt_inject_db()
+    #         # export_data()
+    #         # merge_data()
+    #     except Exception as e:
+    #         db.rollback()
+    #         print(f"Error occurred, rolling back: {e}")
+    #         raise e
 

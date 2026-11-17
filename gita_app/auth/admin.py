@@ -793,3 +793,15 @@ def admin_update_db(file_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, "message": "Database update failed", 'error': str(e)}), 500
+
+@admin.route('/admin/update_ch_summary/<int:record_id>', methods=['PUT'])
+def admin_update_ch_summary(record_id):
+    if not session.get('admin_logged_in'):
+        return "Unauthorized", 403
+    chapter = Chapter.query.get_or_404(record_id)
+    data = request.get_json() or {}
+    lang = data.get('lang')
+    summary = remove_non_printable_from_object(data.get('summary', ''))
+    chapter.summary[lang] = summary
+    db.session.commit()
+    return jsonify({"success": True}), 200

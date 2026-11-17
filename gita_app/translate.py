@@ -3,7 +3,6 @@ from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
 from deep_translator import GoogleTranslator
 
-
 def remove_non_printable_from_object(any_obj):
     strings_to_clean = []
     def collect_strings(data):

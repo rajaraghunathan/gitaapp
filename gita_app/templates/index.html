@@ -13,13 +13,14 @@
             <div id="versesFeedTarget">
                 <div class="border-top mb-2 pt-2">
                     <button type="button" class="btn btn-sm btn-success" data-bs-toggle="offcanvas" data-bs-target="#chapterMenu">SHLOKAS</button>
-                    {% if not session.get('user_id') %}
-                        <small class="text-secondary italic">Log in as a student to participate in classroom discussions or view streaming videos.</small>
-                    {% endif %}
                     <select id="ch-lang" onchange="loadSummary()">
                         <option value="en" selected>English</option>
                         <option value="ta" >Tamil</option>
                     </select>
+                    {% if not session.get('user_id') %}
+                        <small class="text-secondary italic">Log in as a student to participate in classroom discussions or view streaming videos.</small>
+                    {% endif %}
+
                 </div>
                 <!-- Selected items generated sequentially using JavaScript loop configurations -->
             </div>

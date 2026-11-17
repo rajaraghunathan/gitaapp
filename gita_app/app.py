@@ -1,4 +1,4 @@
-import os
+import os, socket
 from config import Config
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from dotenv import load_dotenv
@@ -68,6 +68,7 @@ def get_chapters():
         verses = Verse.query.filter(Verse.chapter_number == c.num).all() #Getting the number of verses in each chapter
         chapters_list.append({
             "id": c.id, "chapter_number": c.num,
+            "admin_logged": True if session.get('admin_logged_in') else False,
             "name": c.name, "summary": summary, "verse_count": len(verses) #"verses": verse_list
         })
     return jsonify(chapters_list)
@@ -95,7 +96,8 @@ def get_chapter_and_verses():
             'chapter_number': verse.chapter_number,
             'verse_number': verse.verse_number,
             'shloka':  verse.shlok, #verse.shloka,
-            'description': verse.meaning.get(lang).get('description')
+            'description': verse.meaning.get(lang).get('description'),
+            "admin_logged": True if session.get('admin_logged_in') else False
         }
         # v_dict = {k: v for k, v in verse.__dict__.items()
         #           if not k.startswith('_') and k not in cols_to_skip_in_verse}
@@ -174,5 +176,33 @@ with app.app_context():
     #                          meaning="Dhritarashtra said: O Sanjaya...", youtube_url="https://youtube.com"))
     #     db.session.commit()
 
+
+def get_local_ip():
+    """Finds the active local IPv4 address of the computer."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # Connects to a dummy local address to identify the active network card
+        s.connect(("10.254.254.254", 1))
+        ip_address = s.getsockname()[0]
+    except Exception:
+        # Fallback if no network interface or hotspot is connected
+        ip_address = "127.0.0.1"
+    finally:
+        s.close()
+    return ip_address
+
 if __name__ == '__main__':
+    """ # 1. Automatically grab your computer's local IP address
+    HOST = get_local_ip()
+    PORT = 5000
+
+    # 2. Print instructions in the console for easy copying
+    print("\n" + "=" * 50)
+    print(f"MOBILE ACCESS LINK: http://{HOST}:{PORT}")
+    print("=" * 50 + "\n")
+
+    # 3. Bind Flask to '0.0.0.0' so it listens to both localhost and the mobile network
+    # We pass the HOST as a printed reminder, but '0.0.0.0' ensures all network cards accept the connection
+    app.run(host="0.0.0.0", port=PORT, debug=True)
+    """
     app.run(debug=True)
