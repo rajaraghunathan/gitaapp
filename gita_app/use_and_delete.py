@@ -1,12 +1,11 @@
 # Helper File to Inject the YouTube link
-from pathlib import Path
 import os, csv, ast, json, requests
-from datetime import datetime, timedelta, timezone
-from sqlalchemy import create_engine, text, Table, MetaData
+from sqlalchemy import create_engine, text, Table, MetaData, func
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.attributes import flag_modified
 from models import Chapter, Student, Verse, AcharyaComment, Comment, QuizQuestion, QuizQuestionTamil, GlossaryFaq
-import translate
+from testing import batch_translate_mymemory
+from translate import batch_translate_list_azure
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,41 +40,71 @@ def yt_inject_db():
             print('**' * 30)
 
 def db_operations ():
-    sumary = {'num': 3,
-               'ta': 'சென்ற\u200c அத்தியாயத்தில்‌ கர்மயோகத்திற்குப்‌ பிறகு ஞானயோகம்‌ செய்யவேண்டும்‌ என்று கூறப்பட்டது. உலகில்‌ பல அதிகாரிகளுக்கு ஞானயோகத்தை அனுஷ்டிக்கத்தக்க ஜ்ஞாந சக்திகள்‌ கைகூடாது. அவர்கள்‌ ஞானயோகத்தைச்‌ செய்யமுயன்றால்‌, அதைச்செய்ய முடியாமல்‌ நாசத்தை அடைவர்‌.\u200c இவர்களும்‌ தன்னைப் பார்த்து ஞானயோகத்தில்‌ இழிந்து நாசத்தை அடையாமல் இருப்பதற்காக ஞானயோகத்தைச்‌ செய்யவல்ல அதிகாரியும்‌, ஞானத்தோடு கூடிய பற்றற்ற கர்மயோகத்தையே அநுஷ்டிக்கவேண்டும்‌\u200c என்றும்‌, அதனாலேயே ஸித்தி பெறலாம்‌ என்றும்‌ கூறுகிறது மூன்றாம் அத்தியாயம்‌.\nஆனால்‌ இப்படிக்‌ கர்மயோகத்தைச்‌ செய்யும்போது “நான்‌ செய்பவன்‌” என்று கர்த்ருத்வத்தைத்‌ தன்னிடமே உள்ளதாக நினையாமல்‌, முக்குணங்களால்‌ தூண்டப்பெற்றே தான்‌ காரியம்‌ செய்கையால், அந்த முக்குணங்களே செய்கின்றன எனறு கர்த்‌ருத்வத்தை அவற்றினிடத்தில்‌ அநுஸந்திக்கவேண்டும்‌.அல்லது, குணங்கள்‌ இவனைக்‌ கர்மம் செய்யத் தூண்டு\u200cம்‌ சக்தியைப்‌ பெற்றிருப்பதும்‌ ஸர்வேஶ்வரனால் எனவும், அவனே இச்‌சேதனனையும்‌ உட்புகுந்து கர்மம்‌ செய்யும்படி நியமிக்கிறான் எனவும், தன்னிடமே உள்ளதாகத் தோன்றும்‌ கர்த்ருத்வத்தை ஸர்‌வேஶ்வரனிடம்‌ உள்ளதாக இவன் அநுஸந்திக்கவேண்டும்‌. இது கர்த்ருத்வத்யாகம்‌ எனப்படுகிறது. ஆக, "ஸர்வேஶ்வரன்‌ நியமிப்பதால்‌, குணங்களால்‌ தூண்டப்பட்டு நான்‌ கர்த்தாவாகிறேன்‌" என்கிற விவேகத்துடன்‌ இ\u200cவன்‌ கர்மயோகத்தைச்‌ செய்யவேண்டும்‌ என்றதாயிற்று. இப்படிக்‌ கர்மயோகத்தின்‌ பெருமையைக்‌ கூறுகிறபடியால்‌ இவ்வத்தியாயம்‌ “கர்மயோகம்‌” என்று அழைக்கப்படுகிறது.'
-                }
+    table = GlossaryFaq
+    chapter_num = 18
+    glossary = db.query(table).where(table.chapter == chapter_num,
+                                             table.type == 'glossary').order_by(table.id).all()
+    db_data = [{
+        k: v for k, v in q.__dict__.items() if not k.startswith('_')
+    } for q in glossary]
+    print(len(glossary), db_data[:2])
 
-    cleaned_obj = translate.remove_non_printable_from_object(sumary.get('num'))
+    ids = []
+    answers = []
+    for g in glossary:
+        ids.append(g.id)
+        answers.append(g.answer.get('en', ''))
 
-    # cleaned_text = sumary.get('ta').replace('\u200c', '')
-    # chapter = db.query(Chapter).filter(Chapter.num == sumary.get('num')).scalar()
-    # chapter.summary['ta'] = cleaned_text
-    # db.commit()
-    # print ('Data added Successfully')
-    # chapter = db.query(Chapter).filter(Chapter.num == sumary.get('num')).scalar()
-    print(repr(sumary))
-    print(repr(cleaned_obj))
+    ans_ta, is_true = batch_translate_list_azure(answers, 'en', 'ta')
+    # ans_ta = batch_translate_mymemory(answers)
+    if len(ans_ta) == 0:
+        print('Translation Error')
+        return None
+    glossary_map = {item.id: item for item in glossary}
+    updated_ids = []
+    for idx, ta in enumerate(ans_ta):
+        record = glossary_map.get(ids[idx])
+        if record:
+            record.answer['ta'] = ta
+            flag_modified(record,'answer')
+            if isinstance(record.question, dict) and 'en' in record.question:
+                updated_q = dict(record.question)
+                updated_q['sa'] = updated_q.pop('en')
+                record.question = updated_q
+            updated_ids.append(ids[idx])
+        else:
+            print(f"ID not found in DB: {ids[idx]}")
+    if updated_ids:
+        print(f"Updated {len(updated_ids)} records:")
+        db.commit()
+
+    return True
 
 def export_data ():
     table = GlossaryFaq
     col_name = 'chapter'
-    filter_criteria = 1
-    if hasattr(table, col_name):
-        verse = db.query(table).where(getattr(table, col_name) == filter_criteria).all()
-    else:
-        print(f"Error: {col_name} is not a valid column name on {table.__name__}")
-        verse = []
-    table_name = table.__tablename__
-    data = {'table_name': table_name, 'col_name': col_name, 'filter_criteria': filter_criteria, 'table_data':[]}
-    for v in verse:
-        temp_data = {k: v for k, v in v.__dict__.items() if not k.startswith('_')}
-        data['table_data'].append(temp_data)
-    today_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
-    file_name_construct = f"local_db_{col_name}_{filter_criteria}_{table_name}_{today_date}.json"
-    json_path = os.path.join(BASE_DIR, "static", "json_files", file_name_construct)
-
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    filter_criteria = '3'
+    try:
+        criteria = int(filter_criteria)
+    except ValueError:
+        criteria = filter_criteria
+    print(criteria)
+    # if hasattr(table, col_name):
+    #     verse = db.query(table).where(getattr(table, col_name) == filter_criteria).all()
+    # else:
+    #     print(f"Error: {col_name} is not a valid column name on {table.__name__}")
+    #     verse = []
+    # table_name = table.__tablename__
+    # data = {'table_name': table_name, 'col_name': col_name, 'filter_criteria': filter_criteria, 'table_data':[]}
+    # for v in verse:
+    #     temp_data = {k: v for k, v in v.__dict__.items() if not k.startswith('_')}
+    #     data['table_data'].append(temp_data)
+    # today_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+    # file_name_construct = f"local_db_{col_name}_{filter_criteria}_{table_name}_{today_date}.json"
+    # json_path = os.path.join(BASE_DIR, "static", "json_files", file_name_construct)
+    #
+    # with open(json_path, "w", encoding="utf-8") as f:
+    #     json.dump(data, f, indent=2, ensure_ascii=False)
 
 def merge_data ():
     # flag_modified(verse, 'meaning')
@@ -169,22 +198,20 @@ def download_public_json(file_id):
         raise Exception(f"Failed to download file. Status code: {response.status_code}")
 
 if __name__ == '__main__':
-    db_operations()
-    # db_path = os.path.join(BASE_DIR, 'gita.db')
-    # engine = create_engine(f"sqlite:///{db_path}", echo=False)
-    # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    # metadata = MetaData()
-    # Base = declarative_base()
-    # Base.metadata.create_all(bind=engine)
-    #
-    # with SessionLocal() as db:
-    #     try:
-    #         db_operations()
-    #         # yt_inject_db()
-    #         # export_data()
-    #         # merge_data()
-    #     except Exception as e:
-    #         db.rollback()
-    #         print(f"Error occurred, rolling back: {e}")
-    #         raise e
+    db_path = os.path.join(BASE_DIR, 'gita.db')
+    engine = create_engine(f"sqlite:///{db_path}", echo=False)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    metadata = MetaData()
+    Base = declarative_base()
+    Base.metadata.create_all(bind=engine)
 
+    with SessionLocal() as db:
+        try:
+            # db_operations()
+            # yt_inject_db()
+            export_data()
+            # merge_data()
+        except Exception as e:
+            db.rollback()
+            print(f"Error occurred, rolling back: {e}")
+            raise e

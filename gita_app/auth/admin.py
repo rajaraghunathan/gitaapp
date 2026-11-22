@@ -458,20 +458,18 @@ def admin_glossary_update_or_delete():
     try:
         if action == 'update':
             if idx == 'new':
-                new_glossary = table(chapter=ch, verse=ver, type='glossary', question={lang:question}, answer={lang:answer})
+                new_glossary = table(chapter=ch, verse=ver, type='glossary', question={'sa':question}, answer={lang:answer})
                 db.session.add(new_glossary)
             else:
                 glossary = db.session.query(table).where(table.id == int(idx)).scalar()
-                glossary.question[lang] = question
+                glossary.question['sa'] = question
                 glossary.answer[lang] = answer
             db.session.commit()
             return jsonify({'success': True, 'message': 'Item Updated Successfully in Database'}), 200
         if action == 'delete':
             glossary = table.query.get(int(idx))
-            glossary.question.pop(lang)
-            glossary.answer.pop(lang)
-            if glossary.question == {}:
-                db.session.delete(glossary)
+            if glossary.answer.get(lang):
+                glossary.answer.pop(lang)
             db.session.commit()
             return jsonify({'success': True, 'message': 'Item Deleted Successfully in Database'}), 200
     except Exception as e:
@@ -552,7 +550,6 @@ def get_drive_service():
     except Exception as e:
         error_details = {"error_type": e.__class__.__name__, "message": str(e)}
         return None, error_details
-
 
 def get_files_drive(drive):
     query = f"'{FOLDER_ID}' in parents and trashed = false"
@@ -635,17 +632,26 @@ table_class = {'chapter': Chapter, 'verse': Verse,
 
 def export_data (table_name, col_name, filter_criteria):
     table = table_class.get(table_name)
+    try:
+        criteria = int(filter_criteria)
+    except ValueError:
+        criteria = filter_criteria
     if hasattr(table, col_name):
-        verse = db.session.query(table).where(getattr(table, col_name) == filter_criteria).all()
+        if type(criteria) == int:
+            table_records = db.session.query(table).where(getattr(table, col_name) == filter_criteria).all()
+        else:
+            table_records = db.session.query(table).all()
     else:
-        verse = []
-    data = {'table_name': table_name, 'col_name': col_name, 'filter_criteria': filter_criteria, 'table_data':[]}
-    for v in verse:
-        temp_data = {k: v for k, v in v.__dict__.items() if not k.startswith('_')}
-        data['table_data'].append(temp_data)
+        table_records = []
+    data = {'table_name': table_name, 'col_name': col_name, 'filter_criteria': criteria, 'table_data':[]}
+    table_data = [{ k: v for k, v in record.__dict__.items() if not k.startswith('_') } for record in table_records]
+    data['table_data'] = table_data
+    # for v in table_records:
+    #     temp_data = {k: v for k, v in v.__dict__.items() if not k.startswith('_')}
+    #     data['table_data'].append(temp_data)
     # today_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
     db_location = 'local' if BASE_DIR.startswith('E:') else 'webapp'
-    file_name_construct = f"{db_location}_db_{col_name}_{filter_criteria}_{table_name}.json"
+    file_name_construct = f"{db_location}_db_{col_name}_{criteria}_{table_name}.json"
     json_path = os.path.join(BASE_DIR, "static", "json_files", file_name_construct)
     if len(data.get('table_data')) > 0:
         with open(json_path, "w", encoding="utf-8") as f:
@@ -658,7 +664,7 @@ def admin_upload_drive():
         return "Unauthorized", 403
     payload = request.get_json()
     table_name =  payload.get('table', 'chapter')
-    criteria = int(payload.get('criteria','1'))
+    criteria = payload.get('criteria','1')
     col_name = payload.get('col_name', 'num')
     json_file_name = export_data(table_name, col_name, criteria) # It's a function
     time.sleep(1)
@@ -740,7 +746,15 @@ def admin_update_db(file_id):
         # Fetching them all at once avoids running a slow query inside a loop
         incoming_col = data.get('col_name')
         incoming_filter = data.get('filter_criteria')
-        existing_records = db.session.query(db_table).where(getattr(db_table, incoming_col) == incoming_filter).all()
+        try:
+            criteria = int(incoming_filter)
+        except ValueError:
+            criteria = incoming_filter
+        if hasattr(db_table, incoming_col):
+            if type(criteria) == int:
+                existing_records = db.session.query(db_table).where(getattr(db_table, incoming_col) == criteria).all()
+            else:
+                existing_records = db.session.query(db_table).all()
         existing_records_map = {record.id: record for record in existing_records}
         existing_ids = set(existing_records_map.keys())
         ids_to_delete = existing_ids - incoming_ids

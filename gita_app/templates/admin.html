@@ -24,7 +24,7 @@
             <div id="adminToggleMenu" class="collapse">
               <div class="bg-white d-flex flex-wrap flex-md-nowrap gap-2 p-2" role="tablist">
                   <!-- Links go here -->
-                <button class="fw-bold btn bt-sm" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">Shloka Manager</button>
+                <button class="fw-bold btn bt-sm active" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">Shloka Manager</button>
                 <button class="fw-bold btn bt-sm" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">Quiz</button>
                 <button class="fw-bold btn bt-sm" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">Glossary</button>
                 <button class="fw-bold btn bt-sm" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">FAQ</button>
@@ -444,7 +444,8 @@
             </div>
 
             <div class="tab-pane fade container" id="db-pane" role="tabpanel" aria-labelledby="db-tab">
-                <div class="row p-2">
+                <fieldset id="db-pane-fieldset">
+                    <div class="row p-2">
                     <div class="col-md m-2 border border-primary">
                         <h6>JSON FILE TO GOOGLE DRIVE</h6>
                         <form onsubmit="uploadToGoogleDrive(event,this)">
@@ -474,6 +475,7 @@
                                 <select class="form-select" id="json-file" name="id">
 
                                 </select>
+                                <button type="button" class="btn btn-primary fw-bold" onclick="loadJsonFiles()">LOAD</button>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3 fw-bold">UPLOAD TO DB</button>
                         </form>
@@ -482,6 +484,8 @@
                         </div>
                     </div>
                 </div>
+                </fieldset>
+
             </div>
         </div>
 
@@ -2081,7 +2085,7 @@
             const filteredGlossaryData = glossaryData.filter(g => lang in g.answer);
             const tbody = document.getElementById('glossaryTbody');
             tbody.innerHTML = '';
-            filteredGlossaryData.forEach(item => {
+            glossaryData.forEach(item => {
                 tbody.appendChild(buildGlossaryRows(item));
             });
             document.getElementById('glossary-h4').innerText = `Glossary:- CH-${activeVerseChapterNum} / V-${activeVerseNumber} / ${lang}`;
@@ -2111,9 +2115,9 @@
         tr.innerHTML = `
             <td data-label="id: "><span class="fw-bold text-dark">${c.id}</span></td>
             <td data-label="Context: " class="text-secondary">CH${c.chapter}-V${c.verse}</td>
-            <td data-label="Language: " class="text-secondary">${c.lang || Object.keys(c.question)[0]}</td>
-            <td data-label="Word: "><div contenteditable="true" class="form-control glossq">${c.question[lang] || c.question}</div></td>
-            <td data-label="Glossary: "><div contenteditable="true" class="form-control glossa">${c.answer[lang] || c.answer}</div></td>
+            <td data-label="Language: " class="text-secondary">${c.lang || lang}</td>
+            <td data-label="Word: "><div contenteditable="true" class="form-control glossq">${c.question['sa'] || ""}</div></td>
+            <td data-label="Glossary: "><div contenteditable="true" class="form-control glossa">${c.answer[lang] || ""}</div></td>
             <td data-label="Action: " class="text-center">
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-dark" onclick="updateGlossary('${c.id}', this)"><i class="fa-solid fa-edit">update</i></button>
@@ -2126,26 +2130,36 @@
 
     function updateGlossary(id, el) {
         const tr = el.closest('tr');
-        const ques = cleanRichText(tr.querySelector(".glossq").innerHTML);
-        const ans = cleanRichText(tr.querySelector(".glossa").innerHTML);
+        const ques = tr.querySelector(".glossq").innerHTML;
+        const ans = tr.querySelector(".glossa").innerHTML;
         const lang = document.getElementById("select-glossary-lang").value;
         if (ques === "" || ans == "") {
             showToast("Word or Glossary is missing", "warning");
             return;
         }
-        const filItem = glossaryData.filter(g => g.id === parseInt(id));
-        if (filItem.length !== 0 && filItem[0].question[lang] === ques && filItem[0].answer[lang] === ans) {
+        const filtered = glossaryData.filter(g=>g.id !== parseInt(id))
+        const saWordExist = filtered.some(g => g.question['sa'] === ques.trim());
+        if (saWordExist) {
+            showToast("Duplicate for " + ques, "warning");
+            return;
+        }
+        const item = glossaryData.find(g => g.id === parseInt(id));
+        const existingAns = item?.answer?.[lang] !== undefined
+            ? item.answer[lang]
+            : item?.answer?.['en'];
+        if (item && item.question?.['sa'] === ques.trim() && existingAns === ans.trim()) {
             showToast("No Changes Detected", "warning");
             return;
         }
+
         let payload = {
             id: parseInt(id) || id,
             action: 'update',
             lang: lang,
             chapter: activeVerseChapterNum,
             verse: activeVerseNumber,
-            question: ques,
-            answer: ans
+            question: cleanRichText(ques),
+            answer: cleanRichText(ans)
         }
         fetch('/admin/glossary/update_or_delete', {
             method: 'POST',
@@ -2159,7 +2173,6 @@
                 showToast(data.message, "danger");
             }
         }).catch(err => showToast(err.message, "danger"));
-
     }
 
     function deleteGlossary(id, el) {
@@ -2169,18 +2182,17 @@
             el.closest('tr').remove()
         } else {
             const tr = el.closest('tr');
-            const ques = cleanRichText(tr.querySelector(".glossq").innerHTML);
-            const ans = cleanRichText(tr.querySelector(".glossa").innerHTML);
+            const ques = tr.querySelector(".glossq").innerHTML;
+            const ans = tr.querySelector(".glossa").innerHTML;
             const lang = document.getElementById("select-glossary-lang").value;
-            const filItem = glossaryData.filter(g => g.id === parseInt(id));
             let payload = {
                 id: parseInt(id),
                 action: 'delete',
                 lang: lang,
                 chapter: activeVerseChapterNum,
                 verse: activeVerseNumber,
-                question: ques,
-                answer: ans
+                question: cleanRichText(ques),
+                answer: cleanRichText(ans)
             }
             fetch('/admin/glossary/update_or_delete', {
                 method: 'POST',
@@ -2339,18 +2351,23 @@
         })
         el = document.getElementById("chapter");
         el.innerHTML = "";
-        const chapters = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+        const chapters = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,'All']
         chapters.map(item=>{
             el.innerHTML += `<option>${item}</option>`
         })
+    }
+
+    function loadJsonFiles() {
+        document.getElementById("db-pane-fieldset").disabled = true;
         document.getElementById("db-upload-response").innerHTML = "<b>Getting the Files. Please Wait...</b>"
-        el = document.getElementById("json-file");
+        let el = document.getElementById("json-file");
         el.innerHTML = "";
         fetch("/admin/get_drive_files",{method: 'GET'}).then(res=>res.json()).then(data => {
             data.drive_files.map(item=>{
                 el.innerHTML += `<option value="${item.id}">${item.name}</option>`
             })
             document.getElementById("db-upload-response").innerHTML = `<b>${data.message}</b>`
+            document.getElementById("db-pane-fieldset").disabled = false;
         });
     }
 
@@ -2364,6 +2381,7 @@
                 return
             }
         })
+        document.getElementById("db-pane-fieldset").disabled = true;
         document.getElementById("upload-response").innerHTML = "<b>Uploading the Files. Please Wait...</b>"
         fetch('/admin/upload_drive', {
             method: 'POST',
@@ -2386,6 +2404,7 @@
                 document.getElementById("upload-response").innerHTML = data.message;
                 showToast(data.message, "danger");
             }
+            document.getElementById("db-pane-fieldset").disabled = false;
         }).catch(err => showToast(err.message, "danger"))
     }
 
@@ -2398,6 +2417,7 @@
             document.getElementById("db-upload-response").innerHTML = "<b>Select a File First...</b>";
             return;
         }
+        document.getElementById("db-pane-fieldset").disabled = true;
         document.getElementById("db-upload-response").innerHTML = "<b>Updating the Database. Please Wait...</b>";
         fetch(`/admin/update_db/${id || 'id'}`).then(res=>res.json()).then(data => {
             const divEl = document.getElementById("db-upload-response");
@@ -2411,6 +2431,7 @@
                 const optionToRemove = document.querySelector(`select#json-file option[value="${id}"]`);
                 if (optionToRemove) { optionToRemove.remove();}
             }
+            document.getElementById("db-pane-fieldset").disabled = false;
         });
     }
 

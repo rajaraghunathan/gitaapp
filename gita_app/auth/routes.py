@@ -1,4 +1,4 @@
-import os, json, translate, random, re
+import os, json, random, re, csv
 from flask import Blueprint, jsonify, request, session, url_for
 from database import db
 from models import Student, Verse, Comment, AcharyaComment, QuizQuestion, QuizScore, QuizQuestionTamil, GlossaryFaq
@@ -409,13 +409,18 @@ def get_glossary():
     lang = request.args.get('lang', 'en')
     chapter = request.args.get('chapter', type=int)
     table = GlossaryFaq
-    glossary = db.session.query(table).where(table.chapter == chapter, db.func.json_type(table.question, f'$.{lang}').is_not(None),
+    glossary = db.session.query(table).where(table.chapter == chapter, db.func.json_type(table.answer, f'$.{lang}').is_not(None),
                                      table.type == 'glossary').order_by(table.id).all()
     if not glossary:
         return jsonify([])
     glossary_list = [{
         k: v for k, v in q.__dict__.items() if not k.startswith('_')
     } for q in glossary]
+    for item in glossary_list:
+        if item['question'].get('sa'):
+            item['transliterated'] = dynamic_sanskrit_transliterate(item['question']['sa'], lang)
+        else:
+            item['transliterated'] = dynamic_sanskrit_transliterate(item['question']['en'], lang)
     return jsonify(glossary_list)
 
 @routes.route('/api/student/faq', methods=['GET'])
@@ -433,3 +438,12 @@ def get_faq():
         k: v for k, v in q.__dict__.items() if not k.startswith('_')
     } for q in faq]
     return jsonify(faq_list)
+
+@routes.route('/api/student/other_glossary', methods=['GET'])
+def get_other_glossary():
+    if 'user_id' not in session:
+        return jsonify({"error": "Login required"}), 401
+    input_file = os.path.join(BASE_DIR, "json using codes", "BG_Global_Glossary.json")
+    with open(input_file, mode='r', encoding='utf-8') as infile:
+        rows = json.load(infile)
+    return jsonify(rows)

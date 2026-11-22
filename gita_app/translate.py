@@ -1,7 +1,11 @@
-import re, time, unicodedata
+import re, time, unicodedata, os, uuid, requests
 from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
 from deep_translator import GoogleTranslator
+
+from dotenv import load_dotenv
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 def remove_non_printable_from_object(any_obj):
     strings_to_clean = []
@@ -163,3 +167,117 @@ def translate_large_text_with_google(mixed_text, source_lang='en', target_lang='
         return " ".join(translated_chunks), True
     except Exception as e:
         return str(e), False
+
+def batch_translate_list_azure(texts, source='en', target='ta', max_retries=3):
+    if not texts:
+        return [], False
+
+    total_characters = sum(len(text) for text in texts)
+    list_length = len(texts)
+
+    if total_characters == 0 or total_characters > 33000 or list_length > 950:
+        print(f'Characters or items exceeded: {list_length} items, {total_characters} chars')
+        return [], False
+
+    azure_key = os.getenv('AZURE_KEY')
+    if not azure_key:
+        print('Missing AZURE_KEY environment variable')
+        return [], False
+
+    azure_endpoint = "https://api.cognitive.microsofttranslator.com"
+    constructed_url = f"{azure_endpoint}/translate"
+
+    headers = {
+        'Ocp-Apim-Subscription-Key': azure_key,
+        'Ocp-Apim-Subscription-Region': "centralindia",  # Match your exact region
+        'Content-type': 'application/json',
+        'X-ClientTraceId': str(uuid.uuid4())
+    }
+    params = {
+        'api-version': '3.0',
+        'from': source,
+        'to': target
+    }
+    body = [{"text": text} for text in texts]
+
+    for attempt in range(max_retries):
+        response = None
+        try:
+            response = requests.post(constructed_url, params=params, headers=headers, json=body, timeout=(10,60))
+
+            # Handle 429 Rate Limit gracefully using Azure's Retry-After header
+            if response.status_code == 429:
+                wait_time = int(response.headers.get("Retry-After", 15))
+                print(f"Rate limit (429) hit. Waiting {wait_time}s before retry {attempt + 1}/{max_retries}...")
+                time.sleep(wait_time)
+                continue
+
+            response.raise_for_status()
+
+            results = response.json()
+            translations = [item["translations"][0]["text"] for item in results]
+
+            # Optional: print characters billed in this call
+            used_chars = response.headers.get("X-Metered-Usage", total_characters)
+            print(f"Batch succeeded ({used_chars} chars used)")
+            return translations, True
+
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+            print(f"Network/Read timeout on attempt {attempt + 1}/{max_retries}: {e}")
+            if attempt < max_retries - 1:
+                time.sleep(5 * (attempt + 1))  # Wait 5s, then 10s before retrying
+                continue
+            return [], False
+        except requests.exceptions.RequestException as e:
+            reason = response.reason if response is not None else "No response"
+            print(f"API Request Error: {e} ({reason})")
+            return [], False
+        except (KeyError, IndexError, ValueError) as e:
+            print(f"Unexpected response format: {e}")
+            return [], False
+
+    print("Failed after maximum retries due to rate limiting.")
+    return [], False
+
+def translate_large_list_azure(texts, source='en', target='ta', max_items=250, max_chars=10000):
+    """
+    Splits lists into fast 250-item / 10,000-char batches so Azure responds quickly
+    without read timeouts or 429 rate-limit errors.
+    """
+    if not texts:
+        return [], True
+
+    all_translations = []
+    current_batch = []
+    current_chars = 0
+
+    for text in texts:
+        text_len = len(text)
+        if text_len > 48000:
+            print(f"Error: Single item length ({text_len}) exceeds Azure limit.")
+            return [], False
+
+        if len(current_batch) >= max_items or (current_chars + text_len) > max_chars:
+            batch_result, success = batch_translate_list_azure(current_batch, source, target)
+            if not success:
+                return [], False
+
+            all_translations.extend(batch_result)
+
+            # Pace requests to stay under ~30,000 chars/minute on Free F0 tier
+            pace_delay = max(2.0, (current_chars / 1000.0) * 2.0)
+            time.sleep(pace_delay)
+
+            current_batch = []
+            current_chars = 0
+
+        current_batch.append(text)
+        current_chars += text_len
+
+    if current_batch:
+        batch_result, success = batch_translate_list_azure(current_batch, source, target)
+        if not success:
+            return [], False
+        all_translations.extend(batch_result)
+
+    return all_translations, True

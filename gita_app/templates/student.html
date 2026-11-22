@@ -179,8 +179,9 @@
                           <tr>
                              <th scope="col" style="width: 5%">Chapter</th>
                               <th scope="col" style="width: 5%">Verse</th>
-                              <th scope="col" style="width: 25%">Word</th>
-                              <th scope="col" style="width: 65%">Glossary</th>
+                              <th scope="col" style="width: 15%">Word</th>
+                              <th scope="col" style="width: 15%">Language</th>
+                              <th scope="col" style="width: 60%">Glossary</th>
                           </tr>
                         </thead>
                         <tbody id="glossaryTbody">
@@ -327,6 +328,7 @@
     let currentMeaningLanguage = null;
     let flattenedVerseList = [];
     let currentEditingCommentId = null;
+    let otherGlossary = [];
     // Global entry checkpoint tracking conditions to capture variables from back end
     let targetedId = `{{ verse_id }}` || null;
     let chapterId = `{{ c_num }}` || null;
@@ -337,6 +339,7 @@
     const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa', 'Hindi': 'hi', 'Telugu': 'te'}
 
     document.addEventListener("DOMContentLoaded", () => {
+        fetchGlobalGlossary();
         const chapterClassList = document.querySelectorAll('.chapter-a');
         chapterClassList.forEach(aElement => {
             aElement.addEventListener('click',(event) => {
@@ -387,7 +390,6 @@
                 const listContainer = document.getElementById("verseList");
                 listContainer.innerHTML = '';
                 flattenedVerseList.length = 0
-                console.log(chapters.length, "chapters debug")
                 chapters.forEach(v => {
                     document.getElementById("chapterName").innerText = v.chapter_number + ") " + v.name
                     document.getElementById('chapter-num').innerText = "Chapter-" + v.chapter_number + ": " + v.name
@@ -1096,22 +1098,30 @@
         const selectedLang = document.getElementById("lang-dropdown").innerText;
         const lang = langKeys[selectedLang.trim()];
         const chapter = activeVerseChapterNum || 1;
+        const tbody = document.getElementById('glossaryTbody');
+        tbody.innerHTML = '';
         fetch(`/api/student/glossary?lang=${lang}&chapter=${chapter}`)
             .then(res => res.json())
             .then(glossary => {
-                const tbody = document.getElementById('glossaryTbody');
-                tbody.innerHTML = '';
-                glossary.forEach(item => {
+                glossary.concat(otherGlossary).forEach(item => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td data-label="Chapter: "><span class="fw-bold text-dark">${item.chapter}</span></td>
                         <td data-label="Verse: " class="text-secondary">${item.verse}</td>
-                        <td data-label="Word: ">${item.question[lang]}</td>
-                        <td data-label="Glossary: ">${item.answer[lang]}</td>
+                        <td data-label="Word: ">${item.question['sa'] || item.question[lang]}</td>
+                        <td data-label="${selectedLang}: ">${item.transliterated || item.question[lang]}</td>
+                        <td data-label="Glossary: ">${item.answer[lang] || item.answer['en']}</td>
                     `;
                     tbody.appendChild(tr);
                 });
-                document.getElementById('glossary-h5').innerText = 'Glossary:- CHAPTER-' + chapter ;
+                document.getElementById('glossary-h5').innerText = 'Glossary:- CHAPTER-' + chapter ;                unlockDOM();
+            })
+    }
+
+    function fetchGlobalGlossary() {
+        fetch('/api/student/other_glossary').then(res => res.json())
+            .then(glossary => {
+                otherGlossary = glossary;
             })
     }
 
