@@ -7,17 +7,16 @@
     <input type="hidden" id="input_chapter">
     <input type="hidden" id="input_verse_number">
 
-
     <div class="sub-sticky py-2">
         <div class="text-center">
-            <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.1rem"></i>
+            <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.5rem"></i>
         </div>
         <div class="d-flex w-100 align-items-center gap-2 px-2 py-2">
             <button class="fw-bold btn btn-warning bt-sm" type="button" data-bs-toggle="collapse" data-bs-target="#studentToggleMenu">
               Menu
             </button>
             <div class="dropdown mb-0 me-auto">
-                <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">English</button>
+                <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown"></button>
                 <ul class="dropdown-menu">
                     <li><button id="en-lang" type="button" class="dropdown-item active" onclick="loadLang(event, 'en')">English</button></li>
                     <li><button id="ta-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'ta')">Tamil</button></li>
@@ -41,7 +40,6 @@
               <!-- Links go here -->
               <a class="nav-link nav-link-custom" data-bs-toggle="offcanvas" href="#studentMenu">Chapter</a>
               <a class="nav-link nav-link-custom" data-bs-toggle="collapse" href="#s-pane">Shloka</a>
-              <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#c-pane">Comments</a>
               <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#quiz-pane">Quiz</a>
               <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#comment-pane">Discussion</a>
               <a class="nav-link nav-link-custom collapsed" data-bs-toggle="collapse" href="#glossary-pane">Glossary</a>
@@ -50,45 +48,87 @@
           </div>
         </div>
     </div>
-    <div id="div-section" class="tab-content w-100 d-block" style="width: 100% !important;">
+    <div id="div-section" class="tab-content w-100 d-block mt-2" style="width: 100% !important;">
         <!-- VERSE SECTION -->
         <div class="container-fluid collapse show" data-bs-parent="#div-section" id="s-pane" >
-            <div class="row">
-                <div class="col-sm-5 mb-2 mt-2">
-                    <!-- Shloka Block -->
+            <div class="accordion" id="shlokaAccordion">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Shloka Block -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingShloka">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShloka" aria-expanded="true" aria-controls="collapseShloka">
+                            Bhagavad Gita Verse
+                          </button>
+                        </h2>
+                        <div id="collapseShloka" class="accordion-collapse collapse show" aria-labelledby="headingShloka">
+                          <div class="accordion-body p-0">
+                            <div class="card">
+                              <div class="card-header">
+                                <ul class="nav nav-pills card-header-pills" id="verseTabs" role="tablist"></ul>
+                              </div>
+                              <div id="verseDivs" class="card-body tab-content">
+                              </div>
+                            </div>
 
-                    <div id="shloka-div" class="mb-2">
-                        <div class="card">
-                            <div class="card-header"></div>
-                            <div class="card-body"></div>
+                          </div>
                         </div>
-                    </div>
-
-                    <div id="youtube-render-div">
-
-                    </div>
-
-                </div>
-                <div class="col-sm-7 mt-2">
-                    <!-- Description Text Block -->
-                    <div class="card mb-2 p-2">
-                        <label class="form-label fw-bold">Description</label>
-                        <p id="field-description"></p>
-                    </div>
-                    <!-- Footnotes Table -->
-                    <div class="card mb-2 p-2" style="display: none;">
-                        <label class="form-label fw-bold">Notes</label>
-                        <p id="footnotes-div"></p>
-                    </div>
-                    <!-- Anvayam Table Module -->
-                    <div class="card mb-2 p-2">
-<!--                        <label class="form-label fw-bold">Word Meaning</label>-->
-<!--                        <p id="anvayam-div"></p>-->
-<!--                        <div class="card">-->
-<!--                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">-->
-<!--                                <h5 id="anvayam-h5">Word Meaning</h5>-->
-<!--                            </div>-->
-<!--                            <div id="anvayamDiv" class="overflow-y-auto" style="height: 60vh;">-->
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingYoutube">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseYoutube" aria-expanded="false" aria-controls="collapseYoutube">
+                            YouTube Commentaries
+                          </button>
+                        </h2>
+                        <div id="collapseYoutube" class="accordion-collapse collapse" aria-labelledby="headingYoutube">
+                          <div class="accordion-body p-0">
+                            <div id="youtube-render-div">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        <!-- Description Text Block -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingDesc">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" aria-expanded="false" aria-controls="collapseDesc">
+                            Description
+                          </button>
+                        </h2>
+                        <div id="collapseDesc" class="accordion-collapse collapse" aria-labelledby="headingDesc">
+                          <div class="accordion-body p-0">
+                            <div class="card mb-2 p-2">
+                                <label class="form-label fw-bold">Description</label>
+                                <p id="field-description"></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        <!-- Footnotes Table -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFoot">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoot" aria-expanded="false" aria-controls="collapseFoot">
+                            Foot Notes
+                          </button>
+                        </h2>
+                        <div id="collapseFoot" class="accordion-collapse collapse" aria-labelledby="headingFoot">
+                          <div class="accordion-body p-0">
+                             <div class="card mb-2 p-2" style="display: none;">
+                                <label class="form-label fw-bold">Notes</label>
+                                <p id="footnotes-div"></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        <!-- Anvayam Table Module -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingMean">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMean" aria-expanded="false" aria-controls="collapseMean">
+                            Shloka Word Meaning
+                          </button>
+                        </h2>
+                        <div id="collapseMean" class="accordion-collapse collapse" aria-labelledby="headingMean">
+                          <div class="accordion-body p-0">
+                             <div class="card mb-2 p-2">
                                 <table id="anvayamTable" class="table table-sm table-striped responsive-card-table">
                                     <thead class="table-warning">
                                       <tr>
@@ -100,35 +140,55 @@
 
                                     </tbody>
                                 </table>
-<!--                            </div>-->
-<!--                        </div>-->
-
-
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    <div class="col-md-6">
+                        <!-- Acharya Commentary -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingAcharya">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAcharya" aria-expanded="false" aria-controls="collapseAcharya">
+                            Acharya Comments
+                          </button>
+                        </h2>
+                        <div id="collapseAcharya" class="accordion-collapse collapse" aria-labelledby="headingAcharya">
+                          <div class="accordion-body p-0">
+                            <div class="card">
+                              <div class="card-header">
+                                <ul class="nav nav-pills card-header-pills" id="verseTabs-1" role="tablist">
+                                  <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#ramanuja" type="button" role="tab">Sri Ramanuja</button>
+                                  </li>
+                                  <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sankara" type="button" role="tab">Sri Sankara</button>
+                                  </li>
+                                  <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#madhava" type="button" role="tab">Sri Maadhva</button>
+                                  </li>
+                                  <li class="nav-item" role="presentation">
+                                    <button class="nav-link"  data-bs-toggle="pill" data-bs-target="#desika" type="button" role="tab">Sri Desika</button>
+                                  </li>
+                                   <li class="nav-item" role="presentation">
+                                    <button class="nav-link"  data-bs-toggle="pill" data-bs-target="#siva" type="button" role="tab">Sri Siva</button>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div class="card-body tab-content">
+                                <div id="ramanuja" class="tab-pane fade show active acharya-div " role="tabpanel">Ramanuja Content</div>
+                                  <div id="sankara" class="tab-pane fade acharya-div" role="tabpanel">Sankara Content</div>
+                                  <div id="madhava" class="tab-pane fade acharya-div" role="tabpanel">Madhava Content</div>
+                                  <div id="desika" class="tab-pane fade acharya-div " role="tabpanel">Desika Content</div>
+                                  <div id="siva" class="tab-pane fade acharya-div" role="tabpanel">Siva Content</div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                </div>
 
-                </div>
-            </div>
-        </div>
-        <!-- COMMENTARY SECTION -->
-        <div class="container-fluid collapse" data-bs-parent="#div-section" id="c-pane" >
-            <div id="acharya" class="mt-2">
-                <div class="card">
-                  <div class="card-header">
-                    <span class="fw-bold text-dark">Commentary:</span>
-                    <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja" aria-expanded="true">Sri Ramanuja</a>
-                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
-                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
-                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
-                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#siva">Sri Siva</a>
-                  </div>
-                  <div class="card-body">
-                      <div id="ramanuja" class="acharya-div collapse show" data-bs-parent="#acharya">Ramanuja Content</div>
-                      <div id="sankara" class="acharya-div collapse" data-bs-parent="#acharya">Sankara Content</div>
-                      <div id="madhava" class="acharya-div collapse" data-bs-parent="#acharya">Madhava Content</div>
-                      <div id="desika" class="acharya-div collapse" data-bs-parent="#acharya">Desika Content</div>
-                      <div id="siva" class="acharya-div collapse" data-bs-parent="#acharya">Siva Content</div>
-                  </div>
-                </div>
             </div>
         </div>
         <!-- QUIZ SECTION -->
@@ -171,7 +231,11 @@
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 id="glossary-h5">GLOSSARY</h5>
-                    <input type="text" id="glossarySearch" placeholder="Search Words..." onkeyup="filterGlossary()">
+                    <div class="input-group">
+                      <input id="glossarySearch" type="text" class="form-control" placeholder="Search">
+                      <button class="btn btn-success" type="button" onclick="filterGlossary()">Filter</button>
+                    </div>
+<!--                    <input type="text" id="glossarySearch" placeholder="Search Words..." onkeyup="filterGlossary()">-->
                 </div>
                 <div id="glossaryDiv" class="card-body overflow-y-auto" style="height: 60vh;">
                     <table id="glossaryTable" class="table table-striped responsive-card-table">
@@ -196,7 +260,11 @@
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 id="faq-h5">Frequently Asked Questions</h5>
-                    <input type="text" id="faqSearch" placeholder="Search Words..." onkeyup="filterFaq()">
+                     <div class="input-group">
+                      <input id="faqSearch" type="text" class="form-control" placeholder="Search Words...">
+                      <button class="btn btn-success" type="button" onclick="filterFaq()">Filter</button>
+                    </div>
+<!--                    <input type="text" id="faqSearch" placeholder="Search Words..." onkeyup="filterFaq()">-->
                 </div>
                 <div id="faqDiv" class="card-body overflow-y-auto" style="height: 60vh;">
                     <table id="faqTable" class="table table-striped responsive-card-table">
@@ -321,11 +389,11 @@
 {% block extra_js %}
 <script>
     let globalActiveChapter = 1;
-    let currentActiveId = null; //Active Verse id
-    let activeVerseChapterNum = null;
-    let activeVerseNumber = null;
+    // let currentActiveId = null; //Active Verse id
+    // let activeVerseChapterNum = null;
+    // let activeVerseNumber = null;
     let loadedMeaningLanguages = {};
-    let currentMeaningLanguage = null;
+    // let currentMeaningLanguage = null;
     let flattenedVerseList = [];
     let currentEditingCommentId = null;
     let otherGlossary = [];
@@ -334,6 +402,11 @@
     let chapterId = `{{ c_num }}` || null;
     let verseId = `{{ v_num }}` || null;
     let lastLang = `{{ language }}` || "en";
+    let currentActiveId = targetedId; //Active Verse id
+    let activeVerseChapterNum = chapterId;
+    let activeVerseNumber = verseId;
+    let currentMeaningLanguage = lastLang;
+
 
     const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit', 'hi': 'Hindi', 'te': 'Telugu'}
     const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa', 'Hindi': 'hi', 'Telugu': 'te'}
@@ -403,7 +476,7 @@
                             item.classList.remove('active'));
                         this.classList.add('active');
                         const selectedLang = document.getElementById("lang-dropdown").innerText;
-                        const lang = langKeys[selectedLang.trim()]
+                        const lang = langKeys[selectedLang.trim()] || currentMeaningLanguage;
                         loadVerse(lang, v.id, v.chapter_number, v.verse_number);
                     });
                     listContainer.appendChild(li);
@@ -422,7 +495,7 @@
                 } else if (flattenedVerseList.length > 0) {
                     const verseButton = verseList[0];
                     const selectedLang = document.getElementById("lang-dropdown").innerText;
-                    const Slang = langKeys[selectedLang.trim()]
+                    const Slang = langKeys[selectedLang.trim()] || currentMeaningLanguage
                     verseButton.onclick = () => loadVerse(Slang, flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     verseButton.click();
                     // loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
@@ -480,16 +553,14 @@
                 src2 = `https://www.holy-bhagavad-gita.org/media/audios/${String(ch).padStart(3, '0')}_${String(vn).padStart(3, '0')}.mp3`;
             }
             `<!--<i onclick="speakSanskritShloka(event)" style="cursor: pointer; font-size: 1rem;">Chant 🔊</i>-->`
-            verse.shlok.forEach(item =>{
+            verse.shlok.forEach((item) =>{
                 Object.entries(item).forEach(([key, val]) => {
-                    // const activeClass = key === "shloka" ? 'show' : '';
-                    // const aria = key === "shloka" ? "true" : "false";
                     if (val !== "") {
-                        htmlContent1 += `
-                            <a class="btn btn-sm" data-bs-toggle="collapse" href="#${key}">${key.toUpperCase()}</a>
-                        `;
+                        htmlContent1 += `<li class="nav-item role="presentation">
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#${key}" type="button" role="tab">${key.toUpperCase()}</button>
+                          </li>`
                          htmlContent2 += `
-                          <div id="${key}" class="shloka-text collapse" data-bs-parent="#shloka-div">
+                          <div class="shloka-text tab-pane fade text-center" id="${key}" role="tabpanel">
                                ${key === 'shloka'
                                     ? (ch === 1 && vn > 25 && vn < 38)
                                         ?
@@ -511,14 +582,18 @@
                     }
                 })
             })
+            document.querySelector("#verseTabs").innerHTML = htmlContent1;
+            document.querySelector("#verseDivs").innerHTML = htmlContent2;
+            const btn = document.querySelector('ul button[data-bs-target="#shloka"]');
+            btn ? btn.click() : false
 
-            document.querySelector("#shloka-div .card-header").innerHTML = htmlContent1;
-            document.querySelector("#shloka-div .card-body").innerHTML = htmlContent2;
-            document.querySelectorAll("#shloka-div a").forEach((aTag) => {
-                if (aTag.getAttribute("href") === "#shloka") {
-                    aTag.click();
-                }
-            })
+            // document.querySelector("#shloka-div .card-header").innerHTML = htmlContent1;
+            // document.querySelector("#shloka-div .card-body").innerHTML = htmlContent2;
+            // document.querySelectorAll("#shloka-div a").forEach((aTag) => {
+            //     if (aTag.getAttribute("href") === "#shloka") {
+            //         aTag.click();
+            //     }
+            // })
 
             const langDropdown = document.getElementById("lang-dropdown");
             const dropdownMenu = langDropdown.closest('.dropdown');
@@ -624,6 +699,20 @@
         renderAnvayam(data.anvayam || []);
     }
 
+    // <div id="youtube-render-div">
+    //                 </div>
+    //                 <div class="card">
+    //                   <div class="card-header">
+    //                     <ul class="nav nav-pills card-header-pills" role="tablist"></ul>
+    //                   </div>
+    //                   <div id="youTubeDivs" class="card-body tab-content">
+    //                   </div>
+    //                 </div>
+    //                 <li class="nav-item role="presentation">
+    //                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#${key}" type="button" role="tab">${key.toUpperCase()}</button>
+    //                   </li>
+
+
     function renderYoutube (YTData) {
         const yDiv = document.getElementById('youtube-render-div');
         let headerHtml = '';
@@ -633,30 +722,41 @@
             let counter = 1;
             Object.entries(YTData).map(([key, val]) => {
                 headerHtml += `
-                   <a class="btn btn-sm" data-bs-toggle="collapse" href="#y-link${counter}" ${counter===1 ?`aria-expanded="true"`: ''}>${key}</a>
+                   <li class="nav-item role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#y-link${counter}" type="button" role="tab">${key}</button>
+                  </li>
                  `
+                // headerHtml += ` <div class="shloka-text tab-pane fade text-center" id="${key}" role="tabpanel">
+                //    <a class="btn btn-sm" data-bs-toggle="collapse" href="#y-link${counter}" ${counter===1 ?`aria-expanded="true"`: ''}>${key}</a>
+                //  `
                 bodyHtml += `
-                        <div id="y-link${counter}" class="youtube-div collapse ${counter===1 ?`show`: ''}" data-bs-parent="#youtube-render-div">
+                        <div class="tab-pane fade youtube-div" id="y-link${counter}" role="tabpanel">
                             <div class="video-container">
                                 <iframe id="youtubePlayer" width="560" height="315" src="${val}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
                         </div>
                 `
+                // bodyHtml += `
+                //         <div id="y-link${counter}" class="youtube-div collapse ${counter===1 ?`show`: ''}" data-bs-parent="#youtube-render-div">
+                //             <div class="video-container">
+                //                 <iframe id="youtubePlayer" width="560" height="315" src="${val}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                //             </div>
+                //         </div>
+                // `
                 counter += 1
             });
             const cardDiv = document.createElement('div');
             cardDiv.classList.add('card');
             const cardHeader = document.createElement('div');
             cardHeader.className ='card-header';
-            cardHeader.innerHTML = headerHtml;
+            cardHeader.innerHTML = `<ul class=nav nav-pills card-header-pills" role="tablist">${headerHtml}</ul>`;
             const cardBody = document.createElement('div');
-            cardBody.className = 'card-body p-1';
+            cardBody.className = 'card-body tab-content p-1';
             cardBody.innerHTML = bodyHtml;
             cardDiv.appendChild(cardHeader).appendChild(cardBody);
             yDiv.appendChild(cardDiv );
         }
     }
-
 
 
     function renderFootnotes(objData) {
@@ -901,7 +1001,7 @@
     function loadActiveChapterQuiz(ch) {
         document.getElementById("quizScore").style.display = "none"
         const selectedLang = document.getElementById("lang-dropdown").innerText;
-        const lang = langKeys[selectedLang.trim()]
+        const lang = langKeys[selectedLang.trim()] || currentMeaningLanguage
         fetch(`/api/quiz/${ch}/${lang}`)
             .then(res => res.json())
             .then(questions => {
@@ -1095,26 +1195,27 @@
     }
 
     function fetchGlossary() {
+        if (!activeVerseChapterNum) return;
         const selectedLang = document.getElementById("lang-dropdown").innerText;
-        const lang = langKeys[selectedLang.trim()];
+        const lang = langKeys[selectedLang.trim()] || currentMeaningLanguage;
         const chapter = activeVerseChapterNum || 1;
-        const tbody = document.getElementById('glossaryTbody');
-        tbody.innerHTML = '';
+        const gDiv = document.getElementById('glossaryDiv');
+        gDiv.innerHTML = 'Getting Glossary Details. Please Wait....';
         fetch(`/api/student/glossary?lang=${lang}&chapter=${chapter}`)
             .then(res => res.json())
             .then(glossary => {
+                gDiv.innerHTML = ''
                 glossary.concat(otherGlossary).forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td data-label="Chapter: "><span class="fw-bold text-dark">${item.chapter}</span></td>
-                        <td data-label="Verse: " class="text-secondary">${item.verse}</td>
-                        <td data-label="Word: ">${item.question['sa'] || item.question[lang]}</td>
-                        <td data-label="${selectedLang}: ">${item.transliterated || item.question[lang]}</td>
-                        <td data-label="Glossary: ">${item.answer[lang] || item.answer['en']}</td>
+                    const p = document.createElement('p');
+                    p.innerHTML = `
+                        <span class="fw-bold text-dark">${item.question['sa'] || item.question[lang]} / ${item.transliterated || item.question[lang]} - </span>
+                        <span class="text-secondary">${item.answer[lang] || item.answer['en']}</span>
                     `;
-                    tbody.appendChild(tr);
+                    gDiv.appendChild(p);
                 });
-                document.getElementById('glossary-h5').innerText = 'Glossary:- CHAPTER-' + chapter ;                unlockDOM();
+                document.getElementById('glossary-h5').innerText = 'Glossary: CH-' + chapter ;
+                filterGlossary()
+                unlockDOM();
             })
     }
 
@@ -1131,35 +1232,21 @@
       const filter = input.value.toLowerCase();
 
       // Get the table and all rows inside the tbody
-      const table = document.getElementById("glossaryTable");
-      const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-      // Loop through all table rows
-      for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName("td");
-
-        // Ensure the row has cells (columns) before checking text
-        if (cells.length >= 2) {
-          const firstColumnText = cells[0].textContent || cells[0].innerText;
-          const secondColumnText = cells[1].textContent || cells[1].innerText;
-          const thirdColumnText = cells[2].textContent || cells[2].innerText;
-          const fourthColumnText = cells[3].textContent || cells[3].innerText;
-
-          // Check if the filter text exists in either the first OR the second column
-          if (
-            firstColumnText.toLowerCase().indexOf(filter) > -1 ||
-            secondColumnText.toLowerCase().indexOf(filter) > -1 ||
-              thirdColumnText.toLowerCase().indexOf(filter) > -1 ||
-              fourthColumnText.toLowerCase().indexOf(filter) > -1
-          ) {
-            rows[i].style.display = ""; // Show row
-          } else {
-            rows[i].style.display = "none"; // Hide row
-          }
-        }
-      }
+      const gDiv = document.getElementById("glossaryDiv");
+        if (!gDiv) return;
+      const rows = gDiv.querySelectorAll("p");
+      rows.forEach(p=>{p.style.display = "none";})
+        rows.forEach(p=>{
+            const pText = p.textContent;
+            if (pText.toLowerCase().indexOf(filter) > -1) {
+                p.style.display = ""; // Show row
+              } else {
+                p.style.display = "none"; // Hide row
+              }
+        })
     }
 
-    function fetchFaq() {
+    function fetchFaqOld() {
         const selectedLang = document.getElementById("lang-dropdown").innerText;
         const lang = langKeys[selectedLang.trim()];
         const chapter = activeVerseChapterNum || 1;
@@ -1182,38 +1269,49 @@
             })
     }
 
+    function fetchFaq() {
+        const selectedLang = document.getElementById("lang-dropdown").innerText;
+        const lang = langKeys[selectedLang.trim()] || currentMeaningLanguage;
+        const chapter = activeVerseChapterNum || 1;
+        fetch(`/api/student/faq?lang=${lang}&chapter=${chapter}`)
+            .then(res => res.json())
+            .then(faq => {
+                const faqDiv = document.getElementById('faqDiv');
+                if (faq.length === 0) {
+                    faqDiv.innerHTML = 'Sorry... The Requested FAQs are not available';
+                } else {
+                    faqDiv.innerHTML = '';
+                }
+                faq.forEach(item => {
+                    const p = document.createElement('p');
+                    p.className = "rounded shadow-sm border p-2"
+                     p.innerHTML = `
+                        <span class="fw-bold">Question: <i class="text-info">${item.question[lang]}</i>\n\n</span>
+                        <span><strong>Answer: </strong>${item.answer[lang]}</span>
+                    `;
+                    faqDiv.appendChild(p);
+                });
+                document.getElementById('faq-h5').innerText = 'FAQs: CH-' + chapter ;
+                filterFaq()
+            })
+    }
+
     function filterFaq() {
-      // Get the search input value and convert it to lowercase for case-insensitive matching
       const input = document.getElementById("faqSearch");
       const filter = input.value.toLowerCase();
-
       // Get the table and all rows inside the tbody
-      const table = document.getElementById("faqTable");
-      const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-      // Loop through all table rows
-      for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName("td");
-
-        // Ensure the row has cells (columns) before checking text
-        if (cells.length >= 2) {
-          const firstColumnText = cells[0].textContent || cells[0].innerText;
-          const secondColumnText = cells[1].textContent || cells[1].innerText;
-          const thirdColumnText = cells[2].textContent || cells[2].innerText;
-          const fourthColumnText = cells[3].textContent || cells[3].innerText;
-
-          // Check if the filter text exists in either the first OR the second column
-          if (
-            firstColumnText.toLowerCase().indexOf(filter) > -1 ||
-            secondColumnText.toLowerCase().indexOf(filter) > -1 ||
-              thirdColumnText.toLowerCase().indexOf(filter) > -1 ||
-              fourthColumnText.toLowerCase().indexOf(filter) > -1
-          ) {
-            rows[i].style.display = ""; // Show row
-          } else {
-            rows[i].style.display = "none"; // Hide row
-          }
-        }
-      }
+      const faqDiv = document.getElementById("faqDiv");
+        if (!faqDiv) return;
+      const rows = faqDiv.querySelectorAll("p");
+      rows.forEach(p=>{p.style.display = "none";})
+        rows.forEach(p=>{
+            const pText = p.textContent;
+            if (pText.toLowerCase().indexOf(filter) > -1) {
+                p.style.display = ""; // Show row
+              } else {
+                p.style.display = "none"; // Hide row
+              }
+        })
     }
 
 </script>

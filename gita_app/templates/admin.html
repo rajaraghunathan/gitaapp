@@ -5,36 +5,75 @@
 <div class="container-fluid my-2 px-2">
         <!-- Dashboard Switcher Controls -->
         <div class="sub-sticky">
+            <div>
+                <i id="c-name" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.5rem"></i>
+                <i id="v-num" class="p-2" style="font-weight: bold; color: darkblue; font-size: 1.5rem"></i>
+            </div>
             <div class="d-flex align-items-center p-2 rounded shadow-sm border" id="adminTabs" style="top: 56px;">
             <!-- Right Side: Integrated Text Styling Toolbar -->
                 <button class="fw-bold btn btn-warning bt-sm" type="button" data-bs-toggle="collapse" data-bs-target="#adminToggleMenu">
                   Menu
                 </button>
+
                 <div class="ms-auto d-flex align-items-center border-start ps-3 me-2" id="textToolbar">
-                <span class="small text-muted me-2 d-none d-md-inline" style="font-size: 11px;">Text:</span>
-                <div class="btn-group" role="group" aria-label="Text formatting">
-                    <button type="button" class="btn btn-sm btn-outline-secondary fw-bold py-1 px-2" onclick="setStyle('bold')">B</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary fst-italic py-1 px-2" onclick="setStyle('italic')">I</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary text-decoration-underline py-1 px-2" onclick="setStyle('underline')">U</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="setStyle('superscript')">X<sup>2</sup></button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="setStyle('subscript')">X<sub>2</sub></button>
+                    <span class="small text-muted me-2 d-none d-md-inline" style="font-size: 11px;">Text:</span>
+                    <div class="btn-group" role="group" aria-label="Text formatting">
+                        <button type="button" class="btn btn-sm btn-outline-secondary fw-bold py-1 px-2" onclick="setStyle('bold')">B</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary fst-italic py-1 px-2" onclick="setStyle('italic')">I</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary text-decoration-underline py-1 px-2" onclick="setStyle('underline')">U</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="setStyle('superscript')">X<sup>2</sup></button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="setStyle('subscript')">X<sub>2</sub></button>
+                    </div>
                 </div>
             </div>
-            </div>
-            <div id="adminToggleMenu" class="collapse">
-              <div class="bg-white d-flex flex-wrap flex-md-nowrap gap-2 p-2" role="tablist">
-                  <!-- Links go here -->
-                <button class="fw-bold btn bt-sm active" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">Shloka Manager</button>
-                <button class="fw-bold btn bt-sm" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">Quiz</button>
-                <button class="fw-bold btn bt-sm" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">Glossary</button>
-                <button class="fw-bold btn bt-sm" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">FAQ</button>
-                <button class="fw-bold btn bt-sm" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">Discussion Queue</button>
-                 <button class="fw-bold btn bt-sm" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">Data Export Center</button>
-                <button class="fw-bold btn bt-sm" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">Students</button>
-                <button class="fw-bold btn bt-sm" id="db-tab" data-bs-toggle="pill" data-bs-target="#db-pane" type="button" role="tab" onclick="loadDbDetails()">
-                    <i class="fa-solid fa-pen-to-square me-2">DB</i></button>
+            <div id="adminToggleMenu" class="collapse p-2 rounded shadow-sm">
+                <div class="bg-white d-flex flex-wrap flex-md-nowrap gap-2 p-2" role="tablist">
+                      <!-- Links go here -->
+                    <button class="fw-bold btn bt-sm active" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">Shloka Manager</button>
+                    <button class="fw-bold btn bt-sm" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">Quiz</button>
+                    <button class="fw-bold btn bt-sm" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">Glossary</button>
+                    <button class="fw-bold btn bt-sm" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">FAQ</button>
+                    <button class="fw-bold btn bt-sm" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">Discussion Queue</button>
+                     <button class="fw-bold btn bt-sm" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">Data Export Center</button>
+                    <button class="fw-bold btn bt-sm" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">Students</button>
+                    <button class="fw-bold btn bt-sm" id="db-tab" data-bs-toggle="pill" data-bs-target="#db-pane" type="button" role="tab" onclick="loadDbDetails()">
+                        <i class="fa-solid fa-pen-to-square me-2">DB</i></button>
+                </div>
 
-              </div>
+                <div class="d-flex flex-wrap flex-md-nowrap gap-2 p-2 border-3 border-top">
+                     <div class = "d-flex">
+                        <button class="btn btn-small" type="button" id="chapter-prev-btn" onclick="navigateToAdjacentChapter(-1)">⬅️</button>
+                        <div class="dropdown">
+                            <button id="ch-list-button" type="button" class="btn btn-small btn-warning dropdown-toggle"  data-bs-toggle="dropdown">
+                                Chapters
+                            </button>
+                            <ul id="chaptersList" class="dropdown-menu"></ul>
+                        </div>
+                        <button class="btn btn-small" type="button" id="chapter-next-btn" onclick="navigateToAdjacentChapter(1)">➡️</button>
+                     </div>
+                    <div class = "d-flex">
+                        <button class="btn btn-small" type="button" id="verse-prev-btn" onclick="navigateToAdjacentVerse(-1)">⬅️</button>
+                        <div class="dropdown">
+                            <button id="verse-list-button" type="button" class="btn btn-small btn-warning dropdown-toggle"  data-bs-toggle="dropdown">
+                                Verses
+                            </button>
+                            <ul id="verseList" class="dropdown-menu"></ul>
+                        </div>
+                        <button class="btn btn-small" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">➡️</button>
+                    </div>
+                    <div class = "d-flex">
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                              <span id="selected-meaning-language">Loading...</span>
+                          </button>
+                          <ul id="language-dropdown" class="dropdown-menu">
+
+                          </ul>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
 
@@ -43,11 +82,11 @@
 
             <!-- Tab Pane A: Verse Injection Form And List Registry Workspace Panel -->
             <div class="tab-pane fade show active" id="v-pane" role="tabpanel" aria-labelledby="v-tab">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <input type="hidden" id="form_verse_id" value="">
-                        <input type="hidden" id="input_chapter">
-                        <input type="hidden" id="input_verse_number">
+                <input type="hidden" id="form_verse_id" value="">
+                <input type="hidden" id="input_chapter">
+                <input type="hidden" id="input_verse_number">
+                <div>
+                    <div class="d-flex flex-wrap flex-md-nowrap gap-2 mb-2">
                         <ul id="menuTabs" class="nav nav-pills mb-2">
                             <li class="nav-item">
                               <a id="a-shloka" class="nav-link active" data-bs-toggle="pill" href="#shloka-pane" role="tab">Shloka</a>
@@ -59,235 +98,196 @@
                               <a id="a-acharya" class="nav-link" data-bs-toggle="pill" href="#acharya-pane" role="tab">Acharya</a>
                             </li>
                         </ul>
-                        <div class = "col d-flex gap-2 mb-2">
-                            <button class="btn btn-small" type="button" id="chapter-prev-btn" onclick="navigateToAdjacentChapter(-1)">⬅️</button>
-                            <div class="dropdown flex-grow-1 d-grid">
-                                <button id="ch-list-button" type="button" class="text-truncate btn btn-small btn-warning dropdown-toggle"  data-bs-toggle="dropdown">
-                                    Chapters
-                                </button>
-                                <ul id="chaptersList" class="dropdown-menu"></ul>
-                            </div>
-                            <button class="btn btn-small" type="button" id="chapter-next-btn" onclick="navigateToAdjacentChapter(1)">➡️</button>
-                        </div>
-                        <div class = "col d-flex gap-2 mb-2">
-                            <button class="btn btn-small" type="button" id="verse-prev-btn" onclick="navigateToAdjacentVerse(-1)">⬅️</button>
-                            <div class="dropdown flex-grow-1 d-grid">
-                                <button id="verse-list-button" type="button" class="text-truncate btn btn-small btn-warning dropdown-toggle"  data-bs-toggle="dropdown">
-                                    Verses
-                                </button>
-                                <ul id="verseList" class="dropdown-menu"></ul>
-                            </div>
-                            <button class="btn btn-small" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">➡️</button>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="fw-bold">Select:</span>
-                            <div class="dropdown">
-                              <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown">
-                                <span id="selected-meaning-language">Loading...</span>
-                              </button>
-                              <ul id="language-dropdown" class="dropdown-menu">
+                        <button id="add-new-lang-btn" class="btn btn-sm btn-outline-secondary" type="button" onclick="addNewMeaningLanguage()">➕ Language</button>
+                        <button id="delete-lang-btn" class="btn btn-sm btn-danger" type="button" onclick="deleteMeaningLanguage()">🗑️ Language</button>
 
-                              </ul>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column gap-2 mb-2">
-                            <button id="add-new-lang-btn" class="btn btn-sm btn-outline-secondary text-nowrap " type="button" onclick="addNewMeaningLanguage()">➕ New Language</button>
-                            <button id="delete-lang-btn" class="btn btn-sm btn-danger text-nowrap " type="button" onclick="deleteMeaningLanguage()">🗑️ Delete Language</button>
-
-                            <button type="submit" formnovalidate form="meaning-language-form" id="save-current-lang-btn" class="btn btn-sm btn-success text-nowrap">💾 Save Changes</button>
-                            <button id="commit-lang-btn" class="btn btn-sm btn-success text-nowrap" type="button" onclick="sendMeaningPayloadToServer()"
-                                >Commit To DB</button>
-                        </div>
-
+                        <button type="submit" formnovalidate form="meaning-language-form" id="save-current-lang-btn" class="btn btn-sm btn-success">💾 Changes</button>
+                        <button id="commit-lang-btn" class="btn btn-sm btn-success" type="button" onclick="sendMeaningPayloadToServer()"
+                            >Commit DB</button>
                     </div>
-                    <div class="col-sm-10">
-                        <div class="text-center">
-                            <i id="c-name" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.1rem"></i>
-                            <i id="v-num" class="p-2" style="font-weight: bold; color: darkblue; font-size: 1.1rem"></i>
-                        </div>
-                        <div class="tab-content ">
-                            <!-- VERSE FORM -->
-                            <div class="tab-pane fade show active" id="shloka-pane" role="tabpanel">
-                                <!-- Form Shloka Card -->
-                                <form id="meaning-language-form" class="card mb-2" onsubmit="saveCurrentFormContext(event)">
-                                    <div id="shloka-div">
-                                        <div class="card shadow-sm border-primary mb-2">
-                                            <div class="card-header">
-                                                <a class="btn btn-sm" data-bs-toggle="collapse" href="#sh-shloka" aria-expanded="true">SHLOKA</a>
-                                                <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-padached">PADA</a>
-                                                <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-sandhi">SANDHI</a>
-                                                <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-anvayam">ANVAYAM</a>
+
+                    <div class="tab-content ">
+                        <!-- VERSE FORM -->
+                        <div class="tab-pane fade show active" id="shloka-pane" role="tabpanel">
+                            <!-- Form Shloka Card -->
+                            <form id="meaning-language-form" class="card mb-2" onsubmit="saveCurrentFormContext(event)">
+                                <div id="shloka-div">
+                                    <div class="card shadow-sm border-primary mb-2">
+                                        <div class="card-header">
+                                            <a class="btn btn-sm" data-bs-toggle="collapse" href="#sh-shloka" aria-expanded="true">SHLOKA</a>
+                                            <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-padached">PADA</a>
+                                            <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-sandhi">SANDHI</a>
+                                            <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sh-anvayam">ANVAYAM</a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="sh-shloka" class="collapse show" data-bs-parent="#shloka-div">
+                                                <textarea id="input_shloka" class="form-control" rows="3" required placeholder="Paste Sanskrit characters..."></textarea>
                                             </div>
-                                            <div class="card-body">
-                                                <div id="sh-shloka" class="collapse show" data-bs-parent="#shloka-div">
-                                                    <textarea id="input_shloka" class="form-control" rows="3" required placeholder="Paste Sanskrit characters..."></textarea>
-                                                </div>
-                                                <div id="sh-padached" class="collapse" data-bs-parent="#shloka-div">
-                                                    <textarea id="input_padached" class="form-control" rows="3" required placeholder="Paste Pada characters..."></textarea>
-                                                </div>
-                                                <div id="sh-sandhi" class="collapse" data-bs-parent="#shloka-div">
-                                                    <textarea id="input_sandhi" class="form-control" rows="3" required placeholder="Paste Sandhi characters..."></textarea>
-                                                </div>
-                                                <div id="sh-anvayam" class="collapse" data-bs-parent="#shloka-div">
-                                                    <textarea id="input_anvayam" class="form-control" rows="3" required placeholder="Paste Anvayam characters..."></textarea>
-                                                </div>
+                                            <div id="sh-padached" class="collapse" data-bs-parent="#shloka-div">
+                                                <textarea id="input_padached" class="form-control" rows="3" required placeholder="Paste Pada characters..."></textarea>
+                                            </div>
+                                            <div id="sh-sandhi" class="collapse" data-bs-parent="#shloka-div">
+                                                <textarea id="input_sandhi" class="form-control" rows="3" required placeholder="Paste Sandhi characters..."></textarea>
+                                            </div>
+                                            <div id="sh-anvayam" class="collapse" data-bs-parent="#shloka-div">
+                                                <textarea id="input_anvayam" class="form-control" rows="3" required placeholder="Paste Anvayam characters..."></textarea>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
 
 <!--                                    <div class="card shadow-sm border-primary mb-2">-->
 <!--                                      <span class="input-group-text"><strong>Sanskrit Shloka</strong></span>-->
 <!--                                      <textarea id="in_shloka" class="form-control" rows="3" required placeholder="Paste Sanskrit characters..."></textarea>-->
 <!--                                    </div>-->
-                                    <div class="card shadow-sm border-primary">
-                                        <div class="card-body">
-                                            <!-- Fixed Description Text Block -->
-                                            <div class="mb-2">
-                                                <label class="form-label fw-bold">Description Text Context</label>
+                                <div class="card shadow-sm border-primary">
+                                    <div class="card-body">
+                                        <!-- Fixed Description Text Block -->
+                                        <div class="mb-2">
+                                            <label class="form-label fw-bold">Description Text Context</label>
 <!--                                                <button type="button" class="btn btn-sm btn-primary" onclick="helperDescription('field-description')">Helper</button>-->
-                                                <!-- Small Button Toolbar Container -->
-                                                <div id="field-description" contenteditable="true" class="form-control mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 50px;">
+                                            <!-- Small Button Toolbar Container -->
+                                            <div id="field-description" contenteditable="true" class="form-control mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 50px;">
 
-                                                </div>
-                                                <div id="desc-error-msg" class="text-danger small mt-1 d-none">Please fill out this field.</div>
                                             </div>
-                                            <!-- Footnotes Table Module -->
-                                            <div class="border-end">
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <h6 class="mb-0 fw-bold">Footnotes Map</h6>
-                                                    <button class="btn btn-sm btn-secondary" onclick="addFootnoteRow()" type="button">➕ Add Row</button>
-                                                </div>
-                                                <table class="table table-sm table-bordered">
-                                                    <thead class="table-light">
-                                                        <tr><th style="width: 20%;">Ref</th><th>Content</th><th style="width: 5%;">Remove</th></tr>
-                                                    </thead>
-                                                    <tbody id="footnotes-table-body"></tbody>
-                                                </table>
+                                            <div id="desc-error-msg" class="text-danger small mt-1 d-none">Please fill out this field.</div>
+                                        </div>
+                                        <!-- Footnotes Table Module -->
+                                        <div class="border-end">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="mb-0 fw-bold">Footnotes Map</h6>
+                                                <button class="btn btn-sm btn-secondary" onclick="addFootnoteRow()" type="button">➕ Add Row</button>
                                             </div>
+                                            <table class="table table-sm table-bordered">
+                                                <thead class="table-light">
+                                                    <tr><th style="width: 20%;">Ref</th><th>Content</th><th style="width: 5%;">Remove</th></tr>
+                                                </thead>
+                                                <tbody id="footnotes-table-body"></tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <!-- ANVAYAM FORM -->
-                            <div class="tab-pane fade" id="anvayam-pane" role="tabpanel">
-                                <!-- YouTube Table Module -->
-                                <div class="card shadow-sm border-primary p-2 mb-2">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="mb-0 fw-bold">YouTube Map</h6>
-                                        <button class="btn btn-sm btn-secondary" onclick="addYouTubeRow()" type="button">➕ Add Row</button>
-                                    </div>
-                                    <table class="table table-sm table-bordered">
-                                        <thead class="table-light">
-                                            <tr><th style="width: 30%;">Speaker</th><th>Url</th><th style="width: 5%;">Remove</th></tr>
-                                        </thead>
-                                        <tbody id="youTube-table-body"></tbody>
-                                    </table>
                                 </div>
-                                <!-- Anvayam Table Module -->
-                                <div class="card shadow-sm border-primary p-2" >
-                                    <div class="d-flex justify-content-between align-items-center mb-2 sticky-top" style="z-index: 10;">
-                                        <h6 class="mb-0 fw-bold">Anvayam Map</h6>
+                            </form>
+                        </div>
+                        <!-- ANVAYAM FORM -->
+                        <div class="tab-pane fade" id="anvayam-pane" role="tabpanel">
+                            <!-- YouTube Table Module -->
+                            <div class="card shadow-sm border-primary p-2 mb-2">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0 fw-bold">YouTube Map</h6>
+                                    <button class="btn btn-sm btn-secondary" onclick="addYouTubeRow()" type="button">➕ Add Row</button>
+                                </div>
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-light">
+                                        <tr><th style="width: 30%;">Speaker</th><th>Url</th><th style="width: 5%;">Remove</th></tr>
+                                    </thead>
+                                    <tbody id="youTube-table-body"></tbody>
+                                </table>
+                            </div>
+                            <!-- Anvayam Table Module -->
+                            <div class="card shadow-sm border-primary p-2" >
+                                <div class="d-flex justify-content-between align-items-center mb-2 sticky-top" style="z-index: 10;">
+                                    <h6 class="mb-0 fw-bold">Anvayam Map</h6>
 <!--                                        <button type="button" class="btn btn-sm btn-primary" onclick="helperAnvayam('anvayam-table-body')">Helper</button>-->
-                                        <button class="btn btn-sm btn-secondary" onclick="addAnvayamRow()" onmousedown="event.preventDefault()" type="button">➕ Add Row</button>
-                                    </div>
-                                    <div style="max-height: 300px; overflow-y: auto;">
-<!--                                        class="table table-striped border responsive-card-table"-->
-                                        <table class="table table-sm table-striped responsive-card-table" >
-                                        <thead class="table-light">
-                                            <tr><th style="width: 40%;">Sanskrit (sa)</th><th id="anvayam-th">Translation (en)</th><th style="width: 5%;">Remove</th></tr>
-                                        </thead>
-                                        <tbody id="anvayam-table-body"></tbody>
-                                    </table>
-                                    </div>
-
+                                    <button class="btn btn-sm btn-secondary" onclick="addAnvayamRow()" onmousedown="event.preventDefault()" type="button">➕ Add Row</button>
                                 </div>
+                                <div style="max-height: 300px; overflow-y: auto;">
+<!--                                        class="table table-striped border responsive-card-table"-->
+                                    <table class="table table-sm table-striped responsive-card-table" >
+                                    <thead class="table-light">
+                                        <tr><th style="width: 40%;">Sanskrit (sa)</th><th id="anvayam-th">Translation (en)</th><th style="width: 5%;">Remove</th></tr>
+                                    </thead>
+                                    <tbody id="anvayam-table-body"></tbody>
+                                </table>
+                                </div>
+
                             </div>
-                            <!-- Acharya Comments FORM -->
-                            <div class="tab-pane fade" id="acharya-pane" role="tabpanel">
-                                <div id="acharya">
-                                    <div class="card">
-                                      <div class="card-header">
-                                        <span class="fw-bold text-dark">Commentary:</span>
-                                        <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja" aria-expanded="true">Sri Ramanuja</a>
-                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
-                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
-                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
-                                        <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#siva">Sri Siva</a>
+                        </div>
+                        <!-- Acharya Comments FORM -->
+                        <div class="tab-pane fade" id="acharya-pane" role="tabpanel">
+                            <div id="acharya">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <span class="fw-bold text-dark">Commentary:</span>
+                                    <a class="btn btn-sm" data-bs-toggle="collapse" href="#ramanuja" aria-expanded="true">Sri Ramanuja</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#sankara">Sri Sankara</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#madhava">Sri Madhva</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#desika">Sri Desika</a>
+                                    <a class="collapsed btn btn-sm" data-bs-toggle="collapse" href="#siva">Sri Siva</a>
+                                  </div>
+                                  <div class="card-body p-0">
+                                      <div id="ramanuja" class="collapse show" data-bs-parent="#acharya">
+                                          <div class="card">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between" >
+                                                <button type="submit" form="ramanuja-form" class="btn btn-sm btn-primary fw-bold">Update Ramanuja Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('ramanuja')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white">
+                                                <form id="ramanuja-form" onsubmit="commitAcharyaForm(event, 'ramanuja')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Ramanuja</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
                                       </div>
-                                      <div class="card-body p-0">
-                                          <div id="ramanuja" class="collapse show" data-bs-parent="#acharya">
-                                              <div class="card">
-                                                <div class="card-header bg-light d-flex align-items-center justify-content-between" >
-                                                    <button type="submit" form="ramanuja-form" class="btn btn-sm btn-primary fw-bold">Update Ramanuja Commentaries</button>
-                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('ramanuja')">+ Add Language</button>
-                                                </div>
-                                                <div class="card-body bg-white">
-                                                    <form id="ramanuja-form" onsubmit="commitAcharyaForm(event, 'ramanuja')">
-                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Ramanuja</span></h6>
-                                                        <div class="acharya-admin-div"></div>
-                                                    </form>
-                                                </div>
+                                      <div id="sankara" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="sankara-form" class="btn btn-sm btn-primary fw-bold">Update Sankara Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('sankara')">+ Add Language</button>
                                             </div>
-                                          </div>
-                                          <div id="sankara" class="collapse" data-bs-parent="#acharya">
-                                              <div class="card shadow-sm border border-secondary-subtle">
-                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                    <button type="submit" form="sankara-form" class="btn btn-sm btn-primary fw-bold">Update Sankara Commentaries</button>
-                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('sankara')">+ Add Language</button>
-                                                </div>
-                                                <div class="card-body bg-white p-3">
-                                                    <form id="sankara-form" onsubmit="commitAcharyaForm(event, 'sankara')">
-                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Sankara</span></h6>
-                                                        <div class="acharya-admin-div"></div>
-                                                    </form>
-                                                </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="sankara-form" onsubmit="commitAcharyaForm(event, 'sankara')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Sankara</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
                                             </div>
-                                          </div>
-                                          <div id="madhava" class="collapse" data-bs-parent="#acharya">
-                                              <div class="card shadow-sm border border-secondary-subtle">
-                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                    <button type="submit" form="madhava-form" class="btn btn-sm btn-primary fw-bold">Update Madhava Commentaries</button>
-                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('madhava')">+ Add Language</button>
-                                                </div>
-                                                <div class="card-body bg-white p-3">
-                                                    <form id="madhava-form" onsubmit="commitAcharyaForm(event, 'madhava')">
-                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Madhava</span></h6>
-                                                        <div class="acharya-admin-div"></div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                          </div>
-                                          <div id="desika" class="collapse" data-bs-parent="#acharya">
-                                              <div class="card shadow-sm border border-secondary-subtle">
-                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                    <button type="submit" form="desika-form" class="btn btn-sm btn-primary fw-bold">Update Desika Commentaries</button>
-                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('desika')">+ Add Language</button>
-                                                </div>
-                                                <div class="card-body bg-white p-3">
-                                                    <form id="desika-form" onsubmit="commitAcharyaForm(event, 'desika')">
-                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Desika</span></h6>
-                                                        <div class="acharya-admin-div"></div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                          </div>
-                                          <div id="siva" class="collapse" data-bs-parent="#acharya">
-                                              <div class="card shadow-sm border border-secondary-subtle">
-                                                <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
-                                                    <button type="submit" form="siva-form" class="btn btn-sm btn-primary fw-bold">Update Siva Commentaries</button>
-                                                    <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('siva')">+ Add Language</button>
-                                                </div>
-                                                <div class="card-body bg-white p-3">
-                                                    <form id="siva-form" onsubmit="commitAcharyaForm(event, 'siva')">
-                                                        <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Siva</span></h6>
-                                                        <div class="acharya-admin-div"></div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                          </div>
+                                        </div>
                                       </div>
-                                    </div>
+                                      <div id="madhava" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="madhava-form" class="btn btn-sm btn-primary fw-bold">Update Madhava Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('madhava')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="madhava-form" onsubmit="commitAcharyaForm(event, 'madhava')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Madhava</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div id="desika" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="desika-form" class="btn btn-sm btn-primary fw-bold">Update Desika Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('desika')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="desika-form" onsubmit="commitAcharyaForm(event, 'desika')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Desika</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div id="siva" class="collapse" data-bs-parent="#acharya">
+                                          <div class="card shadow-sm border border-secondary-subtle">
+                                            <div class="card-header bg-light d-flex align-items-center justify-content-between py-2">
+                                                <button type="submit" form="siva-form" class="btn btn-sm btn-primary fw-bold">Update Siva Commentaries</button>
+                                                <button type="button" class="btn btn-xs btn-success py-1 px-2 small" onclick="addAcharyaFieldRow('siva')">+ Add Language</button>
+                                            </div>
+                                            <div class="card-body bg-white p-3">
+                                                <form id="siva-form" onsubmit="commitAcharyaForm(event, 'siva')">
+                                                    <h6 class="mb-3 border-bottom pb-2">Author Field Context: <span class="text-primary fw-bold">Siva</span></h6>
+                                                    <div class="acharya-admin-div"></div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -299,7 +299,7 @@
             <div class="tab-pane fade" id="c-pane" role="tabpanel" aria-labelledby="c-tab">
                 <h4 class="text-dark border-bottom pb-2 mb-3">Moderation Queue: Student Discussions Forum</h4>
                 <div class="table-responsive" style="max-height: 68vh; overflow-y: auto;">
-                    <table class="table table-striped align-middle border">
+                    <table class="table table-striped align-middle border responsive-card-table">
                         <thead class="table-dark">
                             <tr>
                                 <th>Student Metadata</th>
@@ -339,7 +339,7 @@
             <div class="tab-pane fade" id="student-pane" role="tabpanel" aria-labelledby="student-tab">
                 <h4 class="text-dark border-bottom pb-2 mb-3">Student Registration Details</h4>
                 <div class="table-responsive" style="max-height: 68vh; overflow-y: auto;">
-                    <table class="table table-striped align-middle border">
+                    <table class="table table-striped align-middle border responsive-card-table">
                         <thead class="table-primary">
                             <tr>
                                 <th>Name</th>
@@ -363,8 +363,9 @@
                 <input type="hidden" id="quiz-lang" value="">
                 <input type="hidden" id="quiz-chapter" value="">
                 <div class="card">
+                    <h5 class="p-2" id="quiz-h5">Interactive Quiz</h5>
                     <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white gap-2">
-                        <h5 id="quiz-h5">Interactive Quiz</h5>
+
                         <select id="select-quiz-lang" onchange="changeQuizLanguage(this.value)">
                             <option value="en">English</option>
                             <option value="ta">Tamil</option>
@@ -382,16 +383,16 @@
 
             <!-- Tab Pane Glossary: Edit Content -->
             <div class="tab-pane fade" id="glossary-pane" role="tabpanel" aria-labelledby="glossary-tab">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 id="glossary-h4" class="text-dark mb-2">Edit: Glossary</h4>
-                    <div class="ms-auto d-flex gap-2">
+                <h5 id="glossary-h4" class="text-dark mb-2">Edit: Glossary</h5>
+                <div class="d-flex gap-2 mb-2">
+<!--                    <div class="ms-auto d-flex gap-2">-->
                         <button id="glossary-fetch-button" class="btn btn-sm btn-secondary" onclick="fetchGlossary()" type="button">Fetch</button>
                         <select id="select-glossary-lang" onchange="fetchGlossary()">
                             <option value="en">English</option>
                             <option value="ta">Tamil</option>
                         </select>
-                        <button class="btn btn-sm btn-secondary" onclick="addGlossaryRow()" type="button">➕ Add Row</button>
-                    </div>
+                        <button class="btn btn-sm btn-secondary" onclick="addGlossaryRow()" type="button">➕ Row</button>
+<!--                    </div>-->
                 </div>
                 <div class="table-responsive-sm" style="max-height: 68vh; overflow-y: auto;">
                     <table class="table table-striped border responsive-card-table">
@@ -413,16 +414,16 @@
             </div>
             <!-- Tab Pane FAQ: Edit Content -->
             <div class="tab-pane fade" id="faq-pane" role="tabpanel" aria-labelledby="faq-tab">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 id="faq-h4" class="text-dark mb-2">Edit: FAQ</h4>
-                    <div class="ms-auto d-flex gap-2">
+                <h5 id="faq-h4" class="text-dark mb-2">Edit: FAQ</h5>
+                <div class="d-flex gap-2 mb-2">
+<!--                    <div class="ms-auto d-flex gap-2">-->
                         <button id="faq-fetch-button" class="btn btn-sm btn-secondary" onclick="fetchFaq()" type="button">Fetch</button>
                         <select id="select-faq-lang" onchange="fetchFaq()">
                             <option value="en">English</option>
                             <option value="ta">Tamil</option>
                         </select>
                         <button class="btn btn-sm btn-secondary" onclick="addFaqRow()" type="button">➕ Add Row</button>
-                    </div>
+<!--                    </div>-->
                 </div>
                 <div class="table-responsive-sm" style="max-height: 68vh; overflow-y: auto;">
                     <table class="table table-striped border responsive-card-table">
@@ -684,7 +685,7 @@
 
     function refreshAdminVersesList(chapterNum) {
         const listButton = document.getElementById("ch-list-button");
-        listButton.innerHTML = `Chapter ${chapterNum}`;
+        listButton.innerHTML = `CH-${chapterNum}`;
 
         const url = `/api/chapterShlokas?chapter=${chapterNum}`;
         fetch(url)
@@ -747,7 +748,7 @@
         const verse = await res.json();
 
         const listButton = document.getElementById("verse-list-button");
-        listButton.innerHTML = `Verse ${ch}.${vn}`;
+        listButton.innerHTML = `V ${ch}.${vn}`;
 
         document.getElementById('form_verse_id').value = id;
         document.getElementById('input_chapter').value = ch;
@@ -1595,10 +1596,10 @@
                 comments.forEach(c => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td><span class="fw-bold d-block text-dark">${c.student_name}</span><small class="text-muted">${c.student_email}</small></td>
-                        <td class="font-monospace text-secondary">CH ${c.chapter} - V ${c.verse_number}</td>
-                        <td><p class="mb-0 small text-dark" style="max-width:380px;">${c.text}</p><small class="text-muted" style="font-size:0.7rem;"><i class="fa-regular fa-clock me-1"></i>${c.timestamp}</small></td>
-                        <td class="text-center">
+                        <td data-label="Student: "><span class="fw-bold d-block text-dark">${c.student_name}</span><small class="text-muted">${c.student_email}</small></td>
+                        <td data-label="Context: " class="font-monospace text-secondary">CH ${c.chapter} - V ${c.verse_number}</td>
+                        <td data-label="Comments: "><p class="mb-0 small text-dark" style="max-width:380px;">${c.text}</p><small class="text-muted" style="font-size:0.7rem;"><i class="fa-regular fa-clock me-1"></i>${c.timestamp}</small></td>
+                        <td data-label="Operations: " class="text-center">
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-outline-dark" onclick="openAdminCommentModal(${c.id}, \`${escapeString(c.text)}\`)"><i class="fa-solid fa-edit">edit</i></button>
                                 <button class="btn btn-outline-danger" onclick="deleteCommentEntry(${c.id})"><i class="fa-solid fa-trash-can">delete</i></button>
@@ -1646,9 +1647,13 @@
                 students.forEach(s => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${s.name}</td><td>${s.email}</td><td class="text-center">${s.age}</td>
-                        <td>${s.phone}</td><td class="text-center">${s.gender}</td><td class="text-center">${s.last_verse_id}</td>
-                        <td class="text-center">
+                        <td data-label="Name: ">${s.name}</td>
+                        <td data-label="Email: ">${s.email}</td>
+                        <td data-label="Age: " class="text-center">${s.age}</td>
+                        <td data-label="Phone: ">${s.phone}</td>
+                        <td data-label="Sex:  class="text-center">${s.gender}</td>
+                        <td data-label="Last Verse Id: " class="text-center">${s.last_verse_id}</td>
+                        <td data-label="ACTION" class="text-center">
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-outline-danger" onclick="deleteStudentEntry(${s.id})"><i class="fa-solid fa-trash-can">delete</i></button>
                             </div>
@@ -1892,13 +1897,13 @@
         const h5QuizEl = document.getElementById("quiz-h5");
         h5QuizEl.innerHTML = "";
         if (quizData.length === 0) {
-            h5QuizEl.innerHTML = "Interactive Quiz - No evaluation assessments registered yet for this CH." + activeVerseChapterNum + " segment.";
+            h5QuizEl.innerHTML = "Quiz - No assessments registered for CH" + activeVerseChapterNum;
             return;
         }
         const noofquiz = quizData.reduce((count, quiz) =>{
             return quiz.status !== 'deleted' ? count+1 : count
         },0);
-        h5QuizEl.textContent = "Interactive Quiz for CH." + activeVerseChapterNum + " segment. Total Questions: " + noofquiz;
+        h5QuizEl.textContent = "Quiz for CH." + activeVerseChapterNum + ". Total Questions: " + noofquiz;
         quizData.forEach((q, idx) =>{
             //It only executes the right side if the left side evaluates to true
             q.status !== 'deleted' && container.appendChild(renderQuiz(q, idx));
@@ -1965,7 +1970,7 @@
             return quiz.status !== 'deleted' ? count+1 : count
         },0);
         const h5QuizEl = document.getElementById("quiz-h5");
-        h5QuizEl.textContent = "Interactive Quiz for CH." + activeVerseChapterNum + " segment. Total Questions: " + noofquiz;
+        h5QuizEl.textContent = "Quiz for CH." + activeVerseChapterNum + ". Total Questions: " + noofquiz;
         showToast("Added New Empty Quiz", "success");
     }
 
@@ -2033,7 +2038,7 @@
             return quiz.status !== 'deleted' ? count+1 : count
         },0);
         const h5QuizEl = document.getElementById("quiz-h5");
-        h5QuizEl.textContent = "Interactive Quiz for CH." + activeVerseChapterNum + " segment. Total Questions: " + noofquiz;
+        h5QuizEl.textContent = "Quiz for CH." + activeVerseChapterNum + ". Total Questions: " + noofquiz;
         showToast (`${status}-${quizId} deleted successfully`, 'success');
     }
 

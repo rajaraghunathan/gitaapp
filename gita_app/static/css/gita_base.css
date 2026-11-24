@@ -107,7 +107,7 @@ body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif
     --bs-nav-link-padding-x: 0.5rem ;
     --bs-nav-link-padding-y: 0.25rem ;
 }
-.acharya-div, .acharya-admin-text-div, .shloka-text p, #shloka-div p, .summary-value {
+.acharya-div, .acharya-admin-text-div, .shloka-text p, #shloka-div p, .summary-value, #faqDiv p span {
     white-space: pre-wrap;
 }
 
@@ -161,6 +161,7 @@ body { background-color: #f7f1e3; font-family: 'Segoe UI', system-ui, sans-serif
       background-color: rgb(81 13 38 / 10%);
     border-bottom: 1px solid #dde3e9;
       margin-bottom: 0.2rem;
+      text-align: left !important;
   }
 
   /* Remove the bottom border from the final card property row */

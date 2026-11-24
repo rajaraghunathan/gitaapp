@@ -40,7 +40,7 @@ def get_single_verse_user():
         chapter_number = request.args.get('chapter', type=int)
         verse_number = request.args.get('verse', type=int)
 
-        lang = request.args.get('language', type=str)
+        lang = request.args.get('language', 'en')
         if not lang: return jsonify({"error": "Missing lang parameter"}), 400
 
         verse = (db.session.query(Verse)

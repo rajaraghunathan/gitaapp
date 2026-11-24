@@ -763,7 +763,6 @@ def admin_update_db(file_id):
 
         # --- PHASE 1: HANDLE DELETIONS ---
         for record_id in ids_to_delete:
-            print(existing_records_map[record_id])
             db.session.delete(existing_records_map[record_id])
             record_deleted.append(record_id)
         if len(record_deleted) > 0:
