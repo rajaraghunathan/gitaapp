@@ -6,7 +6,7 @@
     <input type="hidden" id="form_verse_id" value="">
     <input type="hidden" id="input_chapter">
     <input type="hidden" id="input_verse_number">
-
+    <!-- 1. The content container with bold words -->
     <div class="sub-sticky py-2">
         <div class="text-center">
             <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.5rem"></i>
@@ -57,8 +57,8 @@
                         <!-- Shloka Block -->
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingShloka">
-                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShloka" aria-expanded="true" aria-controls="collapseShloka">
-                            Bhagavad Gita Verse
+                          <button class="fw-bold accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShloka" aria-expanded="true" aria-controls="collapseShloka">
+                            Gita Verse
                           </button>
                         </h2>
                         <div id="collapseShloka" class="accordion-collapse collapse show" aria-labelledby="headingShloka">
@@ -76,7 +76,7 @@
                       </div>
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingYoutube">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseYoutube" aria-expanded="false" aria-controls="collapseYoutube">
+                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseYoutube" aria-expanded="false" aria-controls="collapseYoutube">
                             YouTube Commentaries
                           </button>
                         </h2>
@@ -90,14 +90,13 @@
                         <!-- Description Text Block -->
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingDesc">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" aria-expanded="false" aria-controls="collapseDesc">
-                            Description
+                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" aria-expanded="false" aria-controls="collapseDesc">
+                            Verse Meaning
                           </button>
                         </h2>
                         <div id="collapseDesc" class="accordion-collapse collapse" aria-labelledby="headingDesc">
                           <div class="accordion-body p-0">
                             <div class="card mb-2 p-2">
-                                <label class="form-label fw-bold">Description</label>
                                 <p id="field-description"></p>
                             </div>
                           </div>
@@ -106,14 +105,13 @@
                         <!-- Footnotes Table -->
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingFoot">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoot" aria-expanded="false" aria-controls="collapseFoot">
-                            Foot Notes
+                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoot" aria-expanded="false" aria-controls="collapseFoot">
+                            Notes
                           </button>
                         </h2>
                         <div id="collapseFoot" class="accordion-collapse collapse" aria-labelledby="headingFoot">
                           <div class="accordion-body p-0">
-                             <div class="card mb-2 p-2" style="display: none;">
-                                <label class="form-label fw-bold">Notes</label>
+                             <div class="card mb-2 p-2">
                                 <p id="footnotes-div"></p>
                             </div>
                           </div>
@@ -122,8 +120,8 @@
                         <!-- Anvayam Table Module -->
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingMean">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMean" aria-expanded="false" aria-controls="collapseMean">
-                            Shloka Word Meaning
+                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMean" aria-expanded="false" aria-controls="collapseMean">
+                            Verse Word Meaning
                           </button>
                         </h2>
                         <div id="collapseMean" class="accordion-collapse collapse" aria-labelledby="headingMean">
@@ -149,9 +147,10 @@
                         <!-- Acharya Commentary -->
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingAcharya">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAcharya" aria-expanded="false" aria-controls="collapseAcharya">
+                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAcharya" aria-expanded="false" aria-controls="collapseAcharya">
                             Acharya Comments
                           </button>
+
                         </h2>
                         <div id="collapseAcharya" class="accordion-collapse collapse" aria-labelledby="headingAcharya">
                           <div class="accordion-body p-0">
@@ -159,7 +158,7 @@
                               <div class="card-header">
                                 <ul class="nav nav-pills card-header-pills" id="verseTabs-1" role="tablist">
                                   <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#ramanuja" type="button" role="tab">Sri Ramanuja</button>
+                                      <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#ramanuja" type="button" role="tab">Sri Ramanuja</button>
                                   </li>
                                   <li class="nav-item" role="presentation">
                                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sankara" type="button" role="tab">Sri Sankara</button>
@@ -172,6 +171,13 @@
                                   </li>
                                    <li class="nav-item" role="presentation">
                                     <button class="nav-link"  data-bs-toggle="pill" data-bs-target="#siva" type="button" role="tab">Sri Siva</button>
+                                  </li><i class="bi bi-share"></i>
+                                    <li class="px-2">
+                                    <button id="share-btn" type="button" class="btn btn-primary">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
+                                          <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"/>
+                                        </svg>
+                                    </button>
                                   </li>
                                 </ul>
                               </div>
@@ -699,20 +705,6 @@
         renderAnvayam(data.anvayam || []);
     }
 
-    // <div id="youtube-render-div">
-    //                 </div>
-    //                 <div class="card">
-    //                   <div class="card-header">
-    //                     <ul class="nav nav-pills card-header-pills" role="tablist"></ul>
-    //                   </div>
-    //                   <div id="youTubeDivs" class="card-body tab-content">
-    //                   </div>
-    //                 </div>
-    //                 <li class="nav-item role="presentation">
-    //                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#${key}" type="button" role="tab">${key.toUpperCase()}</button>
-    //                   </li>
-
-
     function renderYoutube (YTData) {
         const yDiv = document.getElementById('youtube-render-div');
         let headerHtml = '';
@@ -726,9 +718,6 @@
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#y-link${counter}" type="button" role="tab">${key}</button>
                   </li>
                  `
-                // headerHtml += ` <div class="shloka-text tab-pane fade text-center" id="${key}" role="tabpanel">
-                //    <a class="btn btn-sm" data-bs-toggle="collapse" href="#y-link${counter}" ${counter===1 ?`aria-expanded="true"`: ''}>${key}</a>
-                //  `
                 bodyHtml += `
                         <div class="tab-pane fade youtube-div" id="y-link${counter}" role="tabpanel">
                             <div class="video-container">
@@ -736,13 +725,6 @@
                             </div>
                         </div>
                 `
-                // bodyHtml += `
-                //         <div id="y-link${counter}" class="youtube-div collapse ${counter===1 ?`show`: ''}" data-bs-parent="#youtube-render-div">
-                //             <div class="video-container">
-                //                 <iframe id="youtubePlayer" width="560" height="315" src="${val}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                //             </div>
-                //         </div>
-                // `
                 counter += 1
             });
             const cardDiv = document.createElement('div');
@@ -756,6 +738,7 @@
             cardDiv.appendChild(cardHeader).appendChild(cardBody);
             yDiv.appendChild(cardDiv );
         }
+        if (yDiv.innerText === "") {yDiv.innerHTML = "<p class='fw-bold p-2'>Sorry...  Requested YouTube Content is not Available.</p>"}
     }
 
 
@@ -764,7 +747,6 @@
 
         // 1. Safe guard check: Ensure objData is defined, not null, and has keys
         if (objData && typeof objData === 'object' && Object.keys(objData).length > 0) {
-            fDiv.closest(".card").style.display = 'block';
             // 2. Map entries to strings, omitting the trailing separator issue
             const footnoteLines = Object.entries(objData).map(([key, val]) => {
                 return `<strong>"${key}" : </strong>${val}`;
@@ -773,28 +755,11 @@
             // 3. Join strings with <br> so the list is dense and clean
             fDiv.innerHTML = footnoteLines.join('<br><br>');
         } else {
-            fDiv.closest(".card").style.display = 'none';
-            fDiv.innerHTML = "<strong>Not Available</strong>";
+            fDiv.innerHTML = "<strong>Sorry...  Requested FootNotes Content is not Available.</strong>";
         }
     }
 
     function renderAnvayam(arrData) {
-        // const anvayamDiv = document.getElementById('anvayam-div');
-        //
-        // if (arrData && arrData.length > 0) {
-        //     // Create an array of formatted text strings
-        //     const textSegments = arrData.map(item => {
-        //         const saText = item && typeof item === 'object' ? (item.sa || '') : '';
-        //         const enText = item && typeof item === 'object' ? (item.en || '') : '';
-        //         return `<strong>${saText} --- </strong>${enText}`;
-        //     });
-        //
-        //     // Join them with a semicolon and space, eliminating any trailing punctuation
-        //     anvayamDiv.innerHTML = textSegments.join('; ') + '.';
-        // } else {
-        //     anvayamDiv.innerHTML = "<strong>Not Available</strong>";
-        // }
-
         const tbody = document.getElementById('anvayamTbody');
         tbody.innerHTML = '';
         arrData.map(item => {
@@ -1315,4 +1280,76 @@
     }
 
 </script>
+
+
+
+
+<script>
+  // Helper function to convert HTML tags into plain text with WhatsApp formatting
+  function getFormattedDivText(divEl) {
+    const container = divEl;
+    // Clone the element so we don't modify the visible webpage
+    const clone = container.cloneNode(true);
+
+    // Convert <b> and <strong> tags to *bold*
+    clone.querySelectorAll("b, strong").forEach((el) => {
+      const text = el.textContent.trim();
+      if (text) {
+        el.replaceWith(`*${text}*`);
+      }
+    });
+    clone.querySelectorAll("i").forEach((el) => {
+      const text = el.textContent.trim();
+      if (text) {
+        el.replaceWith(`_${text}_`);
+      } else {
+        el.remove(); // Removes empty icon tags like <i class="bi bi-share"></i>
+      }
+    });
+
+    // Convert <br> tags to line breaks
+    clone.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
+
+    // Add line breaks after block elements like <p> or <div>
+    clone.querySelectorAll("p, div").forEach((block) => {
+      block.append("\n");
+    });
+
+    // Return clean text without extra trailing spaces
+      const textContent = clone.textContent.replace(/\n\s*\n/g, "\n\n").trim();
+      console.log(textContent)
+    return textContent;
+  }
+
+  // Trigger share on button click
+  document.getElementById("share-btn").addEventListener("click", async () => {
+    const divEl = document.querySelector(".acharya-div.active");
+    if (!divEl) return;
+
+    const formattedText = getFormattedDivText(divEl);
+
+    // Option A: Use Native Share Sheet ("Share to anywhere" on mobile & modern browsers)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Shared Details",
+          text: formattedText,
+        });
+      } catch (err) {
+        console.log("Share canceled or failed:", err);
+      }
+    } else {
+      // Option B: Fallback to WhatsApp Web/App for older desktop browsers
+      const encodedText = encodeURIComponent(formattedText);
+      window.open(`https://whatsapp.com{encodedText}`, "_blank", "noopener,noreferrer");
+    }
+  });
+</script>
+
+
+
+
+
+
+
 {% endblock %}
