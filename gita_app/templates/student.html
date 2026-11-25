@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% block title %}Student Dashboard{% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="container-fluid my-2 px-0">
     <input type="hidden" id="form_verse_id" value="">
     <input type="hidden" id="input_chapter">
     <input type="hidden" id="input_verse_number">
     <!-- 1. The content container with bold words -->
     <div class="sub-sticky py-2">
-        <div class="text-center">
-            <i id="chapter-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.5rem"></i>
-        </div>
+<!--        <div class="text-center">-->
+<!--            <i id="chapte-num" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.5rem"></i>-->
+<!--        </div>-->
         <div class="d-flex w-100 align-items-center gap-2 px-2 py-2">
             <button class="fw-bold btn btn-warning bt-sm" type="button" data-bs-toggle="collapse" data-bs-target="#studentToggleMenu">
               Menu
             </button>
             <div class="dropdown mb-0 me-auto">
-                <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown"></button>
+                <button id="lang-dropdown" type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">English</button>
                 <ul class="dropdown-menu">
                     <li><button id="en-lang" type="button" class="dropdown-item active" onclick="loadLang(event, 'en')">English</button></li>
                     <li><button id="ta-lang" type="button" class="dropdown-item" onclick="loadLang(event, 'ta')">Tamil</button></li>
@@ -36,7 +36,7 @@
         </div>
 
         <div id="studentToggleMenu" class="collapse">
-          <div class="bg-secondary d-flex flex-wrap flex-md-nowrap gap-2 p-2">
+          <div class="bg-body-secondary d-flex flex-wrap flex-md-nowrap gap-2 p-2">
               <!-- Links go here -->
               <a class="nav-link nav-link-custom" data-bs-toggle="offcanvas" href="#studentMenu">Chapter</a>
               <a class="nav-link nav-link-custom" data-bs-toggle="collapse" href="#s-pane">Shloka</a>
@@ -51,13 +51,13 @@
     <div id="div-section" class="tab-content w-100 d-block mt-2" style="width: 100% !important;">
         <!-- VERSE SECTION -->
         <div class="container-fluid collapse show" data-bs-parent="#div-section" id="s-pane" >
-            <div class="accordion" id="shlokaAccordion">
+            <div class="accordion accordion-flush" id="shlokaAccordion">
                 <div class="row">
                     <div class="col-md-6">
                         <!-- Shloka Block -->
-                      <div class="accordion-item">
+                      <div class="accordion-item rounded-5 my-2">
                         <h2 class="accordion-header" id="headingShloka">
-                          <button class="fw-bold accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShloka" aria-expanded="true" aria-controls="collapseShloka">
+                          <button class="fw-bold accordion-button rounded-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShloka" aria-expanded="true" aria-controls="collapseShloka">
                             Gita Verse
                           </button>
                         </h2>
@@ -74,9 +74,9 @@
                           </div>
                         </div>
                       </div>
-                      <div class="accordion-item">
+                      <div class="accordion-item rounded-5 my-2">
                         <h2 class="accordion-header" id="headingYoutube">
-                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseYoutube" aria-expanded="false" aria-controls="collapseYoutube">
+                          <button class="fw-bold accordion-button rounded-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseYoutube" aria-expanded="false" aria-controls="collapseYoutube">
                             YouTube Commentaries
                           </button>
                         </h2>
@@ -88,9 +88,9 @@
                         </div>
                       </div>
                         <!-- Description Text Block -->
-                      <div class="accordion-item">
+                      <div class="accordion-item rounded-5 my-2">
                         <h2 class="accordion-header" id="headingDesc">
-                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" aria-expanded="false" aria-controls="collapseDesc">
+                          <button class="fw-bold accordion-button rounded-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" aria-expanded="false" aria-controls="collapseDesc">
                             Verse Meaning
                           </button>
                         </h2>
@@ -103,9 +103,9 @@
                         </div>
                       </div>
                         <!-- Footnotes Table -->
-                      <div class="accordion-item">
+                      <div class="accordion-item rounded-5 my-2">
                         <h2 class="accordion-header" id="headingFoot">
-                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoot" aria-expanded="false" aria-controls="collapseFoot">
+                          <button class="fw-bold accordion-button rounded-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoot" aria-expanded="false" aria-controls="collapseFoot">
                             Notes
                           </button>
                         </h2>
@@ -118,9 +118,9 @@
                         </div>
                       </div>
                         <!-- Anvayam Table Module -->
-                      <div class="accordion-item">
+                      <div class="accordion-item rounded-5 my-2">
                         <h2 class="accordion-header" id="headingMean">
-                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMean" aria-expanded="false" aria-controls="collapseMean">
+                          <button class="fw-bold accordion-button rounded-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMean" aria-expanded="false" aria-controls="collapseMean">
                             Verse Word Meaning
                           </button>
                         </h2>
@@ -145,9 +145,9 @@
                     </div>
                     <div class="col-md-6">
                         <!-- Acharya Commentary -->
-                      <div class="accordion-item">
+                      <div class="accordion-item rounded-5 my-2">
                         <h2 class="accordion-header" id="headingAcharya">
-                          <button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAcharya" aria-expanded="false" aria-controls="collapseAcharya">
+                          <button class="fw-bold accordion-button rounded-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAcharya" aria-expanded="false" aria-controls="collapseAcharya">
                             Acharya Comments
                           </button>
 
@@ -173,11 +173,7 @@
                                     <button class="nav-link"  data-bs-toggle="pill" data-bs-target="#siva" type="button" role="tab">Sri Siva</button>
                                   </li><i class="bi bi-share"></i>
                                     <li class="px-2">
-                                    <button id="share-btn" type="button" class="btn btn-primary">
-                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
-                                          <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"/>
-                                        </svg>
-                                    </button>
+                                    <button id="share-btn" type="button" class="btn">&#x1F4E4;&#xFE0E;</button>
                                   </li>
                                 </ul>
                               </div>
@@ -417,7 +413,9 @@
     const langVals = {'en': 'English', 'ta': 'Tamil', 'sa': 'Sanskrit', 'hi': 'Hindi', 'te': 'Telugu'}
     const langKeys = {'English': 'en', 'Tamil': 'ta', 'Sanskrit': 'sa', 'Hindi': 'hi', 'Telugu': 'te'}
 
+
     document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("lang-dropdown").innerText = langVals[currentMeaningLanguage]
         fetchGlobalGlossary();
         const chapterClassList = document.querySelectorAll('.chapter-a');
         chapterClassList.forEach(aElement => {
@@ -679,7 +677,7 @@
                 verseElements[targetIdx].classList.add('active');
             }
             const selectedLang = document.getElementById("lang-dropdown").innerText;
-            const lang = langKeys[selectedLang.trim()]
+            const lang = langKeys[selectedLang.trim()] || currentMeaningLanguage
             loadVerse(lang, flattenedVerseList[targetIdx].id, flattenedVerseList[targetIdx].chapter, flattenedVerseList[targetIdx].verse)
         }
     }
