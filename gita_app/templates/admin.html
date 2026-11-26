@@ -5,16 +5,19 @@
 <div class="container-fluid my-2 px-2">
         <!-- Dashboard Switcher Controls -->
         <div class="sub-sticky">
-<!--            <div>-->
-<!--                <i id="c-name" class="p-2" style="font-weight: bold; color: #fd7e14; font-size: 1.5rem"></i>-->
-<!--                <i id="v-num" class="p-2" style="font-weight: bold; color: darkblue; font-size: 1.5rem"></i>-->
-<!--            </div>-->
             <div class="d-flex align-items-center p-2 rounded shadow-sm border" id="adminTabs" style="top: 56px;">
             <!-- Right Side: Integrated Text Styling Toolbar -->
-                <button class="fw-bold btn btn-warning bt-sm" type="button" data-bs-toggle="collapse" data-bs-target="#adminToggleMenu">
+                <button class="fw-bold btn btn-sm btn-warning bt-sm" type="button" data-bs-toggle="collapse" data-bs-target="#adminToggleMenu">
                   Menu
                 </button>
+                <div class="dropdown px-2">
+                      <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                          <span id="selected-meaning-language">Loading...</span>
+                      </button>
+                      <ul id="language-dropdown" class="dropdown-menu">
 
+                      </ul>
+                    </div>
                 <div class="ms-auto d-flex align-items-center border-start ps-3 me-2" id="textToolbar">
                     <span class="small text-muted me-2 d-none d-md-inline" style="font-size: 11px;">Text:</span>
                     <div class="btn-group" role="group" aria-label="Text formatting">
@@ -26,21 +29,7 @@
                     </div>
                 </div>
             </div>
-            <div id="adminToggleMenu" class="collapse p-2 rounded shadow-sm">
-                <div class="bg-white d-flex flex-wrap flex-md-nowrap gap-2 p-2" role="tablist">
-                      <!-- Links go here -->
-                    <button class="fw-bold btn bt-sm active" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button" role="tab">Shloka Manager</button>
-                    <button class="fw-bold btn bt-sm" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" role="tab" onclick="fetchQuizList()">Quiz</button>
-                    <button class="fw-bold btn bt-sm" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" role="tab">Glossary</button>
-                    <button class="fw-bold btn bt-sm" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" role="tab">FAQ</button>
-                    <button class="fw-bold btn bt-sm" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button" role="tab" onclick="fetchGlobalComments()">Discussion Queue</button>
-                     <button class="fw-bold btn bt-sm" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" role="tab">Data Export Center</button>
-                    <button class="fw-bold btn bt-sm" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button" role="tab" onclick="fetchStudentList()">Students</button>
-                    <button class="fw-bold btn bt-sm" id="db-tab" data-bs-toggle="pill" data-bs-target="#db-pane" type="button" role="tab" onclick="loadDbDetails()">
-                        <i class="fa-solid fa-pen-to-square me-2">DB</i></button>
-                </div>
-
-                <div class="d-flex flex-wrap flex-md-nowrap gap-2 p-2 border-3 border-top">
+            <div class="d-flex align-items-center gap-2 p-2">
                      <div class = "d-flex gap-2">
                         <button class="btn btn-sm" type="button" id="chapter-prev-btn" onclick="navigateToAdjacentChapter(-1)">⬅️</button>
                         <div class="dropdown">
@@ -61,18 +50,20 @@
                         </div>
                         <button class="btn btn-sm" type="button" id="verse-next-btn" onclick="navigateToAdjacentVerse(1)">➡️</button>
                     </div>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown">
-                          <span id="selected-meaning-language">Loading...</span>
-                      </button>
-                      <ul id="language-dropdown" class="dropdown-menu">
-
-                      </ul>
-                    </div>
-
-
+            </div>
+            <div id="adminToggleMenu" class="collapse rounded shadow-sm">
+                <div class="bg-white d-flex flex-wrap flex-md-nowrap p-2 gap-2" role="tablist">
+                      <!-- Links go here -->
+                    <button class="fw-bold btn bt-sm active" id="v-tab" data-bs-toggle="pill" data-bs-target="#v-pane" type="button">Shloka</button>
+                    <button class="fw-bold btn bt-sm" id="quiz-tab" data-bs-toggle="pill" data-bs-target="#quiz-pane" type="button" onclick="fetchQuizList()">Quiz</button>
+                    <button class="fw-bold btn bt-sm" id="glossary-tab" data-bs-toggle="pill" data-bs-target="#glossary-pane" type="button" >Glossary</button>
+                    <button class="fw-bold btn bt-sm" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" type="button" >FAQ</button>
+                    <button class="fw-bold btn bt-sm" id="c-tab" data-bs-toggle="pill" data-bs-target="#c-pane" type="button"  onclick="fetchGlobalComments()">Discussion</button>
+                     <button class="fw-bold btn bt-sm" id="export-tab" data-bs-toggle="pill" data-bs-target="#export-pane" type="button" >Export</button>
+                    <button class="fw-bold btn bt-sm" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-pane" type="button"  onclick="fetchStudentList()">Students</button>
+                    <button class="fw-bold btn bt-sm" id="db-tab" data-bs-toggle="pill" data-bs-target="#db-pane" type="button"  onclick="loadDbDetails()">
+                        <i class="fa-solid fa-pen-to-square me-2">DB</i></button>
                 </div>
-
             </div>
         </div>
 
@@ -85,26 +76,28 @@
                 <input type="hidden" id="input_chapter">
                 <input type="hidden" id="input_verse_number">
                 <div>
+
                     <div class="d-flex flex-wrap flex-md-nowrap gap-2 mb-2">
-                        <ul id="menuTabs" class="nav nav-pills mb-2">
+                        <ul id="menuTabs" class="nav nav-pills">
                             <li class="nav-item">
-                              <a id="a-shloka" class="nav-link active" data-bs-toggle="pill" href="#shloka-pane" role="tab">Shloka</a>
+                                <button class="btn btn-sm btn-outline-primary active" data-bs-toggle="pill" data-bs-target="#shloka-pane">Shloka</button>
+<!--                              <a id="a-shloka" class="active" data-bs-toggle="pill" href="#shloka-pane" role="button">Shloka</a>-->
+                            </li>
+                            <li class="nav-item px-2">
+                                <button class="btn btn-sm btn-outline-secondary " data-bs-toggle="pill" data-bs-target="#anvayam-pane">Anvayam</button>
+<!--                              <a id="a-anvayam" class="" data-bs-toggle="pill" href="#anvayam-pane" role="button">Anvayam</a>-->
                             </li>
                             <li class="nav-item">
-                              <a id="a-anvayam" class="nav-link" data-bs-toggle="pill" href="#anvayam-pane" role="tab">Anvayam</a>
-                            </li>
-                            <li class="nav-item">
-                              <a id="a-acharya" class="nav-link" data-bs-toggle="pill" href="#acharya-pane" role="tab">Acharya</a>
+                                <button class="btn btn-sm btn-outline-success" data-bs-toggle="pill" data-bs-target="#acharya-pane">Acharya</button>
+<!--                              <a id="a-acharya" class="" data-bs-toggle="pill" href="#acharya-pane" role="button">Acharya</a>-->
                             </li>
                         </ul>
-                        <button id="add-new-lang-btn" class="btn btn-sm btn-outline-secondary" type="button" onclick="addNewMeaningLanguage()">➕ Language</button>
-                        <button id="delete-lang-btn" class="btn btn-sm btn-danger" type="button" onclick="deleteMeaningLanguage()">🗑️ Language</button>
-
-                        <button type="submit" formnovalidate form="meaning-language-form" id="save-current-lang-btn" class="btn btn-sm btn-success">💾 Changes</button>
+                        <button id="add-new-lang-btn" class="btn btn-sm btn-outline-secondary" type="button" onclick="addNewMeaningLanguage()">➕</button>
+                        <button id="delete-lang-btn" class="btn btn-sm btn-danger" type="button" onclick="deleteMeaningLanguage()">🗑️</button>
+                        <button type="submit" formnovalidate form="meaning-language-form" id="save-current-lang-btn" class="btn btn-sm btn-success">💾</button>
                         <button id="commit-lang-btn" class="btn btn-sm btn-success" type="button" onclick="sendMeaningPayloadToServer()"
                             >Commit DB</button>
                     </div>
-
                     <div class="tab-content ">
                         <!-- VERSE FORM -->
                         <div class="tab-pane fade show active" id="shloka-pane" role="tabpanel">

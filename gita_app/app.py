@@ -192,7 +192,8 @@ def get_local_ip():
     return ip_address
 
 if __name__ == '__main__':
-    """ # 1. Automatically grab your computer's local IP address
+    """
+    # 1. Automatically grab your computer's local IP address
     HOST = get_local_ip()
     PORT = 5000
 
