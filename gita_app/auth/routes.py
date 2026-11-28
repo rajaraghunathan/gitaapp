@@ -3,36 +3,85 @@ from flask import Blueprint, jsonify, request, session, url_for
 from database import db
 from models import Student, Verse, Comment, AcharyaComment, QuizQuestion, QuizScore, QuizQuestionTamil, GlossaryFaq
 from datetime import datetime, timezone
-from auth.admin import safe_translate_large_text #customized function
-from deep_translator import GoogleTranslator
-from translate import dynamic_sanskrit_transliterate #customized function
+from translate import dynamic_sanskrit_transliterate, translate_api_groq, remove_non_printable_from_object #customized function
 from zoneinfo import ZoneInfo
+from .admin import read_json_from_drive, update_json_in_drive
 
 routes = Blueprint("routes", __name__)
 
 # Define path for the local cache file
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) #Current File Directory
 BASE_DIR = os.path.dirname(CURRENT_DIR) #One Level Up to Next Directory
-CACHE_FILE = os.path.join(BASE_DIR, "json using codes", "mean_translations_cache.json")
-# Helper function to load cache from JSON file safely
-def load_translation_cache():
-    if os.path.exists(CACHE_FILE):
-        try:
-            with open(CACHE_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            return {}  # Return empty dict if file is corrupted
-    return {}
+ACHARYA_DRIVE_FILE_ID = '13yHOQYEK7XNySo0nHE8zk0-d-csWxxQ8'
+MEANING_DRIVE_FILE_ID = '10uBr8FZycvzmb3cAZzByToOq1IBt9nde'
 
-# Helper function to save a new entry to the JSON file safely
-def save_to_translation_cache(key, value):
-    cache = load_translation_cache()
-    cache[key] = value
-    try:
-        with open(CACHE_FILE, 'w', encoding='utf-8') as f:
-            json.dump(cache, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Failed to write cache to file: {e}")
+def safe_translate_description_and_anvayam (cache_key, v_dict, lang):
+    # cache_file = os.path.join(BASE_DIR, "json using codes", "mean_translations_cache.json")
+    # with open(cache_file, 'r', encoding='utf-8') as f:
+    #     local_cache = json.load(f)
+    local_cache = read_json_from_drive(MEANING_DRIVE_FILE_ID)
+    if cache_key in local_cache:
+        v_dict["meaning"] = {lang: local_cache[cache_key]}
+        v_dict["translated"] = "yes"
+        print(f"⚡ Cache Hit! Shloka {cache_key} in {lang} loaded from disk.")
+        return v_dict
+    else:
+        # CASE: Completely missing -> Perform Native Batch Translation
+        # If requested not available skipping the translation route and loading default en content
+        # v_dict["meaning"] = {'en': v_dict["meaning"]['en']}
+        # v_dict["translated"] = "no"
+        # return v_dict
+        english_content = v_dict["meaning"].get('en', {})
+        strings_to_translate = []
+        # Step 1: Collect all English strings into an ordered list
+        def collect_strings(data):
+            if isinstance(data, dict):
+                for v in data.values(): collect_strings(v)
+            elif isinstance(data, list):
+                for item in data: collect_strings(item)
+            elif isinstance(data, str) and re.search(r'[a-zA-Z]', data):
+                strings_to_translate.append(data)
+
+        collect_strings(english_content)
+
+        translated_strings = []
+        if strings_to_translate:
+            translated = translate_api_groq(strings_to_translate, lang)
+            if isinstance(translated, str):
+                print({"error": f"Translation pipeline failed: {translated}"})
+                return v_dict
+
+        # Step 2: Rebuild the nested dictionary mapping the translated items back safely
+        string_iterator = iter(translated)
+
+        def rebuild_nested(data):
+            if isinstance(data, dict):
+                return {k: rebuild_nested(v) for k, v in data.items()}
+            elif isinstance(data, list):
+                return [rebuild_nested(item) for item in data]
+            elif isinstance(data, str):
+                if re.search(r'[a-zA-Z]', data):
+                    # Pop the next translated string from the clean list
+                    return next(string_iterator, data)
+                return data
+            return data
+
+        translated_content = rebuild_nested(english_content)
+        for item in  translated_content.get('anvayam',[]):
+            word = item.get('sa')
+            item['sa'] = dynamic_sanskrit_transliterate(word,lang)
+
+        # Save permanently to local JSON file cache
+        local_cache[cache_key] = translated_content
+        update_json_in_drive(MEANING_DRIVE_FILE_ID, local_cache)
+        # with open(cache_file, 'w', encoding='utf-8') as f:
+        #     json.dump(local_cache, f, ensure_ascii=False, indent=4)
+        print(f"💾 Saved Shloka Translation: {cache_key} ({lang}) to cache.")
+
+        # Format and return the filtered dictionary
+        v_dict["meaning"] = {lang: translated_content}
+        v_dict["translated"] = "yes"
+        return v_dict
 
 @routes.route('/api/singleverse', methods=['GET']) #Finalised & Working
 def get_single_verse_user():
@@ -56,12 +105,6 @@ def get_single_verse_user():
         sandhi = v_dict["shlok"].get('sandhi','')
         anvayam = v_dict["shlok"].get('anvayam', '')
         indic_lang = 'devanagari' if lang == 'hi' else lang
-        # v_dict["shlok"] = {
-        #     'shloka': dynamic_sanskrit_transliterate(shloka, indic_lang),
-        #     'padached': dynamic_sanskrit_transliterate(padached, indic_lang),
-        #     'sandhi': dynamic_sanskrit_transliterate(sandhi, indic_lang),
-        #     'anvayam': dynamic_sanskrit_transliterate(anvayam, indic_lang)
-        # }
         v_dict["shlok"] = [
             {'shloka': dynamic_sanskrit_transliterate(shloka, indic_lang)},
             {'padached': dynamic_sanskrit_transliterate(padached, indic_lang)},
@@ -70,86 +113,21 @@ def get_single_verse_user():
         ]
         v_dict["audio_file"] = url_for('static', filename=f'audio/Ch{chapter_number}-{verse_number}.aac')
 
-        # v_dict["shloka"] = {
-        #     'sa': shloka_sa,
-        #     'ta': dynamic_sanskrit_transliterate(shloka_sa, 'ta'),
-        #     'te': dynamic_sanskrit_transliterate(shloka_sa, 'te'),
-        #     'en': dynamic_sanskrit_transliterate(shloka_sa, 'en')
-        # }
-
         # CASE A: Requested language is already available in the dictionary
         if lang in v_dict["meaning"]:
             # Keep ONLY the requested language inside the meaning dictionary
             v_dict["meaning"] = {lang: v_dict["meaning"][lang]}
             v_dict["translated"] = "no"
             return jsonify(v_dict)
-
-        # CASE B: Check local JSON file cache
-        cache_key = f"{chapter_number}_{verse_number}_{lang}"
-        local_cache = load_translation_cache()
-
-        if cache_key in local_cache:
-            v_dict["meaning"] = {lang: local_cache[cache_key]}
-            v_dict["translated"] = "yes"
-            print(f"⚡ Cache Hit! Shloka Chapter {chapter_number} Verse {verse_number} in {lang} loaded from disk.")
-            return jsonify(v_dict)
-
-        # CASE C: Completely missing -> Perform Native Batch Translation
         else:
-            # If requested not available skipping the translation route and loading default en content
             v_dict["meaning"] = {'en': v_dict["meaning"]['en']}
             v_dict["translated"] = "no"
-            return jsonify(v_dict)
+            return v_dict
 
-            english_content = v_dict["meaning"].get('en', {})
-            strings_to_translate = []
-
-            # Step 1: Collect all English strings into an ordered list
-            def collect_strings(data):
-                if isinstance(data, dict):
-                    for v in data.values(): collect_strings(v)
-                elif isinstance(data, list):
-                    for item in data: collect_strings(item)
-                elif isinstance(data, str) and re.search(r'[a-zA-Z]', data):
-                    strings_to_translate.append(data)
-
-            collect_strings(english_content)
-
-            translated_strings = []
-            if strings_to_translate:
-                try:
-                    # FIX: Use translate_batch() instead of " ||| ".join()
-                    # This guarantees Google Translate never eats or mangles your structure
-                    translator = GoogleTranslator(source='en', target=lang)
-                    translated_strings = translator.translate_batch(strings_to_translate)
-                except Exception as e:
-                    return jsonify({"error": f"Translation pipeline failed: {str(e)}"}), 500
-
-            # Step 2: Rebuild the nested dictionary mapping the translated items back safely
-            string_iterator = iter(translated_strings)
-
-            def rebuild_nested(data):
-                if isinstance(data, dict):
-                    return {k: rebuild_nested(v) for k, v in data.items()}
-                elif isinstance(data, list):
-                    return [rebuild_nested(item) for item in data]
-                elif isinstance(data, str):
-                    if re.search(r'[a-zA-Z]', data):
-                        # Pop the next translated string from the clean list
-                        return next(string_iterator, data)
-                    return data
-                return data
-
-            translated_content = rebuild_nested(english_content)
-
-            # Save permanently to your local JSON file cache
-            save_to_translation_cache(cache_key, translated_content)
-            print(f"💾 Saved Shloka Translation: Ch {chapter_number} Vs {verse_number} ({lang}) to cache.")
-
-            # Format and return the filtered dictionary
-            v_dict["meaning"] = {lang: translated_content}
-            v_dict["translated"] = "yes"
-            return jsonify(v_dict)
+        # CASE B: Check local JSON file cache and if not Perform Tranlsation
+        cache_key = f"{chapter_number}_{verse_number}_{lang}"
+        translated_dict = safe_translate_description_and_anvayam(cache_key, v_dict, lang)
+        return jsonify(translated_dict)
     else:
         return jsonify({"error": "Unauthorized"}), 403
 
@@ -191,6 +169,60 @@ def get_student_comments(vid):
         "comments": comments_data, "current_user_id": session.get('user_id')
     })
 
+def safe_translate_acharya_comments(temp_dict, target_lang, ch, vs):
+    ch_str = str(ch)
+    vs_str = str(vs)
+    # Reading Translation JSON File from Google Drive
+    cache = read_json_from_drive(ACHARYA_DRIVE_FILE_ID)
+    is_cache_changed = False
+
+    for key in temp_dict.keys():
+        text_str = temp_dict[key].strip()
+        if (ch_str in cache and
+                vs_str in cache[ch_str] and
+                key in cache[ch_str][vs_str] and
+                target_lang in cache[ch_str][vs_str][key]):
+            print(f"⚡ Cache Hit! Chapter {ch} Verse {vs} ({key}) in {target_lang} loaded from disk.")
+            temp_dict[key] = {}
+            temp_dict[key] = {'author': f'Sri {key.capitalize()}'}
+            if cache[ch_str][vs_str][key][target_lang].strip() == '':
+                cache[ch_str][vs_str][key].pop(target_lang)
+                is_cache_changed = True
+                temp_dict[key][target_lang] = text_str
+            else:
+                temp_dict[key][target_lang] = cache[ch_str][vs_str][key][target_lang]
+            temp_dict[key]['lang status'] = 'Translated From Sanskrit'
+            continue
+        if len(text_str) > 1000:
+            translated = f"Large Text Characters (>1000) Cannot be Translated"
+        else:
+            translated = translate_api_groq([text_str], target_lang)
+        if isinstance(translated, str) or len(translated) == 0:
+            temp_dict[key] = {}
+            temp_dict[key] = {'author': f'Sri {key.capitalize()}'}
+            temp_dict[key][target_lang] = text_str
+            temp_dict[key]['lang status'] = f'Translation Failed: {translated}'
+        else:
+            temp_dict[key] = {}
+            temp_dict[key] = {'author': f'Sri {key.capitalize()}'}
+            temp_dict[key][target_lang] = " ".join(remove_non_printable_from_object(translated))
+            temp_dict[key]['lang status'] = 'Translated From Sanskrit'
+            final_result = temp_dict[key][target_lang]
+            if final_result != text_str:
+                # Create empty parent objects on the fly if they don't exist yet
+                if ch_str not in cache: cache[ch_str] = {}
+                if vs_str not in cache[ch_str]: cache[ch_str][vs_str] = {}
+                if key not in cache[ch_str][vs_str]: cache[ch_str][vs_str][key] = {}
+                cache[ch_str][vs_str][key][target_lang] = final_result
+                is_cache_changed = True
+                print(f"💾 Saved Translation: Ch {ch} Vs {vs} [{key}] ({target_lang}) to cache.")
+
+    #Updating Translation JSON File in Google Drive
+    if is_cache_changed:
+        update_json_in_drive(ACHARYA_DRIVE_FILE_ID, cache)
+
+    return temp_dict
+
 @routes.route('/api/acharya/student', methods=['GET'])
 def get_acharya_comment_student():
     if 'user_id' not in session:
@@ -209,53 +241,30 @@ def get_acharya_comment_student():
         return jsonify({"error": "Database Value Does Not Exist"}), 403
 
     row_dict = {c.name: getattr(result, c.name) for c in result.__table__.columns}
-
-    # Build base template dictionary cleanly
+    temp_dict = {}
     acharya_dict = {}
     acharyas = ['ramanuja', 'sankara', 'madhava', 'desika', 'siva']
 
     for name in acharyas:
-        # Prevent server crashes if an entire acharya column key is missing in row_dict
         source_data = row_dict.get(name) or {}
-
-        # Initialize internal schema dynamic assignments
-        acharya_dict[name] = {
-            'author': source_data.get('author')
-        }
-
+        acharya_dict[name] = {'author': f'Sri {name.capitalize()}'}
         text_in_requested_lang = source_data.get(lang)
         sanskrit_source_text = source_data.get('sa')
-        english_source_text = source_data.get('en')
 
-        # Scenario 1: Language copy already exists locally in DB
         if text_in_requested_lang:
             acharya_dict[name][lang] = text_in_requested_lang
             acharya_dict[name]['lang status'] = 'Default Content'
-
-        # Scenario 2: Translate on-the-fly from available Sanskrit source
         elif sanskrit_source_text:
-            # translated = safe_translate_large_text(sanskrit_source_text, lang, chapter_number, verse_number, name)
-            translated = None
-            if translated:
-                acharya_dict[name][lang] = translated
-                acharya_dict[name]['lang status'] = 'Translated From Sanskrit'
-            elif translated is None:
-                # Caught an active network block; handle natively without crashing route
-                acharya_dict[name][lang] = sanskrit_source_text
-                acharya_dict[name]['lang status'] = '(Showing Sanskrit Source)'
-            else:
-                acharya_dict[name]['lang status'] = 'Translation Failed/Empty'
-
-        # Scenario 3: Fallback workflows if neither condition is satisfied
+            acharya_dict[name][lang] = sanskrit_source_text
+            acharya_dict[name]['lang status'] = 'Sanskrit Content'
+            temp_dict[name] = sanskrit_source_text
         else:
-            if name in ['siva']:
-                acharya_dict[name][lang] = source_data.get('en', '')
-                acharya_dict[name]['lang status'] = 'No Translation'
-            else:
-                # Safe dictionary navigation fallback via .get()
-                acharya_dict[name][lang] = source_data.get('en', '')
-                acharya_dict[name]['lang status'] = 'No Translation'
+            acharya_dict[name][lang] = source_data.get('en', '')
+            acharya_dict[name]['lang status'] = 'No Translation'
 
+    # processed_dict = safe_translate_acharya_comments(temp_dict, lang, chapter_number, verse_number)
+    # for key in processed_dict.keys():
+    #     acharya_dict[key] = processed_dict[key]
     return jsonify(acharya_dict)
 
 @routes.route('/api/quiz/<int:chapter_num>//<lang>', methods=['GET'])

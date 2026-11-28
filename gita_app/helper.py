@@ -1,12 +1,12 @@
 from pathlib import Path
-import json, os
+import json, os, io
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from dotenv import load_dotenv
-from auth.admin import get_drive_service, get_files_drive
+from auth.admin import get_drive_service, get_files_drive, read_json_from_drive, update_json_in_drive
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv()
@@ -47,15 +47,10 @@ def upload_to_drive(drive):
         print("Uploaded:", uploaded["name"], uploaded["id"])
     return True
 
-
 if __name__ == "__main__":
     # /home/KrishaTeach/gitaapp/gita_app/auth/json using codes/acharya_translations_cache.json
     # upload_to_drive()
-    drive, res = get_drive_service()
-    if drive:
-        print(get_files_drive(drive),res)
-    else:
-        print(res)
+    drive_id = '10uBr8FZycvzmb3cAZzByToOq1IBt9nde'
 
 
 

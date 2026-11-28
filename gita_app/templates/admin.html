@@ -138,6 +138,7 @@
                                         <!-- Fixed Description Text Block -->
                                         <div class="mb-2">
                                             <label class="form-label fw-bold">Description Text Context</label>
+                                            <button class="btn btn-sm btn-primary" onclick="helperDescription('field-description')" onmousedown="event.preventDefault()" type="button">Helper</button>
 <!--                                                <button type="button" class="btn btn-sm btn-primary" onclick="helperDescription('field-description')">Helper</button>-->
                                             <!-- Small Button Toolbar Container -->
                                             <div id="field-description" contenteditable="true" class="form-control mt-2" style="border: 1px solid #ccc; padding: 10px; min-height: 50px;">
@@ -181,6 +182,7 @@
                             <div class="card shadow-sm border-primary p-2" >
                                 <div class="d-flex justify-content-between align-items-center mb-2 sticky-top" style="z-index: 10;">
                                     <h6 class="mb-0 fw-bold">Anvayam Map</h6>
+                                    <button class="btn btn-sm btn-primary" onclick="helperDescription('anvayam-table-body')" onmousedown="event.preventDefault()" type="button">Helper</button>
 <!--                                        <button type="button" class="btn btn-sm btn-primary" onclick="helperAnvayam('anvayam-table-body')">Helper</button>-->
                                     <button class="btn btn-sm btn-secondary" onclick="addAnvayamRow()" onmousedown="event.preventDefault()" type="button">➕ Add Row</button>
                                 </div>
@@ -553,6 +555,7 @@
     let bootstrapLangModalInstance = null;
     let globalActiveChapter = 1;
     let selectedAuthorKey = null;
+    let activeVerseId = null;
     let activeVerseChapterNum = null;
     let activeVerseNumber = null;
     let loadedMeaningLanguages = {};
@@ -743,6 +746,7 @@
         listButton.innerHTML = `V ${ch}.${vn}`;
 
         document.getElementById('form_verse_id').value = id;
+        activeVerseId = parseInt(id);
         document.getElementById('input_chapter').value = ch;
         document.getElementById('input_verse_number').value = vn;
         // document.getElementById('input_shloka').value = verse.shloka;
@@ -1162,6 +1166,10 @@
         }
     }
 
+    function addAllNewAnvayam() {
+
+    }
+
     function buildAnvayamRowMarkup(saValue, enValue) {
         const tr = document.createElement('tr');
         tr.className = 'anvayam-row-item';
@@ -1434,6 +1442,7 @@
     function loadCommentaryAcharya(cNum,vNum) {
         const url = `/api/acharya?chapter=${cNum}&verse=${vNum}`;
         fetch(url).then(res => res.json()).then(data => {
+            console.log(data)
             document.querySelectorAll('.acharya-admin-div').forEach(item => item.textContent = "");
             // data format: { "en": "content", "sa": "content" } or empty {}
 
@@ -1487,7 +1496,24 @@
     async function addAcharyaFieldRow(acharya) {
         const editLanguage = document.getElementById("selected-meaning-language").innerText;
         const cleanCode = langKeys[editLanguage]
-        createAcharyaRowElement(acharya, cleanCode, '');
+        if (acharya !== "ramanuja") {
+            createAcharyaRowElement(acharya, cleanCode, '');
+            return;
+        }
+        const payLoad = {
+            acharya: acharya,
+            chapter_number: activeVerseChapterNum,
+            verse_number: activeVerseNumber,
+            target_lang: cleanCode
+        }
+        fetch('/api/admin/acharya_translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payLoad)
+        }).then(res=>res.json()).then(data => {
+            const translatedText = data.translated_text || "";
+            createAcharyaRowElement(acharya, cleanCode, translatedText);
+        })
     }
 
     function removeAcharyaFieldRow(elementId) {
@@ -1707,153 +1733,6 @@
 
     function setStyle(command) {
         document.execCommand(command, false, null);
-    }
-
-    // Check if the two objects are equal with respect to key value pairs
-    function deepObjEqual(obj1, obj2) {
-        // If both are the exact same primitive or reference
-        if (obj1 === obj2) return true;
-
-        // If one is not an object or is null, they are not equal
-        if (typeof obj1 !== 'object' || obj1 === null ||
-            typeof obj2 !== 'object' || obj2 === null) {
-            return false;
-        }
-
-        const keys1 = Object.keys(obj1);
-        const keys2 = Object.keys(obj2);
-
-        if (keys1.length !== keys2.length) return false;
-
-        for (let key of keys1) {
-            // Recursively check keys and values
-            if (!keys2.includes(key) || !deepObjEqual(obj1[key], obj2[key])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    <!-- Helper Functions -->
-    function loadModal(id, bodyContent, actionButtonConfig = null) {
-        // 1. Generate the base HTML string
-        let modalHtml = `
-            <div class="modal fade" id="${id}Modal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header bg-dark text-white">
-                            <h5 class="modal-title"><i class="fa-solid fa-user-shield me-2"></i>${id}</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            ${bodyContent}
-                        </div>
-                        <div class="modal-footer">
-                            <!-- Red close button is always present -->
-                            <button id="textTranslate" type="button" class="btn btn-primary" onclick="translateFromServer(\'${id}\')">Translate</button>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // 2. Inject HTML into the body
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        const modalElement = document.getElementById(`${id}Modal`);
-        const footerElement = modalElement.querySelector('.modal-footer');
-
-        // 3. Dynamically create and add the action button if configuration is provided
-        if (actionButtonConfig && typeof actionButtonConfig.onClick === 'function') {
-            const actionBtn = document.createElement('button');
-            actionBtn.type = 'button';
-            actionBtn.className = actionButtonConfig.className || 'btn btn-primary';
-            actionBtn.innerText = actionButtonConfig.text || 'Submit';
-
-            // Attach your dynamic commands/function
-            actionBtn.addEventListener('click', function(e) {
-                actionButtonConfig.onClick(e, bootstrapModal);
-            });
-
-            // Insert the action button BEFORE the close button in the footer
-            footerElement.insertBefore(actionBtn, footerElement.firstChild);
-        }
-
-        // 4. Initialize and show the modal
-        const bootstrapModal = new bootstrap.Modal(modalElement);
-        bootstrapModal.show();
-
-        // 5. Auto-cleanup on close
-        modalElement.addEventListener('hidden.bs.modal', function () {
-            bootstrapModal.dispose();
-            modalElement.remove();
-        });
-    }
-
-    function helperDescription(id) {
-        const engContent = loadedMeaningLanguages["meaning"]["en"]["description"];
-        const editLanguage = document.getElementById("selected-meaning-language").innerText;
-        const editContent = loadedMeaningLanguages["meaning"][langKeys[editLanguage]]["description"];
-        let bodyContentHtml = `
-            <div class="row">
-                <div class="col-6">
-                    <h6>English</h6>
-                    <div>${engContent}</div>
-                </div>
-                <div class="col-6">
-                    <h6 id="${id}Language">${editLanguage}</h6>
-                    <div id="${id}NewContent" contenteditable="true">${editContent}</div>
-                </div>
-            </div>
-        `
-
-        loadModal(id, bodyContentHtml, {
-            text: 'Load',
-            className: 'btn btn-success', // Green button
-            onClick: function(event, modalInstance) {
-                const editContentHtml = document.getElementById(`${id}NewContent`).innerHTML;
-                const cleanHtml = cleanRichText(editContentHtml);
-                const editContent = document.getElementById(`${id}NewContent`).textContent;
-                if (editContent.trim() !== ""){
-                    document.getElementById(id).innerHTML = cleanHtml;
-                    showToast("Updated. Save Changes & Commit to DB", "success");
-                }
-                // Close the modal programmatically when done
-                modalInstance.hide();
-            }
-        });
-    }
-
-    async function translateFromServer(id) {
-        let url = '/api/translate';
-        if (id === "anvayam-table-body") {
-            alert('under development');
-            return;
-        }
-        const engContent = loadedMeaningLanguages["meaning"]["en"]["description"];
-        const div = document.createElement ('div');
-        div.innerHTML = engContent;
-        const enText = div.textContent;
-        if (Array.isArray(enText)) {
-            url = '/api/translate';
-        }
-        const cleanCode = langKeys [document.getElementById(`${id}Language`).textContent];
-        document.getElementById(`${id}NewContent`).textContent = "Getting The Text..."
-        const payload = {
-            sourceLang: "en",
-            targetLang: cleanCode,
-            enText: enText
-        }
-        // const url = '/api/translate';
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (!data.success) {showToast(data.message, "warning"); return;}
-        const description = data.translated_text
-        document.getElementById(`${id}NewContent`).textContent = description;
     }
 
     function changeQuizLanguage(lang) {
@@ -2430,6 +2309,195 @@
             }
             document.getElementById("db-pane-fieldset").disabled = false;
         });
+    }
+
+   // Check if the two objects are equal with respect to key value pairs
+    function deepObjEqual(obj1, obj2) {
+        // If both are the exact same primitive or reference
+        if (obj1 === obj2) return true;
+
+        // If one is not an object or is null, they are not equal
+        if (typeof obj1 !== 'object' || obj1 === null ||
+            typeof obj2 !== 'object' || obj2 === null) {
+            return false;
+        }
+
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+
+        if (keys1.length !== keys2.length) return false;
+
+        for (let key of keys1) {
+            // Recursively check keys and values
+            if (!keys2.includes(key) || !deepObjEqual(obj1[key], obj2[key])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    <!-- Helper Functions -->
+    function loadModal(id, bodyContent, actionButtonConfig = null) {
+        // 1. Generate the base HTML string
+        let modalHtml = `
+            <div class="modal fade" id="${id}Modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen-lg-down">
+                    <div class="modal-content">
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title"><i class="fa-solid fa-user-shield me-2"></i>${id}</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ${bodyContent}
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Red close button is always present -->
+                            <button id="textTranslate" type="button" class="btn btn-primary" onclick="translateFromServer(\'${id}\')">Translate</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 2. Inject HTML into the body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        const modalElement = document.getElementById(`${id}Modal`);
+        const footerElement = modalElement.querySelector('.modal-footer');
+
+        // 3. Dynamically create and add the action button if configuration is provided
+        if (actionButtonConfig && typeof actionButtonConfig.onClick === 'function') {
+            const actionBtn = document.createElement('button');
+            actionBtn.type = 'button';
+            actionBtn.className = actionButtonConfig.className || 'btn btn-primary';
+            actionBtn.innerText = actionButtonConfig.text || 'Submit';
+
+            // Attach your dynamic commands/function
+            actionBtn.addEventListener('click', function(e) {
+                actionButtonConfig.onClick(e, bootstrapModal);
+            });
+
+            // Insert the action button BEFORE the close button in the footer
+            footerElement.insertBefore(actionBtn, footerElement.firstChild);
+        }
+
+        // 4. Initialize and show the modal
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
+
+        // 5. Auto-cleanup on close
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            bootstrapModal.dispose();
+            modalElement.remove();
+        });
+    }
+    function helperDescription(id) {
+        const editLanguage = document.getElementById("selected-meaning-language").innerText;
+        let engContent = null;
+        let editContent = null;
+        if (id === "field-description") {
+            engContent = loadedMeaningLanguages["meaning"]["en"]["description"];
+            editContent = loadedMeaningLanguages["meaning"][langKeys[editLanguage]]["description"];;
+        } else if (id === "anvayam-table-body") {
+            engContent = loadedMeaningLanguages["meaning"]["en"]["anvayam"];
+            editContent = loadedMeaningLanguages["meaning"][langKeys[editLanguage]]["anvayam"];
+            // Helper to build a full <table> string from an array
+            const createTableHtml = (dataArray) => {
+                const table = document.createElement('table');
+                table.className = 'table responsive-card-table'; // Optional: add Bootstrap table class if needed
+                const tbody = document.createElement('tbody');
+
+                dataArray.forEach(item => {
+                    const saText = item && typeof item === 'object' ? (item.sa || '') : '';
+                    const enText = item && typeof item === 'object' ? (item.en || '') : '';
+                    const tr = buildAnvayamRowMarkup(saText, enText)
+                    tbody.appendChild(tr);
+                });
+                table.appendChild(tbody);
+                return table.outerHTML; // Returns the full "<table><tbody>...</tbody></table>" string
+            };
+            engContent = createTableHtml(engContent);
+            editContent = createTableHtml(editContent);
+        }
+
+        let bodyContentHtml = `
+            <div class="row">
+                <div class="col-6">
+                    <h6>English</h6>
+                    <div>${engContent}</div>
+                </div>
+                <div class="col-6">
+                    <h6 id="${id}Language">${editLanguage}</h6>
+                    <div id="${id}NewContent" contenteditable="true">${editContent}</div>
+                </div>
+            </div>
+        `
+
+        loadModal(id, bodyContentHtml, {
+            text: 'Load',
+            className: 'btn btn-success', // Green button
+            onClick: function(event, modalInstance) {
+                const editContentHtml = document.getElementById(`${id}NewContent`).innerHTML;
+                // const cleanHtml = cleanRichText(editContentHtml);
+                const editContent = document.getElementById(`${id}NewContent`).textContent;
+                if (editContent.trim() !== ""){
+                    document.getElementById(id).innerHTML = editContentHtml;
+                    showToast("Updated. Save Changes & Commit to DB", "success");
+                }
+                // Close the modal programmatically when done
+                modalInstance.hide();
+            }
+        });
+    }
+    async function translateFromServer(id) {
+        let url = '/api/translate';
+        let engContent = null;
+        let source = 'en';
+        let requirement = 'description';
+        if (id === "field-description") {
+            engContent = loadedMeaningLanguages["meaning"]["en"]["description"];
+        } else if (id === "anvayam-table-body") {
+            requirement = "anvayam";
+            engContent = loadedMeaningLanguages["meaning"]["en"]["anvayam"];
+            source = 'sa';
+        }
+        if (!engContent) return;
+        const cleanCode = langKeys [document.getElementById(`${id}Language`).textContent];
+        document.getElementById(`${id}NewContent`).textContent = "Getting The Text..."
+        const payload = {
+            requirement: requirement,
+            sourceLang: source,
+            targetLang: cleanCode,
+            enIncoming: engContent
+        }
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.success) {showToast(data.message, "warning");}
+        if (Array.isArray(data.translated_text)) {
+            const createTableHtml = (dataArray) => {
+                const table = document.createElement('table');
+                table.className = 'table responsive-card-table'; // Optional: add Bootstrap table class if needed
+                const tbody = document.createElement('tbody');
+
+                dataArray.forEach(item => {
+                    const saText = item && typeof item === 'object' ? (item.sa || '') : '';
+                    const enText = item && typeof item === 'object' ? (item.en || '') : '';
+                    const tr = buildAnvayamRowMarkup(saText, enText)
+                    tbody.appendChild(tr);
+                });
+                table.appendChild(tbody);
+                return table.outerHTML; // Returns the full "<table><tbody>...</tbody></table>" string
+            };
+            const editContent = createTableHtml(data.translated_text);
+            document.getElementById(`${id}NewContent`).innerHTML = editContent;
+        } else {
+            const description = data.translated_text
+            document.getElementById(`${id}NewContent`).innerHTML = description;
+        }
     }
 
     function calculateTextAreaLines(text,mW) {

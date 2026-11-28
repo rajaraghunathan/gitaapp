@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from dotenv import load_dotenv
 from database import db, mail, migrate
 from models import Chapter, Verse, Student, AcharyaComment
-from translate import text_translate_google, batch_translate_google, translate_large_text_with_google
+from translate import translate_api_groq, dynamic_sanskrit_transliterate
 
 from auth import user, admin, routes
 
@@ -107,75 +107,55 @@ def get_chapter_and_verses():
 @app.route('/api/translate', methods=['POST'])
 def translate_text_stream():
     data = request.get_json() or {}
-    text = data.get('enText', '').strip()
-    anvayam = data.get('enAnvayam', [])
-    source = data.get('sourceLang', 'en').strip()
-    target = data.get('targetLang', 'en').strip()
-
-    translated_description, success_text = text_translate_google(text, source, target)
-    translated_anvayam, success_batch = batch_translate_google(anvayam, source, target)
-
-    if success_text and success_batch:
+    incoming_content = data.get('enIncoming')
+    source = data.get('sourceLang')
+    target = data.get('targetLang')
+    requirement = data.get('requirement')
+    if requirement == 'description':
+        translated = translate_api_groq([incoming_content],target)
         return jsonify({
             "success": True,
-            "translated_text": translated_description,
-            "translated_anvayam": translated_anvayam
-        }), 200
-
-    error_details = []
-    if not success_text:
-        error_details.append(f"Main text error: {translated_description}")
-    if not success_batch:
-        error_details.append(f"Batch items error: {translated_anvayam}")
-
-    return jsonify({
-        "success": False,
-        "message": "Translation processing failed.",
-        "details": " | ".join(error_details)
-    }), 500
+            "translated_text": ' '.join(translated)
+        })
+    else:
+        text_strings = [item.get('sa') for item in incoming_content]
+        translated = translate_api_groq(text_strings, target)
+        for (idx, item) in enumerate(incoming_content):
+            shloka_word = dynamic_sanskrit_transliterate(incoming_content[idx].get('sa'),target)
+            incoming_content[idx]['sa'] = shloka_word
+            incoming_content[idx]['en'] = translated[idx]
+        return jsonify({
+            "success": True,
+            "translated_text": incoming_content,
+        })
 
 @app.route('/api/admin/acharya_translate', methods=['POST'])
 def get_acharya_translate_admin():
+    if not session.get('admin_logged_in'): return jsonify({"error": "Unauthorized"}), 403
     data = request.get_json() or {}
-    acharya = str(data.get('acharya'))
     chapter_number = data.get('chapter_number')
     verse_number = data.get('verse_number')
-    target_lang = data.get('targetLang', 'en').strip()
-
+    target_lang = data.get('target_lang', 'some').strip()
     record = (db.session.query(AcharyaComment).filter(
-        AcharyaComment.chapter_number == chapter_number,
-        AcharyaComment.verse_number == verse_number
+        AcharyaComment.chapter_number == int(chapter_number),
+        AcharyaComment.verse_number == int(verse_number)
     ).first())
-    acharya_dict = getattr(record, acharya)
-    if acharya_dict.get('sa'):
-        source_lang = 'sa'
-        commentary = acharya_dict.get('sa')
-    else:
-        source_lang = 'en'
-        commentary = acharya_dict.get('en')
-    if commentary:
-        translated_commentary, success = translate_large_text_with_google(commentary, source_lang, target_lang)
-    else:
-        translated_commentary, success = translate_large_text_with_google("", source_lang, target_lang)
-    if success:
+    acharya_dict = getattr(record, 'ramanuja')
+    commentary = acharya_dict.get('sa',acharya_dict.get('en','Source Language is not Existing'))
+    translated = translate_api_groq([commentary], target_lang)
+    if isinstance(translated, list):
         return jsonify({
             "success": True,
-            "translated_text": translated_commentary
-        }), 200
+            "translated_text": " ".join(translated)
+        })
     else:
         return jsonify({
             "success": False,
-            "message": "Translation processing failed.",
-            "details": f"Main text error: {translated_commentary}"
-        }), 500
+            "translated_text": f"Translation processing failed: {translated}"
+        })
 
 with app.app_context():
     db.create_all()
-    # if Verse.query.count() == 0:
-    #     db.session.add(Verse(chapter=1, verse_number=1, shloka="धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः ।",
-    #                          meaning="Dhritarashtra said: O Sanjaya...", youtube_url="https://youtube.com"))
-    #     db.session.commit()
-
 
 def get_local_ip():
     """Finds the active local IPv4 address of the computer."""

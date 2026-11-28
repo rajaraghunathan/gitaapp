@@ -106,85 +106,6 @@ def export_data ():
     # with open(json_path, "w", encoding="utf-8") as f:
     #     json.dump(data, f, indent=2, ensure_ascii=False)
 
-def merge_data ():
-    # flag_modified(verse, 'meaning')
-    file_id = '1viadTOf88mAKmYdCLWYwLNjDO1lqFben'
-    # data = download_public_json(file_id)
-    json_path = os.path.join(BASE_DIR, "json using codes", f"CH2_verse_data.json")
-    with open(json_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    table_class = {'chapter': Chapter, 'verse': Verse,
-                   'acharya_comment': AcharyaComment, 'quiz_question': QuizQuestion,
-                   'quiz_question-tamil': QuizQuestionTamil, 'glossary_faq': GlossaryFaq}
-    db_table = table_class.get(data.get('table_name'))
-    incoming_table = data.get('table_data', [])
-    incoming_col = data.get('col_name')
-    incoming_filter = data.get('filter_criteria')
-
-    # 1. Map the incoming records by their unique ID
-    incoming_records_map = {row['id']: row for row in incoming_table}
-    incoming_ids = set(incoming_records_map.keys())
-
-    # 2. Fetch all current records from the main DB for this scope (e.g., Chapter 2)
-    # Fetching them all at once avoids running a slow query inside a loop
-    existing_records = db.query(db_table).where(getattr(db_table, incoming_col) == incoming_filter).all()
-    existing_records_map = {record.id: record for record in existing_records}
-    existing_ids = set(existing_records_map.keys())
-    ids_to_delete = existing_ids - incoming_ids
-    ids_to_update = existing_ids & incoming_ids
-    ids_to_insert = incoming_ids - existing_ids
-
-    print(f'ids_to_insert: {len(ids_to_insert)}')
-    print(f'ids_to_delete: {len(ids_to_delete)}')
-    print(f'ids_to_update: {len(ids_to_update)}')
-
-    record_same = []
-    record_diff = []
-    record_new = []
-    record_deleted = []
-
-    # --- PHASE 1: HANDLE DELETIONS ---
-    for record_id in ids_to_delete:
-        print(existing_records_map[record_id])
-        # db.delete(existing_records_map[record_id])
-        record_deleted.append(record_id)
-    # db.flush()
-    # --- PHASE 2: HANDLE UPDATES ---
-    for record_id in ids_to_update:
-        current_record = existing_records_map[record_id]
-        new_data = incoming_records_map[record_id]
-
-        for key, value in new_data.items():
-            if key != 'id' and getattr(current_record, key) != value:
-                # setattr(current_record, key, value)
-                if not record_id in record_diff:
-                    record_diff.append(record_id)
-            else:
-                if not record_id in record_same:
-                    record_same.append(record_id)
-
-    # --- PHASE 3: HANDLE INSERTS ---
-    for record_id in ids_to_insert:
-        new_row_data = incoming_records_map[record_id]
-        if 'id' in new_row_data.keys():
-            new_row_data.pop('id')
-        # Unpack the dictionary safely including the original ID to keep sync intact
-        new_record = GlossaryFaq(**new_row_data)
-        # db.add(new_record)
-        record_new.append(record_id)
-
-    print('Merging Data to DB')
-    print(f'{len(existing_records)} records found')
-    print(f'{len(record_same)} records are same')
-    print(f'{len(record_diff)} records are updated. Updated ids are {record_diff}')
-    print(f'{len(record_new)} records are inserted. Inserted ids are {record_new}')
-    print(f'{len(record_deleted)} number of records are deleted. Deleted ids are {record_deleted}')
-
-    # if len(record_diff) + len(record_new) + len(record_deleted) > 0:
-    #     db.commit()
-    #     print("Successfully synced all inserts, updates, and deletes! in Data Base")
-
 def download_public_json(file_id):
     """Downloads a publicly shared file from Google Drive without authentication."""
     print("Downloading JSON from Google Drive...")
@@ -197,21 +118,41 @@ def download_public_json(file_id):
     else:
         raise Exception(f"Failed to download file. Status code: {response.status_code}")
 
-if __name__ == '__main__':
-    db_path = os.path.join(BASE_DIR, 'gita.db')
-    engine = create_engine(f"sqlite:///{db_path}", echo=False)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    metadata = MetaData()
-    Base = declarative_base()
-    Base.metadata.create_all(bind=engine)
+def some_function():
+    # record = db.query(Verse).where(Verse.chapter_number==5).all()[0]
+    # db_data = {
+    #     k: v for k, v in record.__dict__.items() if not k.startswith('_')
+    # }
+    # print(db_data)
+    cache_file = os.path.join(BASE_DIR, "json using codes", "acharya_translations_cache.json")
+    with open(cache_file, 'r', encoding='utf-8') as f:
+        local_cache = json.load(f)
+    new_dict = {}
+    for key1, val1 in local_cache.items():
+        for key2, val2 in val1.items():
+            new_dict.update({f'{key1}_{key2}': val2})
+    output_file = os.path.join(BASE_DIR, "json using codes", "acharya_translations_cache_new.json")
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(new_dict, f, ensure_ascii=False, indent=4)
 
-    with SessionLocal() as db:
-        try:
-            # db_operations()
-            # yt_inject_db()
-            export_data()
-            # merge_data()
-        except Exception as e:
-            db.rollback()
-            print(f"Error occurred, rolling back: {e}")
-            raise e
+if __name__ == '__main__':
+    some_function()
+
+    # db_path = os.path.join(BASE_DIR, 'gita.db')
+    # engine = create_engine(f"sqlite:///{db_path}", echo=False)
+    # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    # metadata = MetaData()
+    # Base = declarative_base()
+    # Base.metadata.create_all(bind=engine)
+    #
+    # with SessionLocal() as db:
+    #     try:
+    #
+    #         # db_operations()
+    #         # yt_inject_db()
+    #         # export_data()
+    #         # merge_data()
+    #     except Exception as e:
+    #         db.rollback()
+    #         print(f"Error occurred, rolling back: {e}")
+    #         raise e

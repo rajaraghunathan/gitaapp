@@ -63,7 +63,7 @@
                         </h2>
                         <div id="collapseShloka" class="accordion-collapse collapse show" aria-labelledby="headingShloka">
                           <div class="accordion-body p-0">
-                            <div class="card">
+                            <div class="card rounded-5">
                               <div class="card-header">
                                 <ul class="nav nav-pills card-header-pills" id="verseTabs" role="tablist"></ul>
                               </div>
@@ -495,7 +495,7 @@
                     verseButton.click();
                     // loadVerse(lang, targetedId, chapterId, verseId);
                     loadActiveChapterQuiz(chapterId);
-                    lastLang='en'; targetedId=null; chapterId=null; verseId=null;
+                    // lastLang='en'; targetedId=null; chapterId=null; verseId=null;
                 } else if (flattenedVerseList.length > 0) {
                     const verseButton = verseList[0];
                     const selectedLang = document.getElementById("lang-dropdown").innerText;
@@ -505,6 +505,11 @@
                     // loadVerse("en", flattenedVerseList[0].id, flattenedVerseList[0].chapter, flattenedVerseList[0].verse);
                     loadActiveChapterQuiz(flattenedVerseList[0].chapter);
                 }
+                // document.getElementById('form_verse_id').value = targetedId ? parseInt(targetedId) :  parseInt(flattenedVerseList[0].id);
+                // document.getElementById('input_chapter').value = chapterId ? parseInt(chapterId) :  parseInt(flattenedVerseList[0].chapter);
+                // document.getElementById('input_verse_number').value = verseId ? parseInt(verseId) : parseInt(flattenedVerseList[0].verse);
+                // const langElOlId = `${currentMeaningLanguage}-lang`;
+                // document.getElementById(langElOlId).click();
                 fetchGlossary(); fetchFaq();
                 document.getElementById("studentMenuDismiss").click();
             });

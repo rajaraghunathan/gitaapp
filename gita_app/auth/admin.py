@@ -1,5 +1,4 @@
-import os, json, uuid, re, requests, io, csv
-import time
+import os, json, uuid, re, requests, io, csv, time
 
 from flask import Blueprint, jsonify, request,flash, redirect, url_for, session, render_template, make_response
 from database import db
@@ -7,12 +6,11 @@ from models import Chapter, Student, Verse, AcharyaComment, Comment, QuizQuestio
 from zoneinfo import ZoneInfo
 from translate import remove_non_printable_from_object
 from pathlib import Path
-from datetime import datetime
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload, MediaIoBaseUpload
 
 admin = Blueprint("admin", __name__)
 
@@ -54,6 +52,22 @@ def get_single_verse_admin():
              .where(Verse.chapter_number == chapter_number, Verse.verse_number == verse_number)
              .scalar())
     v_dict = {k: v for k, v in verse.__dict__.items() if not k.startswith('_')}
+
+    """
+    # Check and Include the data available in local caache
+    cache_file = os.path.join(BASE_DIR, "json using codes", "mean_translations_cache.json")
+    with open(cache_file, 'r', encoding='utf-8') as f:
+        local_cache = json.load(f)
+    # from .routes import MEANING_DRIVE_FILE_ID
+    # local_cache = read_json_from_drive(MEANING_DRIVE_FILE_ID)
+    cache_key = f"{chapter_number}_{verse_number}"
+    filtered_cache_keys = [key for key in local_cache.keys() if key.startswith(cache_key)]
+    for key in filtered_cache_keys:
+        lang = (key[-2:])
+        if v_dict['meaning'].get(lang):
+            v_dict['meaning'][lang] = local_cache.get(key)
+    """
+
     session['temp'] = {
         'id': verse.id,
         'chapter': chapter_number,
@@ -87,166 +101,19 @@ def update_verse_admin():
 
 @admin.route('/api/acharya', methods=['GET'])
 def get_acharya_comment_admin():
-    if session.get('admin_logged_in') :
-        chapter_number = request.args.get('chapter', type=int)
-        verse_number = request.args.get('verse', type=int)
-        result = db.session.execute(db.select(AcharyaComment)
-        .where(AcharyaComment.chapter_number == chapter_number, AcharyaComment.verse_number == verse_number)
-            ).scalar()
-
-        if result is not None:
-            payload = {
-                'ramanuja': result.ramanuja,
-                'sankara': result.sankara,
-                'madhava': result.madhava,
-                'desika': result.desika,
-                'siva': result.siva
-            }
-            return jsonify(payload)
-        else:
-            return jsonify({})
-    else:
+    if not session.get('admin_logged_in'):
         return jsonify({"error": "Unauthorized"}), 403
 
-acharya_cache_file = os.path.join(BASE_DIR, "json using codes", "acharya_translations_cache.json")
-def load_acharya_cache():
-    if os.path.exists(acharya_cache_file):
-        try:
-            with open(acharya_cache_file, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return {}
-    return {}
-
-def save_to_acharya_cache(cache_data):
-    try:
-        with open(acharya_cache_file, "w", encoding="utf-8") as f:
-            json.dump(cache_data, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Error saving to cache file: {e}")
-
-# ADDED EXTRA PARAMETERS: ch, vs, acharya
-def safe_translate_large_text(text, target_lang, ch, vs, acharya):
-    if not text or not str(text).strip():
-        return ""
-
-    # Normalize language codes
-    if target_lang == 'sc': target_lang = 'sa'
-    if target_lang == 'ht': target_lang = 'hi'
-    if target_lang in ['tamil', 'ta']:
-        target_lang = 'ta'
-    elif target_lang in ['telugu', 'te']:
-        target_lang = 'te'
-    elif target_lang in ['english', 'en']:
-        target_lang = 'en'
-
-    text_str = str(text).strip()
-    ch_str = str(ch)
-    vs_str = str(vs)
-
-    # 1. READABLE NESTED CACHE CHECK
-    cache = load_acharya_cache()
-
-    # Safely navigate down the tree to see if this translation exists
-    if (ch_str in cache and
-            vs_str in cache[ch_str] and
-            acharya in cache[ch_str][vs_str] and
-            target_lang in cache[ch_str][vs_str][acharya]):
-        print(f"⚡ Cache Hit! Chapter {ch} Verse {vs} ({acharya}) in {target_lang} loaded from disk.")
-        return cache[ch_str][vs_str][acharya][target_lang]
-
-    # 2. Cache Miss: Execute Azure translation setup
-    AZURE_KEY = os.getenv('AZURE_KEY')
-    AZURE_ENDPOINT = "https://api.cognitive.microsofttranslator.com"
-    AZURE_REGION = "eastus"
-    MAX_LIMIT = 4000
-    constructed_url = AZURE_ENDPOINT + '/translate'
-    # if target_lang == 'hi':
-    #     params = {'api-version': '3.0', 'from': 'sa', 'to': target_lang}
-    # else:
-    #     params = {'api-version': '3.0', 'from': 'hi', 'to': target_lang}
-
-    headers = {
-        'Ocp-Apim-Subscription-Key': AZURE_KEY,
-        'Ocp-Apim-Subscription-Region': AZURE_REGION,
-        'Content-type': 'application/json',
-        'X-ClientTraceId': str(uuid.uuid4())
-    }
-
-    def call_azure_api(text_to_send):
-        # EXPLICIT COUPLING FIX FOR HINDI
-        if target_lang == 'hi':
-            try:
-                import mtranslate
-                print("Running web-scraping bridge for Sanskrit-to-Hindi pipeline...")
-
-                # mtranslate explicitly handles sa -> hi without script copy errors
-                web_translation = mtranslate.translate(text_to_send, 'hi', 'sa')
-                return web_translation
-            except Exception as e:
-                print(f"Sanskrit to Hindi mtranslate engine failed: {e}")
-                return None
-
-        # UNIVERSAL AZURE ROUTE FOR ENGLISH, TAMIL, TELUGU
-        else:
-            params = {
-                'api-version': '3.0',
-                'from': 'hi',
-                'to': target_lang
-            }
-            body = [{'text': text_to_send}]
-            try:
-                response = requests.post(constructed_url, params=params, headers=headers, json=body)
-                if response.status_code == 200:
-                    return response.json()[0]['translations'][0]['text']
-                else:
-                    print(f"Azure Error Code {response.status_code}: {response.text}")
-                    return None
-            except Exception as e:
-                print(f"Network error linking to Azure: {e}")
-                return None
-
-    if len(text_str) <= MAX_LIMIT:
-        translated = call_azure_api(text_str)
-        final_result = translated if translated else text_str
+    chapter_number = request.args.get('chapter', type=int)
+    verse_number = request.args.get('verse', type=int)
+    result = db.session.execute(db.select(AcharyaComment)
+    .where(AcharyaComment.chapter_number == chapter_number, AcharyaComment.verse_number == verse_number)
+        ).scalar()
+    if result:
+        payload = { k: v for k, v in result.__dict__.items() if not k.startswith('_') }
+        return jsonify(payload)
     else:
-        print(f"🌐 Cache Miss. Translating Ch {ch} Vs {vs} ({acharya}) via Azure...")
-        sentences = re.split(r'(?<=[.!?।])\s+', text_str)
-        chunks = []
-        current_chunk = ""
-        for sentence in sentences:
-            if len(current_chunk) + len(sentence) + 1 <= MAX_LIMIT:
-                current_chunk += (" " if current_chunk else "") + sentence
-            else:
-                if current_chunk: chunks.append(current_chunk)
-                if len(sentence) > MAX_LIMIT:
-                    for i in range(0, len(sentence), MAX_LIMIT): chunks.append(sentence[i:i + MAX_LIMIT])
-                    current_chunk = ""
-                else:
-                    current_chunk = sentence
-        if current_chunk: chunks.append(current_chunk)
-
-        translated_chunks = []
-        for chunk in chunks:
-            translated_part = call_azure_api(chunk)
-            if translated_part:
-                translated_chunks.append(translated_part)
-            else:
-                return text_str
-        final_result = " ".join(translated_chunks)
-
-    # 3. SAVE TO NESTED TREE DICTIONARY
-    if final_result and final_result != text_str:
-        # Create empty parent objects on the fly if they don't exist yet
-        if ch_str not in cache: cache[ch_str] = {}
-        if vs_str not in cache[ch_str]: cache[ch_str][vs_str] = {}
-        if acharya not in cache[ch_str][vs_str]: cache[ch_str][vs_str][acharya] = {}
-
-        cache[ch_str][vs_str][acharya][target_lang] = final_result
-        save_to_acharya_cache(cache)
-        print(f"💾 Saved Translation: Ch {ch} Vs {vs} [{acharya}] ({target_lang}) to cache.")
-
-    return final_result
+        return jsonify({})
 
 @admin.route('/api/commentaries/update', methods=['POST'])
 def update_commentaries():
@@ -550,6 +417,38 @@ def get_drive_service():
     except Exception as e:
         error_details = {"error_type": e.__class__.__name__, "message": str(e)}
         return None, error_details
+
+def read_json_from_drive(file_id):
+    """Downloads the JSON file into memory and returns a Python dict."""
+    drive_service, is_success = get_drive_service()
+    if drive_service:
+        request = drive_service.files().get_media(fileId=file_id)
+    else:
+        return {}
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while not done:
+        _, done = downloader.next_chunk()
+    fh.seek(0)
+    json_data = json.loads(fh.read().decode("utf-8"))
+    return json_data
+
+def update_json_in_drive(file_id, data_dict):
+    """Converts a Python dict to JSON in memory and overwrites the Drive file."""
+    json_bytes = json.dumps(data_dict, indent=4, ensure_ascii=False).encode("utf-8")
+    fh = io.BytesIO(json_bytes)
+    media = MediaIoBaseUpload(fh, mimetype="application/json", resumable=True)
+    drive_service, is_success = get_drive_service()
+    if drive_service:
+        updated_file = (
+            drive_service.files()
+            .update(fileId=file_id, media_body=media)
+            .execute()
+        )
+        print(f"Successfully updated file ID: {updated_file.get('id')}")
+    else:
+        print(is_success)
 
 def get_files_drive(drive):
     query = f"'{FOLDER_ID}' in parents and trashed = false"

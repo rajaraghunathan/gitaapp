@@ -1,4 +1,4 @@
-import re, time, unicodedata, os, uuid, requests
+import re, time, unicodedata, os, uuid, requests, json
 from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
 from deep_translator import GoogleTranslator
@@ -99,7 +99,8 @@ def dynamic_sanskrit_transliterate(text, target_lang, source_lang='devanagari'):
         'en': sanscript.IAST,
         'te': sanscript.TELUGU,
         'ta': sanscript.TAMIL_SUB,       # Subscript numbers (க₂, க₃...)
-        'devanagari': sanscript.DEVANAGARI
+        'devanagari': sanscript.DEVANAGARI,
+        'hi' : sanscript.DEVANAGARI
     }
 
     # 3. Clean up keys to avoid case-sensitivity issues
@@ -281,3 +282,90 @@ def translate_large_list_azure(texts, source='en', target='ta', max_items=250, m
         all_translations.extend(batch_result)
 
     return all_translations, True
+
+def translate_api_groq(strings_to_translate: list[str], lang_code: str):
+    if not strings_to_translate:
+        return 'Not a List Object'
+    total_characters = sum(len(text) for text in strings_to_translate)
+    if total_characters > 8000:
+        return 'Text Can not translated more than 8000 characters.'
+    supported_languages = {
+        "en": "English",
+        "sa": "Sanskrit (संस्कृत)",
+        "hi": "Hindi (हिंदी)",
+        "ta": "Tamil (தமிழ்)",
+        "te": "Telugu (తెలుగు)",
+        "kn": "Kannada (ಕನ್ನಡ)",
+        "ml": "Malayalam (മലയാളം)"
+    }
+    target_lang = supported_languages.get(lang_code)
+    if not target_lang:
+        return "error: Supported Langauges are en(English), sa(Sanskrit), ta(Tamil), te(Telugu), kn(Kannada), ml(Malayalam)"
+
+    system_prompt = (
+        f"You are an expert translator fluent in English, Sanskrit, and {target_lang}. "
+        f"Translate the user's input array of strings in 'texts' accurately into clear, natural {target_lang} using its native script. "
+        "You MUST respond with a valid JSON object containing a single key 'translations' whose value is an array of strings. "
+        "Maintain the exact same number of elements and exact same order as the input array. "
+        "Do not merge, split, or skip any strings."
+        "If the input is a spiritual or Bhagavad Gita text, preserve traditional philosophical terms accurately. "
+        f"Use authentic spiritual and Vedantic {target_lang} vocabulary—for example: "
+        "translate 'sannyasa' as 'சந்நியாசம்' or 'துறவு', 'tyaga' as 'தியாகம்' or 'பற்றின்மை' (never modern words like 'விடுப்பு'), "
+        "'atman' as 'ஆத்மா', 'dharma' as 'தர்மம்', 'karma' as 'கர்மம்', 'yoga' as 'யோகம்', "
+        "If the input is general English content, keep the tone natural, clear, and culturally appropriate. "
+        f"Return only the {target_lang} translation with standard spaces and no extra English commentary."
+    )
+    system_prompt_2 = (
+        "You are a revered Sanskrit and Tamil scholar specializing in the Srimad Bhagavad Gita. "
+        "For the given Sanskrit shloka, provide the output strictly in Tamil using these two sections:\n\n"
+        "பதவுரை (சொற்பொருள்):\n"
+        "- Break down each key Sanskrit word/compound in Tamil script followed by its exact Tamil meaning.\n\n"
+        "பொழிப்புரை (மொழிபெயர்ப்பு):\n"
+        "- Provide a clear, devotional, and accurate Tamil translation of the full verse.\n\n"
+        "Rules:\n"
+        "1. Use authentic spiritual Tamil terms (e.g., 'துறவு' for sannyasa, 'தியாகம்' for tyaga, 'ரிஷிகேசா' for Hrishikesha).\n"
+        "2. Never use modern bureaucratic words (like 'விடுப்பு' for tyaga) or any English words.\n"
+        "3. Use standard spaces only."
+    )
+    system_prompt_2 = (
+        f"You are an expert translator fluent in English, Sanskrit, and {target_lang}. "
+        f"Translate the user's input text accurately into clear, natural {target_lang} using its native script. "
+        "If the input is a spiritual or Bhagavad Gita text, preserve traditional philosophical terms accurately. "
+        f"Use authentic spiritual and Vedantic {target_lang} vocabulary—for example: "
+        "translate 'sannyasa' as 'சந்நியாசம்' or 'துறவு', 'tyaga' as 'தியாகம்' or 'பற்றின்மை' (never modern words like 'விடுப்பு'), "
+        "'atman' as 'ஆத்மா', 'dharma' as 'தர்மம்', 'karma' as 'கர்மம்', 'yoga' as 'யோகம்', "
+        "If the input is general English content, keep the tone natural, clear, and culturally appropriate. "
+        f"Return only the {target_lang} translation with standard spaces and no extra English commentary."
+    )
+    groq_api_key = os.environ.get("GROQ_API_KEY")
+    groq_url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {groq_api_key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "openai/gpt-oss-120b",
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": json.dumps({"texts": strings_to_translate}, ensure_ascii=False)}
+        ],
+        "response_format": {"type": "json_object"},
+        "temperature": 0.2,
+        "reasoning_effort" : "low"
+    }
+
+    try:
+        response = requests.post(groq_url, headers=headers, json=payload, timeout=30)
+        response.raise_for_status()
+        result = response.json()
+        raw_content = result["choices"][0]["message"]["content"]
+        translated_strings = json.loads(raw_content).get("translations", [])
+        # Validate 1-to-1 length match
+        if len(translated_strings) != len(strings_to_translate):
+            raise ValueError(
+                f"Translation mismatch: sent {len(strings_to_translate)}, got {len(translated_strings)}"
+            )
+        translated_strings = remove_non_printable_from_object(translated_strings)
+        return translated_strings
+    except (requests.exceptions.RequestException, ValueError, json.JSONDecodeError, KeyError) as e:
+        return f"error: {str(e)}"
